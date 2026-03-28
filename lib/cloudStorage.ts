@@ -26,7 +26,7 @@ export async function cloudGetProject(id: string): Promise<Project | undefined> 
 export async function cloudSaveProject(project: Project): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
-  const { id, created_at, ...rest } = project
+  const { id, created_at, owner_id: _oid, ...rest } = project
   await supabase.from('projects').upsert({ id, owner_id: user.id, created_at, ...rest })
 }
 
