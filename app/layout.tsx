@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
+import ThemeProvider from '@/components/ThemeProvider'
 
 export const metadata: Metadata = {
   title: 'Tokenlab',
@@ -10,11 +11,21 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
+      <head>
+        {/* Anti-flash: apply saved theme before paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('tokenlab_theme');document.documentElement.setAttribute('data-theme',t||'dark')})()`,
+          }}
+        />
+      </head>
       <body>
-        <Sidebar />
-        <main className="ml-[240px] min-h-screen">
-          {children}
-        </main>
+        <ThemeProvider>
+          <Sidebar />
+          <main className="ml-[240px] min-h-screen">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   )

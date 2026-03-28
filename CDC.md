@@ -26,6 +26,7 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Dashboard (score de santé, progression modules) | ✅ |
 | localStorage (MVP sans auth) | ✅ |
 | Score de cohérence (health score) | ✅ |
+| Mode jour/nuit (toggle + persistance localStorage) | ✅ |
 
 ### Hors scope V1
 
