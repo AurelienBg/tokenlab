@@ -27,6 +27,7 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | localStorage (MVP sans auth) | ✅ |
 | Score de cohérence (health score) | ✅ |
 | Mode jour/nuit (toggle + persistance localStorage) | ✅ |
+| Internationalisation FR/EN (toggle + persistance localStorage) | ✅ |
 
 ### Hors scope V1
 

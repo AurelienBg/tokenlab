@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { ModuleKey } from '@/lib/types'
+import { useLang } from './LangProvider'
 
 interface Props {
   title: string
@@ -21,6 +22,7 @@ export default function ModuleShell({
   onSave,
   children,
 }: Props) {
+  const { t } = useLang()
   return (
     <div className="max-w-3xl mx-auto px-6 py-8">
       {/* Header */}
@@ -40,23 +42,23 @@ export default function ModuleShell({
           href={`/project/${projectId}/dashboard`}
           className="btn btn-ghost"
         >
-          ← Dashboard
+          {t.backDashboard}
         </Link>
         <div className="flex items-center gap-3">
           {saved && (
-            <span className="text-xs text-green">✓ Sauvegardé</span>
+            <span className="text-xs text-green">{t.saved}</span>
           )}
           <button
             onClick={() => onSave(false)}
             className="btn btn-ghost"
           >
-            Sauvegarder
+            {t.save}
           </button>
           <button
             onClick={() => onSave(true)}
             className="btn btn-primary"
           >
-            Marquer comme complet ✓
+            {t.markComplete}
           </button>
         </div>
       </div>

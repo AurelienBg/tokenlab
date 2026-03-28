@@ -7,12 +7,14 @@ import { getLocalProject } from '@/lib/storage'
 import { LocalProject, HealthScore } from '@/lib/types'
 import { computeHealthScore } from '@/lib/healthScore'
 import { MODULES } from '@/lib/constants'
+import { useLang } from '@/components/LangProvider'
 
 export default function DashboardPage() {
   const params = useParams()
   const id = params.id as string
   const [lp, setLp] = useState<LocalProject | null>(null)
   const [health, setHealth] = useState<HealthScore | null>(null)
+  const { t } = useLang()
 
   useEffect(() => {
     const data = getLocalProject(id)
@@ -61,7 +63,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <Link href={`/project/${id}/coach`} className="btn btn-primary">
-            ✦ Coach IA
+            ✦ {t.coachIA}
           </Link>
         </div>
       </div>
@@ -75,14 +77,14 @@ export default function DashboardPage() {
           }`}>
             {health?.total ?? 0}
           </div>
-          <div className="text-xs text-muted uppercase tracking-wider">Score de santé</div>
+          <div className="text-xs text-muted uppercase tracking-wider">{t.healthScore}</div>
           <div className="text-xs text-muted mt-1">/ 100</div>
         </div>
 
         <div className="card col-span-2 flex flex-col justify-center">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-foreground">Progression globale</span>
-            <span className="text-sm text-muted">{completedCount} / {MODULES.length} modules</span>
+            <span className="text-sm font-medium text-foreground">{t.globalProgress}</span>
+            <span className="text-sm text-muted">{completedCount} / {MODULES.length} {t.modules}</span>
           </div>
           <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
             <div
@@ -100,7 +102,7 @@ export default function DashboardPage() {
               ))}
               {health.gaps.length > 3 && (
                 <p className="text-xs text-muted pl-4">
-                  +{health.gaps.length - 3} autres alertes — voir le Coach IA
+                  +{health.gaps.length - 3} {t.moreAlerts}
                 </p>
               )}
             </div>
@@ -109,12 +111,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Modules grid */}
-      <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4">Modules</h2>
+      <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4">{t.modulesSection}</h2>
       <div className="grid grid-cols-2 gap-3">
         {MODULES.map((mod) => {
           const data = lp.modules[mod.key]
           const isComplete = data?.is_complete ?? false
           const hasData = !!data
+          const ml = t.modules_labels[mod.key]
 
           return (
             <Link
@@ -125,22 +128,22 @@ export default function DashboardPage() {
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-muted">{mod.shortLabel}</span>
+                    <span className="text-xs font-mono text-muted">{ml.shortLabel}</span>
                     {isComplete ? (
-                      <span className="text-[10px] bg-green/10 text-green px-1.5 py-0.5 rounded font-medium">Complet</span>
+                      <span className="text-[10px] bg-green/10 text-green px-1.5 py-0.5 rounded font-medium">{t.complete}</span>
                     ) : hasData ? (
-                      <span className="text-[10px] bg-yellow/10 text-yellow px-1.5 py-0.5 rounded font-medium">En cours</span>
+                      <span className="text-[10px] bg-yellow/10 text-yellow px-1.5 py-0.5 rounded font-medium">{t.inProgress}</span>
                     ) : (
-                      <span className="text-[10px] bg-surface-2 text-muted px-1.5 py-0.5 rounded">Vide</span>
+                      <span className="text-[10px] bg-surface-2 text-muted px-1.5 py-0.5 rounded">{t.empty}</span>
                     )}
                     {mod.optional && (
-                      <span className="text-[10px] text-muted">optionnel</span>
+                      <span className="text-[10px] text-muted">{t.optional}</span>
                     )}
                   </div>
                   <p className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">
-                    {mod.label}
+                    {ml.label}
                   </p>
-                  <p className="text-xs text-muted mt-0.5 truncate">{mod.description}</p>
+                  <p className="text-xs text-muted mt-0.5 truncate">{ml.description}</p>
                 </div>
                 <span className="text-muted group-hover:text-accent transition-colors text-sm shrink-0">→</span>
               </div>
