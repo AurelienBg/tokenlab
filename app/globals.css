@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ── Design tokens ─────────────────────────────────────────── */
+/* ── Design tokens — Dark (default) ────────────────────────── */
 :root {
   --background: #0A0A0F;
   --surface: #12121A;
@@ -17,6 +17,25 @@
   --yellow: #F59E0B;
   --red: #EF4444;
   --blue: #3B82F6;
+}
+
+/* ── Design tokens — Light ──────────────────────────────────── */
+[data-theme="light"] {
+  --background: #F6F6FC;
+  --surface: #FFFFFF;
+  --surface-2: #EDEDF7;
+  --sidebar: #EEEEF8;
+  --surface-hover: #E4E4F2;
+  --border: #D4D4E8;
+  --foreground: #1A1A2E;
+  --muted: #7B7B9A;
+  --accent: #7C3AED;
+  --accent-hover: #6D28D9;
+  --accent-light: rgba(124, 58, 237, 0.12);
+  --green: #059669;
+  --yellow: #D97706;
+  --red: #DC2626;
+  --blue: #2563EB;
 }
 
 @theme inline {
