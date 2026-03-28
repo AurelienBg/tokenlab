@@ -1,5 +1,7 @@
 // localStorage helpers — used for anonymous users
 import { Project, ModuleData, ModuleKey, LocalProject } from './types'
+import { computeHealthScore } from './healthScore'
+import { MODULES, MODULE_BITS } from './constants'
 
 const PROJECTS_KEY = 'tokenlab_projects'
 
@@ -50,6 +52,20 @@ export function saveLocalModuleData(moduleData: ModuleData): void {
   const idx = all.findIndex((lp) => lp.project.id === moduleData.project_id)
   if (idx >= 0) {
     all[idx].modules[moduleData.module_key] = moduleData
+
+    // Recompute health score and completed_modules bitmask
+    const modules = all[idx].modules
+    const health = computeHealthScore(modules)
+    let completedBits = 0
+    for (const mod of MODULES) {
+      if (modules[mod.key]?.is_complete) {
+        completedBits |= MODULE_BITS[mod.key]
+      }
+    }
+    all[idx].project.health_score = health.total
+    all[idx].project.completed_modules = completedBits
+    all[idx].project.updated_at = new Date().toISOString()
+
     setAllLocalProjects(all)
   }
 }

@@ -1,5 +1,9 @@
 import { ModuleKey, ModuleData, ModuleDataMap, HealthScore, M1Data, M3Data, M5Data, M6Data } from './types'
-import { MODULE_HEALTH_WEIGHTS } from './constants'
+import { MODULE_HEALTH_WEIGHTS, MODULES } from './constants'
+
+const MODULE_LABELS: Record<ModuleKey, string> = Object.fromEntries(
+  MODULES.map((m) => [m.key, m.label])
+) as Record<ModuleKey, string>
 
 export function computeHealthScore(modules: Partial<Record<ModuleKey, ModuleData>>): HealthScore {
   const breakdown: Partial<Record<ModuleKey, number>> = {}
@@ -11,7 +15,7 @@ export function computeHealthScore(modules: Partial<Record<ModuleKey, ModuleData
     const mod = modules[key]
     if (!mod) {
       breakdown[key] = 0
-      gaps.push(`Module ${key} non renseigné`)
+      gaps.push(`${MODULE_LABELS[key]} non renseigné`)
       totalWeight += weight
       continue
     }

@@ -14,7 +14,12 @@ export default function ProjectLayout({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     const lp = getLocalProject(id)
-    if (lp) setProject(lp.project)
+    if (lp) {
+      setProject(lp.project)
+    } else {
+      // Unknown project — redirect to list
+      window.location.href = '/projects'
+    }
   }, [id])
 
   if (!project) {
