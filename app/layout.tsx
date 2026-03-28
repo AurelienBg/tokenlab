@@ -11,15 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <head>
-        {/* Anti-flash: apply saved theme before paint */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('tokenlab_theme');document.documentElement.setAttribute('data-theme',t||'dark')})()`,
-          }}
-        />
-      </head>
+    <html lang="fr" suppressHydrationWarning>
       <body>
         <ThemeProvider>
           <LangProvider>

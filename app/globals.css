@@ -1,41 +1,42 @@
 @import "tailwindcss";
 
-/* ── Design tokens — Dark (default) ────────────────────────── */
-:root {
-  --background: #0A0A0F;
-  --surface: #12121A;
-  --surface-2: #1A1A26;
-  --sidebar: #0E0E16;
-  --surface-hover: #1E1E2E;
-  --border: #2A2A3E;
-  --foreground: #E8E8F0;
-  --muted: #6B6B8A;
-  --accent: #7C3AED;
-  --accent-hover: #6D28D9;
-  --accent-light: rgba(124, 58, 237, 0.15);
-  --green: #10B981;
-  --yellow: #F59E0B;
-  --red: #EF4444;
-  --blue: #3B82F6;
-}
+/* ── Design tokens (both in @layer base so light overrides dark correctly) ─ */
+@layer base {
+  :root {
+    --background: #0A0A0F;
+    --surface: #12121A;
+    --surface-2: #1A1A26;
+    --sidebar: #0E0E16;
+    --surface-hover: #1E1E2E;
+    --border: #2A2A3E;
+    --foreground: #E8E8F0;
+    --muted: #6B6B8A;
+    --accent: #7C3AED;
+    --accent-hover: #6D28D9;
+    --accent-light: rgba(124, 58, 237, 0.15);
+    --green: #10B981;
+    --yellow: #F59E0B;
+    --red: #EF4444;
+    --blue: #3B82F6;
+  }
 
-/* ── Design tokens — Light ──────────────────────────────────── */
-[data-theme="light"] {
-  --background: #F6F6FC;
-  --surface: #FFFFFF;
-  --surface-2: #EDEDF7;
-  --sidebar: #EEEEF8;
-  --surface-hover: #E4E4F2;
-  --border: #D4D4E8;
-  --foreground: #1A1A2E;
-  --muted: #7B7B9A;
-  --accent: #7C3AED;
-  --accent-hover: #6D28D9;
-  --accent-light: rgba(124, 58, 237, 0.12);
-  --green: #059669;
-  --yellow: #D97706;
-  --red: #DC2626;
-  --blue: #2563EB;
+  [data-theme="light"] {
+    --background: #F6F6FC;
+    --surface: #FFFFFF;
+    --surface-2: #EDEDF7;
+    --sidebar: #EEEEF8;
+    --surface-hover: #E4E4F2;
+    --border: #D4D4E8;
+    --foreground: #1A1A2E;
+    --muted: #7B7B9A;
+    --accent: #7C3AED;
+    --accent-hover: #6D28D9;
+    --accent-light: rgba(124, 58, 237, 0.12);
+    --green: #059669;
+    --yellow: #D97706;
+    --red: #DC2626;
+    --blue: #2563EB;
+  }
 }
 
 @theme inline {
