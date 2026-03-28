@@ -1,5 +1,5 @@
 # Tokenlab — CDC (Cahier des Charges)
-> Version 0.2 — Basé sur la spec XRPL Commons (28/01/2026)
+> Version 0.2 — Mis à jour le 28/03/2026
 
 Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 
@@ -17,7 +17,7 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Module 2 — Agents & Policies | ✅ |
 | Module 3 — Value Flow (Sinks & Faucets) | ✅ |
 | Module 4 — Supply-Side & Emission | ✅ |
-| Module 5 — Distribution & Allocation (avec camembert bar) | ✅ |
+| Module 5 — Distribution & Allocation (avec bar chart) | ✅ |
 | Module 6 — Vesting & Sell Pressure | ✅ |
 | Module 7 — TGE & Stratégie de Liquidité | ✅ |
 | Module 8 — Gouvernance | ✅ |
@@ -28,9 +28,10 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Score de cohérence (health score) | ✅ |
 | Mode jour/nuit (toggle + persistance localStorage) | ✅ |
 | Internationalisation FR/EN (toggle + persistance localStorage) | ✅ |
-| UX modules — auto-save (debounce 1.5s) + Cmd/Ctrl+S | ✅ |
-| UX modules — progress stepper + bouton "Module suivant" | ✅ |
-| UX projets — delete inline (confirmation sans modal) | ✅ |
+| UX — auto-save (debounce 1.5s) + Cmd/Ctrl+S | ✅ |
+| UX — progress stepper + bouton "Module suivant" | ✅ |
+| UX — delete inline (confirmation sans modal native) | ✅ |
+| Export PDF (rapport tokenomics complet) | 🔄 en cours |
 
 ### Hors scope V1
 
@@ -38,7 +39,6 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 |---|---|
 | Auth Supabase + cloud sync | V2 |
 | Multi-utilisateurs par projet | V2 |
-| Export PDF | V2 |
 | Export Notion | V3 |
 | MOOC théorique | V2 |
 | Simulation dynamique (Machinations) | V3 |
@@ -53,7 +53,7 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 |---|---|
 | Framework | Next.js 16 (App Router) + Tailwind CSS v4 |
 | Backend | Next.js API Routes |
-| Déploiement | Vercel |
+| Déploiement | Vercel (`tokenlabapp.vercel.app`) |
 | IA | Anthropic API — `claude-sonnet-4-20250514` |
 | Stockage V1 | localStorage (pas d'auth) |
 | Stockage V2 | Supabase (PostgreSQL) + RLS par projet |
@@ -66,3 +66,16 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 - **Module data** : un objet par module key en localStorage, jsonb en Supabase
 - **Health score** : calculé localement via `lib/healthScore.ts`, pas d'API
 - **Coach IA** : streaming SSE via `/api/coach`, contexte projet sérialisé en markdown
+- **Thème** : CSS vars dans `@layer base` pour que Tailwind v4 ne purge pas `[data-theme="light"]`
+- **i18n** : LangProvider context, `lib/i18n.ts` avec clés FR/EN, persisté en localStorage
+- **Auto-save** : hook `lib/useAutoSave.ts` (debounce 1.5s + Cmd/Ctrl+S), wired dans tous les modules
+- **Export PDF** : `@react-pdf/renderer` v4, lazy-loaded (ssr:false), bouton sur le dashboard
+
+---
+
+## Versions
+
+| Version | Date | Changements |
+|---|---|---|
+| v0.1 | 28/01/2026 | MVP initial — 10 modules, Coach IA, Dashboard, localStorage |
+| v0.2 | 28/03/2026 | Mode jour/nuit, FR/EN, auto-save, progress stepper, export PDF |

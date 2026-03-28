@@ -53,6 +53,7 @@ export const translations = {
     // ModuleNav
     dashboard: 'Dashboard',
     coachIA: 'Coach IA',
+    exportPDF: 'Export PDF',
 
     // Dashboard
     healthScore: 'Score de santé',
@@ -139,6 +140,7 @@ export const translations = {
     // ModuleNav
     dashboard: 'Dashboard',
     coachIA: 'AI Coach',
+    exportPDF: 'Export PDF',
 
     // Dashboard
     healthScore: 'Health score',
