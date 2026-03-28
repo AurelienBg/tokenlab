@@ -7,12 +7,14 @@ import { getLocalProjects } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { useTheme } from './ThemeProvider'
 import { useLang } from './LangProvider'
+import { useAuth } from '@/lib/useAuth'
 
 export default function Sidebar() {
   const pathname = usePathname()
   const [projects, setProjects] = useState<Project[]>([])
   const { theme, toggle } = useTheme()
   const { lang, t, toggle: toggleLang } = useLang()
+  const { user, signOut } = useAuth()
 
   useEffect(() => {
     setProjects(getLocalProjects())
@@ -79,26 +81,52 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-border flex items-center justify-between">
-        <span className="text-xs text-muted font-mono">v0.2</span>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={toggleLang}
-            className="text-xs text-muted hover:text-foreground transition-colors font-mono font-semibold"
-            title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+      <div className="px-4 py-3 border-t border-border space-y-2">
+        {/* Auth row */}
+        {user ? (
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted truncate max-w-[130px]" title={user.email ?? ''}>
+              {user.email}
+            </span>
+            <button
+              onClick={signOut}
+              className="text-xs text-muted hover:text-red transition-colors shrink-0"
+              title="Se déconnecter"
+            >
+              ↩
+            </button>
+          </div>
+        ) : (
+          <Link
+            href="/auth/login"
+            className="flex items-center gap-1.5 text-xs text-muted hover:text-accent transition-colors"
           >
-            {lang === 'fr' ? 'EN' : 'FR'}
-          </button>
-          <button
-            onClick={toggle}
-            className="text-muted hover:text-foreground transition-colors"
-            title={theme === 'dark' ? t.lightMode : t.darkMode}
-          >
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </button>
-          <Link href="/projects" className="text-xs text-muted hover:text-foreground transition-colors">
-            {t.allProjects}
+            <span className="text-[10px]">⬡</span> Se connecter
           </Link>
+        )}
+
+        {/* Controls row */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted font-mono">v0.3</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleLang}
+              className="text-xs text-muted hover:text-foreground transition-colors font-mono font-semibold"
+              title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+            >
+              {lang === 'fr' ? 'EN' : 'FR'}
+            </button>
+            <button
+              onClick={toggle}
+              className="text-muted hover:text-foreground transition-colors"
+              title={theme === 'dark' ? t.lightMode : t.darkMode}
+            >
+              {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            </button>
+            <Link href="/projects" className="text-xs text-muted hover:text-foreground transition-colors">
+              {t.allProjects}
+            </Link>
+          </div>
         </div>
       </div>
     </aside>

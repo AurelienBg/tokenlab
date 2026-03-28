@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
-import { M3Data, FlowItem } from '@/lib/types'
+import { getLocalModuleData, saveLocalModuleData, generateId, getLocalProject } from '@/lib/storage'
+import { M3Data, FlowItem, Project } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { ValueFlowDiagram } from '@/components/ValueFlowDiagram'
 import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M3Data = {
@@ -74,9 +75,12 @@ function FlowList({
 export default function Module3Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M3Data>(DEFAULT)
+  const [project, setProject] = useState<Project | null>(null)
   const [saved, setSaved] = useState(false)
 
   useEffect(() => {
+    const lp = getLocalProject(id)
+    if (lp) setProject(lp.project)
     const mod = getLocalModuleData(id, 'm3')
     if (mod) setData(mod.data as M3Data)
   }, [id])
@@ -137,6 +141,13 @@ export default function Module3Page() {
       saved={saved}
       onSave={handleSave}
     >
+      {/* Live diagram */}
+      <ValueFlowDiagram
+        data={data}
+        tokenName={project?.token_name || undefined}
+        tokenTicker={project?.token_ticker || undefined}
+      />
+
       <FlowList
         items={data.faucets}
         title="Token Faucets (sources)"
