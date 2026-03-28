@@ -80,7 +80,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="px-4 py-3 border-t border-border flex items-center justify-between">
-        <span className="text-xs text-muted font-mono">v0.1</span>
+        <span className="text-xs text-muted font-mono">v0.2</span>
         <div className="flex items-center gap-3">
           <button
             onClick={toggleLang}

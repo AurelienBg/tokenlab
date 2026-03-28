@@ -8,6 +8,7 @@ import { LocalProject, HealthScore } from '@/lib/types'
 import { computeHealthScore } from '@/lib/healthScore'
 import { MODULES } from '@/lib/constants'
 import { useLang } from '@/components/LangProvider'
+import { ExportButton } from '@/components/pdf/ExportButton'
 
 export default function DashboardPage() {
   const params = useParams()
@@ -62,9 +63,12 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-          <Link href={`/project/${id}/coach`} className="btn btn-primary">
-            ✦ {t.coachIA}
-          </Link>
+          <div className="flex items-center gap-2">
+            <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />
+            <Link href={`/project/${id}/coach`} className="btn btn-primary">
+              ✦ {t.coachIA}
+            </Link>
+          </div>
         </div>
       </div>
 
