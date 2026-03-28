@@ -31,7 +31,7 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | UX — auto-save (debounce 1.5s) + Cmd/Ctrl+S | ✅ |
 | UX — progress stepper + bouton "Module suivant" | ✅ |
 | UX — delete inline (confirmation sans modal native) | ✅ |
-| Export PDF (rapport tokenomics complet) | 🔄 en cours |
+| Export PDF (rapport tokenomics complet) | ✅ |
 
 ### Hors scope V1
 
