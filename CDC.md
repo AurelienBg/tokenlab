@@ -42,14 +42,19 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Cloud sync localStorage → Supabase au login | ✅ |
 | Multi-device sync (pull Supabase → localStorage) | ✅ |
 
-### Hors scope V2
+### Backlog / Hors scope V2
 
 | Fonctionnalité | Prévu |
 |---|---|
+| **Google OAuth — configuration prod** (Google Cloud credentials + redirect URL Supabase) | À faire |
+| **Setup Supabase prod** (schema SQL + env vars Vercel) | À faire |
+| Édition du projet (nom, ticker, blockchain depuis le dashboard) | V3 |
+| Landing page `/` (vitrine + CTA) | V3 |
+| Duplicate projet | V3 |
 | Multi-utilisateurs par projet | V3 |
 | Export Notion | V3 |
 | MOOC théorique | V3 |
-| Simulation dynamique (Machinations) | V3 |
+| Simulation dynamique (graphe supply dans le temps) | V3 |
 | Benchmark on-chain automatique | V3 |
 
 ---
