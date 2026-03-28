@@ -73,3 +73,8 @@ export function saveLocalModuleData(moduleData: ModuleData): void {
 export function generateId(): string {
   return crypto.randomUUID()
 }
+
+// Exposed for AuthSync — returns full LocalProject array for migration
+export function getAllLocalProjectsRaw(): LocalProject[] {
+  return getAllLocalProjects()
+}

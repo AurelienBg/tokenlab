@@ -33,17 +33,24 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | UX — delete inline (confirmation sans modal native) | ✅ |
 | Export PDF (rapport tokenomics complet) | ✅ |
 
-### Hors scope V1
+### V2 (actuel)
+
+| Fonctionnalité | Statut |
+|---|---|
+| Visualisation Value Flow interactive (SVG temps réel) | ✅ |
+| Auth Supabase (email/password + Google OAuth) | ✅ |
+| Cloud sync localStorage → Supabase au login | ✅ |
+| Multi-device sync (pull Supabase → localStorage) | ✅ |
+
+### Hors scope V2
 
 | Fonctionnalité | Prévu |
 |---|---|
-| Auth Supabase + cloud sync | V2 |
-| Multi-utilisateurs par projet | V2 |
+| Multi-utilisateurs par projet | V3 |
 | Export Notion | V3 |
-| MOOC théorique | V2 |
+| MOOC théorique | V3 |
 | Simulation dynamique (Machinations) | V3 |
 | Benchmark on-chain automatique | V3 |
-| Visualisation Value Flow interactive | V2 |
 
 ---
 
@@ -79,3 +86,4 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 |---|---|---|
 | v0.1 | 28/01/2026 | MVP initial — 10 modules, Coach IA, Dashboard, localStorage |
 | v0.2 | 28/03/2026 | Mode jour/nuit, FR/EN, auto-save, progress stepper, export PDF |
+| v0.3 | 28/03/2026 | Value Flow diagram SVG interactif, Auth Supabase + cloud sync |
