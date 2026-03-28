@@ -6,11 +6,13 @@ import { useEffect, useState } from 'react'
 import { getLocalProjects } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { useTheme } from './ThemeProvider'
+import { useLang } from './LangProvider'
 
 export default function Sidebar() {
   const pathname = usePathname()
   const [projects, setProjects] = useState<Project[]>([])
   const { theme, toggle } = useTheme()
+  const { lang, t, toggle: toggleLang } = useLang()
 
   useEffect(() => {
     setProjects(getLocalProjects())
@@ -30,14 +32,13 @@ export default function Sidebar() {
           href="/projects/new"
           className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium bg-accent text-white hover:bg-accent-hover transition-colors mb-4"
         >
-          <span className="text-base leading-none">+</span>
-          Nouveau projet
+          {t.newProject}
         </Link>
 
         {projects.length > 0 && (
           <div>
             <p className="text-[11px] font-semibold text-muted px-3 mb-2 uppercase tracking-wider">
-              Projets récents
+              {t.recentProjects}
             </p>
             <ul className="space-y-0.5">
               {projects.slice(0, 15).map((p) => {
@@ -71,8 +72,8 @@ export default function Sidebar() {
 
         {projects.length === 0 && (
           <div className="px-3 py-8 text-center">
-            <p className="text-xs text-muted">Aucun projet pour l&apos;instant.</p>
-            <p className="text-xs text-muted mt-1">Créez votre premier projet !</p>
+            <p className="text-xs text-muted">{t.noProjects}</p>
+            <p className="text-xs text-muted mt-1">{t.createFirst}</p>
           </div>
         )}
       </nav>
@@ -82,14 +83,21 @@ export default function Sidebar() {
         <span className="text-xs text-muted font-mono">v0.1</span>
         <div className="flex items-center gap-3">
           <button
+            onClick={toggleLang}
+            className="text-xs text-muted hover:text-foreground transition-colors font-mono font-semibold"
+            title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+          >
+            {lang === 'fr' ? 'EN' : 'FR'}
+          </button>
+          <button
             onClick={toggle}
             className="text-muted hover:text-foreground transition-colors"
-            title={theme === 'dark' ? 'Mode jour' : 'Mode nuit'}
+            title={theme === 'dark' ? t.lightMode : t.darkMode}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
           <Link href="/projects" className="text-xs text-muted hover:text-foreground transition-colors">
-            Tous les projets
+            {t.allProjects}
           </Link>
         </div>
       </div>

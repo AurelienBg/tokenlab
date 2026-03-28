@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MODULES } from '@/lib/constants'
 import { Project } from '@/lib/types'
+import { useLang } from './LangProvider'
 
 interface Props {
   project: Project
@@ -12,17 +13,21 @@ interface Props {
 export default function ModuleNav({ project }: Props) {
   const pathname = usePathname()
   const base = `/project/${project.id}`
+  const { t } = useLang()
 
   const navItems = [
-    { href: `${base}/dashboard`, label: 'Dashboard', icon: '◈' },
-    ...MODULES.map((m) => ({
-      href: `${base}/${m.path}`,
-      label: m.shortLabel,
-      sublabel: m.label.replace(/^(Étape \d+ — |Module \d+ — )/, ''),
-      icon: moduleIcon(m.key),
-      isComplete: !!(project.completed_modules & (1 << MODULES.indexOf(m))),
-    })),
-    { href: `${base}/coach`, label: 'Coach IA', icon: '✦' },
+    { href: `${base}/dashboard`, label: t.dashboard, icon: '◈' },
+    ...MODULES.map((m) => {
+      const ml = t.modules_labels[m.key]
+      return {
+        href: `${base}/${m.path}`,
+        label: ml.shortLabel,
+        sublabel: ml.label,
+        icon: moduleIcon(m.key),
+        isComplete: !!(project.completed_modules & (1 << MODULES.indexOf(m))),
+      }
+    }),
+    { href: `${base}/coach`, label: t.coachIA, icon: '✦' },
   ]
 
   return (
