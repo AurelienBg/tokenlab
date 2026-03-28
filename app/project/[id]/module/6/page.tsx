@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M6Data, VestingSchedule } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M6Data = { vesting_schedules: [], sell_pressure_notes: '', notes: '' }
 
@@ -61,6 +62,8 @@ export default function Module6Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   return (
     <ModuleShell

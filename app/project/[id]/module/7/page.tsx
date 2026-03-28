@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M7Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M7Data = {
   listing_type: null,
@@ -44,6 +45,8 @@ export default function Module7Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   return (
     <ModuleShell

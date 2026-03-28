@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M3Data, FlowItem } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M3Data = {
   faucets: [],
@@ -122,6 +123,8 @@ export default function Module3Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   const ratio = data.emission_revenue_ratio
 

@@ -6,6 +6,7 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M5Data, Allocation } from '@/lib/types'
 import { ALLOCATION_BENCHMARKS } from '@/lib/constants'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT_ALLOCATIONS: Allocation[] = [
   { id: '1', category: 'Team & Advisors', percentage: 15, rationale: '' },
@@ -59,6 +60,8 @@ export default function Module5Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   return (
     <ModuleShell

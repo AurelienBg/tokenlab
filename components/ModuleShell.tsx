@@ -1,8 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { ModuleKey } from '@/lib/types'
 import { useLang } from './LangProvider'
+import { MODULES } from '@/lib/constants'
+import { getLocalProject } from '@/lib/storage'
 
 interface Props {
   title: string
@@ -18,17 +21,62 @@ export default function ModuleShell({
   title,
   subtitle,
   projectId,
+  moduleKey,
   saved,
   onSave,
   children,
 }: Props) {
   const { t } = useLang()
+  const [completedBits, setCompletedBits] = useState(0)
+
+  // Load completion status for progress stepper
+  useEffect(() => {
+    const lp = getLocalProject(projectId)
+    if (lp) setCompletedBits(lp.project.completed_modules)
+  }, [projectId, saved])
+
+  const currentIdx = MODULES.findIndex((m) => m.key === moduleKey)
+  const nextModule = MODULES[currentIdx + 1] ?? null
+  const nextHref = nextModule
+    ? `/project/${projectId}/${nextModule.path}`
+    : `/project/${projectId}/coach`
+  const nextLabel = nextModule
+    ? t.modules_labels[nextModule.key].shortLabel
+    : t.coachIA
+
   return (
     <div className="max-w-3xl mx-auto px-6 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-xl font-bold text-foreground">{title}</h1>
-        {subtitle && <p className="text-sm text-muted mt-1">{subtitle}</p>}
+      {/* Progress stepper */}
+      <div className="mb-6">
+        <div className="flex items-center gap-1 mb-3">
+          {MODULES.map((m, i) => {
+            const isComplete = !!(completedBits & (1 << i))
+            const isCurrent = m.key === moduleKey
+            return (
+              <Link
+                key={m.key}
+                href={`/project/${projectId}/${m.path}`}
+                title={t.modules_labels[m.key].label}
+                className={`h-1.5 flex-1 rounded-full transition-all ${
+                  isCurrent
+                    ? 'bg-accent'
+                    : isComplete
+                    ? 'bg-green/60'
+                    : 'bg-border hover:bg-muted/40'
+                }`}
+              />
+            )
+          })}
+        </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-foreground">{title}</h1>
+            {subtitle && <p className="text-sm text-muted mt-0.5">{subtitle}</p>}
+          </div>
+          <span className="text-xs text-muted font-mono shrink-0">
+            {currentIdx + 1} / {MODULES.length}
+          </span>
+        </div>
       </div>
 
       {/* Content */}
@@ -46,20 +94,27 @@ export default function ModuleShell({
         </Link>
         <div className="flex items-center gap-3">
           {saved && (
-            <span className="text-xs text-green">{t.saved}</span>
+            <span className="text-xs text-green animate-fade-in">{t.saved}</span>
           )}
           <button
             onClick={() => onSave(false)}
-            className="btn btn-ghost"
+            className="btn btn-ghost text-xs"
+            title="Cmd+S / Ctrl+S"
           >
             {t.save}
           </button>
           <button
             onClick={() => onSave(true)}
-            className="btn btn-primary"
+            className="btn btn-primary text-xs"
           >
             {t.markComplete}
           </button>
+          <Link
+            href={nextHref}
+            className="btn btn-ghost text-xs flex items-center gap-1"
+          >
+            {nextLabel} →
+          </Link>
         </div>
       </div>
     </div>

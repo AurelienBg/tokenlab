@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M2Data, Agent, Policy } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M2Data = { agents: [], policies: [], notes: '' }
 
@@ -75,6 +76,8 @@ export default function Module2Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   return (
     <ModuleShell
