@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M8Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M8Data = {
   governance_model: null,
@@ -53,6 +54,8 @@ export default function Module8Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   return (
     <ModuleShell

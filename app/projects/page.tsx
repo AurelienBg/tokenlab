@@ -5,18 +5,21 @@ import Link from 'next/link'
 import { getLocalProjects, deleteLocalProject } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
+import { useLang } from '@/components/LangProvider'
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const { t } = useLang()
 
   useEffect(() => {
     setProjects(getLocalProjects())
   }, [])
 
   function handleDelete(id: string) {
-    if (!confirm('Supprimer ce projet ?')) return
     deleteLocalProject(id)
     setProjects(getLocalProjects())
+    setConfirmDelete(null)
   }
 
   function completedCount(p: Project): number {
@@ -27,23 +30,21 @@ export default function ProjectsPage() {
     <div className="max-w-4xl mx-auto px-6 py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Mes projets</h1>
-          <p className="text-sm text-muted mt-1">Structurez votre tokenomics post-workshop</p>
+          <h1 className="text-2xl font-bold text-foreground">{t.projectsTitle}</h1>
+          <p className="text-sm text-muted mt-1">{t.projectsSubtitle}</p>
         </div>
         <Link href="/projects/new" className="btn btn-primary">
-          + Nouveau projet
+          {t.newProject}
         </Link>
       </div>
 
       {projects.length === 0 ? (
         <div className="card text-center py-16">
           <div className="text-4xl mb-4">🪙</div>
-          <h2 className="text-lg font-semibold text-foreground mb-2">Aucun projet</h2>
-          <p className="text-sm text-muted mb-6">
-            Créez votre premier projet pour commencer à structurer votre tokenomics.
-          </p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">{t.noProjectsYet}</h2>
+          <p className="text-sm text-muted mb-6 max-w-xs mx-auto">{t.noProjectsDesc}</p>
           <Link href="/projects/new" className="btn btn-primary">
-            Créer un projet
+            {t.createProject}
           </Link>
         </div>
       ) : (
@@ -80,8 +81,8 @@ export default function ProjectsPage() {
                     <div className="flex items-center gap-4 mt-3">
                       <div className="flex-1 max-w-[200px]">
                         <div className="flex items-center justify-between text-xs text-muted mb-1">
-                          <span>Progression</span>
-                          <span>{completed}/{total} modules</span>
+                          <span>{t.progressLabel}</span>
+                          <span>{completed}/{total}</span>
                         </div>
                         <div className="h-1.5 bg-surface-2 rounded-full overflow-hidden">
                           <div
@@ -92,7 +93,7 @@ export default function ProjectsPage() {
                       </div>
                       {p.health_score > 0 && (
                         <div className="text-xs text-muted">
-                          Score : <span className={`font-semibold ${
+                          {t.scoreLabel} : <span className={`font-semibold ${
                             p.health_score >= 70 ? 'text-green' :
                             p.health_score >= 40 ? 'text-yellow' : 'text-red'
                           }`}>{p.health_score}/100</span>
@@ -105,14 +106,31 @@ export default function ProjectsPage() {
                       href={`/project/${p.id}/dashboard`}
                       className="btn btn-ghost text-xs"
                     >
-                      Ouvrir
+                      {t.open}
                     </Link>
-                    <button
-                      onClick={() => handleDelete(p.id)}
-                      className="btn btn-ghost text-xs text-red hover:text-red hover:border-red/30"
-                    >
-                      Supprimer
-                    </button>
+                    {confirmDelete === p.id ? (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleDelete(p.id)}
+                          className="btn text-xs bg-red/10 text-red border border-red/30 hover:bg-red/20"
+                        >
+                          {t.deleteConfirm}
+                        </button>
+                        <button
+                          onClick={() => setConfirmDelete(null)}
+                          className="btn btn-ghost text-xs"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDelete(p.id)}
+                        className="btn btn-ghost text-xs text-muted hover:text-red hover:border-red/30 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        {t.delete}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

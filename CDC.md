@@ -28,6 +28,9 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Score de cohérence (health score) | ✅ |
 | Mode jour/nuit (toggle + persistance localStorage) | ✅ |
 | Internationalisation FR/EN (toggle + persistance localStorage) | ✅ |
+| UX modules — auto-save (debounce 1.5s) + Cmd/Ctrl+S | ✅ |
+| UX modules — progress stepper + bouton "Module suivant" | ✅ |
+| UX projets — delete inline (confirmation sans modal) | ✅ |
 
 ### Hors scope V1
 

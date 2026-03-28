@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M9Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M9Data = {
   jurisdictions: [],
@@ -52,6 +53,8 @@ export default function Module9Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   const showMiCA = data.jurisdictions.includes('EU (MiCA)')
 

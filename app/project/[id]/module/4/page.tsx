@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { M4Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useAutoSave } from '@/lib/useAutoSave'
 
 const DEFAULT: M4Data = {
   total_supply: null,
@@ -56,6 +57,8 @@ export default function Module4Page() {
     })
     setSaved(true)
   }
+
+  useAutoSave(data, handleSave)
 
   function formatNumber(n: number): string {
     if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`
