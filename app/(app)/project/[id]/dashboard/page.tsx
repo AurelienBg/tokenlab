@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { getLocalProject } from '@/lib/storage'
-import { LocalProject, HealthScore } from '@/lib/types'
+import { getLocalProject, saveLocalProject } from '@/lib/storage'
+import { LocalProject, HealthScore, Project, ProjectType, ProjectStage } from '@/lib/types'
 import { computeHealthScore } from '@/lib/healthScore'
 import { MODULES } from '@/lib/constants'
 import { useLang } from '@/components/LangProvider'
@@ -15,6 +15,8 @@ export default function DashboardPage() {
   const id = params.id as string
   const [lp, setLp] = useState<LocalProject | null>(null)
   const [health, setHealth] = useState<HealthScore | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [editForm, setEditForm] = useState<Partial<Project>>({})
   const { t } = useLang()
 
   useEffect(() => {
@@ -24,6 +26,38 @@ export default function DashboardPage() {
       setHealth(computeHealthScore(data.modules))
     }
   }, [id])
+
+  function startEdit() {
+    if (!lp) return
+    setEditForm({
+      name: lp.project.name,
+      description: lp.project.description,
+      token_name: lp.project.token_name,
+      token_ticker: lp.project.token_ticker,
+      blockchain: lp.project.blockchain,
+      project_type: lp.project.project_type ?? undefined,
+      project_stage: lp.project.project_stage ?? undefined,
+    })
+    setEditing(true)
+  }
+
+  function handleEditSave() {
+    if (!lp) return
+    const updated: Project = {
+      ...lp.project,
+      name: editForm.name?.trim() || lp.project.name,
+      description: editForm.description?.trim() ?? lp.project.description,
+      token_name: editForm.token_name?.trim() ?? lp.project.token_name,
+      token_ticker: editForm.token_ticker?.trim().toUpperCase() ?? lp.project.token_ticker,
+      blockchain: editForm.blockchain?.trim() ?? lp.project.blockchain,
+      project_type: (editForm.project_type || null) as ProjectType | null,
+      project_stage: (editForm.project_stage || null) as ProjectStage | null,
+      updated_at: new Date().toISOString(),
+    }
+    saveLocalProject(updated)
+    setLp({ ...lp, project: updated })
+    setEditing(false)
+  }
 
   if (!lp) return null
 
@@ -36,40 +70,86 @@ export default function DashboardPage() {
     <div className="max-w-4xl mx-auto px-6 py-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
-            <p className="text-sm text-muted mt-1">{project.description}</p>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {project.token_ticker && (
-                <span className="text-xs font-mono bg-accent/10 text-accent px-2 py-1 rounded">
-                  ${project.token_ticker}
-                </span>
-              )}
-              {project.blockchain && (
-                <span className="text-xs bg-surface-2 text-muted px-2 py-1 rounded">
-                  {project.blockchain}
-                </span>
-              )}
-              {project.project_type && (
-                <span className="text-xs bg-surface-2 text-muted px-2 py-1 rounded">
-                  {project.project_type.replace(/_/g, ' ')}
-                </span>
-              )}
-              {project.project_stage && (
-                <span className="text-xs bg-surface-2 text-muted px-2 py-1 rounded capitalize">
-                  {project.project_stage}
-                </span>
-              )}
+        {editing ? (
+          <div className="card space-y-4">
+            <h2 className="text-sm font-semibold text-foreground">{t.editProject}</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-2">
+                <label className="label">{t.projectName}</label>
+                <input className="input" value={editForm.name ?? ''} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} autoFocus />
+              </div>
+              <div className="col-span-2">
+                <label className="label">{t.description}</label>
+                <textarea className="input" rows={2} value={editForm.description ?? ''} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">{t.tokenName}</label>
+                <input className="input" value={editForm.token_name ?? ''} onChange={e => setEditForm(f => ({ ...f, token_name: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">{t.tokenTicker}</label>
+                <input className="input" value={editForm.token_ticker ?? ''} onChange={e => setEditForm(f => ({ ...f, token_ticker: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">{t.blockchain}</label>
+                <input className="input" value={editForm.blockchain ?? ''} onChange={e => setEditForm(f => ({ ...f, blockchain: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">{t.projectStage}</label>
+                <select className="input" value={editForm.project_stage ?? ''} onChange={e => setEditForm(f => ({ ...f, project_stage: e.target.value as ProjectStage | undefined }))}>
+                  <option value="">—</option>
+                  <option value="ideation">Idéation</option>
+                  <option value="mvp">MVP</option>
+                  <option value="live">Live</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setEditing(false)} className="btn btn-ghost text-sm">{t.cancel}</button>
+              <button onClick={handleEditSave} className="btn btn-primary text-sm">{t.save}</button>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />
-            <Link href={`/project/${id}/coach`} className="btn btn-primary">
-              ✦ {t.coachIA}
-            </Link>
+        ) : (
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
+                <button onClick={startEdit} className="text-muted hover:text-foreground transition-colors" title={t.editProject}>
+                  <EditIcon />
+                </button>
+              </div>
+              <p className="text-sm text-muted mt-1">{project.description}</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {project.token_ticker && (
+                  <span className="text-xs font-mono bg-accent/10 text-accent px-2 py-1 rounded">
+                    ${project.token_ticker}
+                  </span>
+                )}
+                {project.blockchain && (
+                  <span className="text-xs bg-surface-2 text-muted px-2 py-1 rounded">
+                    {project.blockchain}
+                  </span>
+                )}
+                {project.project_type && (
+                  <span className="text-xs bg-surface-2 text-muted px-2 py-1 rounded">
+                    {project.project_type.replace(/_/g, ' ')}
+                  </span>
+                )}
+                {project.project_stage && (
+                  <span className="text-xs bg-surface-2 text-muted px-2 py-1 rounded capitalize">
+                    {project.project_stage}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />
+              <Link href={`/project/${id}/coach`} className="btn btn-primary">
+                ✦ {t.coachIA}
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Score + progress */}
@@ -156,5 +236,14 @@ export default function DashboardPage() {
         })}
       </div>
     </div>
+  )
+}
+
+function EditIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
   )
 }
