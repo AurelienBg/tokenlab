@@ -1,13 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Sidebar from '@/components/Sidebar'
 import ThemeProvider from '@/components/ThemeProvider'
 import LangProvider from '@/components/LangProvider'
-import { AuthSync } from '@/components/AuthSync'
 
 export const metadata: Metadata = {
   title: 'Tokenlab',
-  description: 'Structurez votre tokenomics post-workshop',
+  description: 'Structure your tokenomics — post-workshop tool for Web3 founders',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,11 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <LangProvider>
-            <AuthSync />
-            <Sidebar />
-            <main className="ml-[240px] min-h-screen">
-              {children}
-            </main>
+            {children}
           </LangProvider>
         </ThemeProvider>
       </body>
