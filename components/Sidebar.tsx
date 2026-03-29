@@ -23,10 +23,10 @@ export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-[240px] flex flex-col border-r border-border bg-sidebar z-10">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+      <Link href="/projects" className="flex items-center gap-2.5 px-5 py-4 border-b border-border hover:opacity-80 transition-opacity">
         <TokenlabIcon />
         <span className="text-base font-bold tracking-tight text-foreground">Tokenlab</span>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-3">
