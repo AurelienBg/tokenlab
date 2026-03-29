@@ -46,8 +46,8 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 
 | Fonctionnalité | Prévu |
 |---|---|
+| **Setup Supabase prod** (upgrade plan / libérer un slot + schema SQL + env vars Vercel) | À faire — bloquant |
 | **Google OAuth — configuration prod** (Google Cloud credentials + redirect URL Supabase) | À faire |
-| **Setup Supabase prod** (schema SQL + env vars Vercel) | À faire |
 | Édition du projet (nom, ticker, blockchain depuis le dashboard) | V3 |
 | Landing page `/` (vitrine + CTA) | V3 |
 | Duplicate projet | V3 |
