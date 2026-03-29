@@ -109,13 +109,24 @@ export default function Sidebar() {
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted font-mono">v0.3</span>
           <div className="flex items-center gap-3">
-            <button
-              onClick={toggleLang}
-              className="text-xs text-muted hover:text-foreground transition-colors font-mono font-semibold"
-              title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
-            >
-              {lang === 'fr' ? 'EN' : 'FR'}
-            </button>
+            <div className="flex items-center rounded-lg overflow-hidden border border-border text-xs font-semibold">
+              <button
+                onClick={() => lang !== 'fr' && toggleLang()}
+                className={`flex items-center gap-1 px-2 py-1 transition-colors ${
+                  lang === 'fr' ? 'bg-accent text-white' : 'text-muted hover:text-foreground'
+                }`}
+              >
+                🇫🇷 FR
+              </button>
+              <button
+                onClick={() => lang !== 'en' && toggleLang()}
+                className={`flex items-center gap-1 px-2 py-1 transition-colors ${
+                  lang === 'en' ? 'bg-accent text-white' : 'text-muted hover:text-foreground'
+                }`}
+              >
+                🇬🇧 EN
+              </button>
+            </div>
             <button
               onClick={toggle}
               className="text-muted hover:text-foreground transition-colors"
