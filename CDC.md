@@ -50,12 +50,12 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | **Setup Supabase prod** (upgrade plan / libérer un slot + schema SQL + env vars Vercel) | À faire — bloquant |
 | **Google OAuth — configuration prod** (Google Cloud credentials + redirect URL Supabase) | À faire |
 
-#### Quick wins (~30 min chacun)
+#### Quick wins V2 (~30 min chacun)
 | Fonctionnalité | Prévu |
 |---|---|
-| 🗑️ Suppression projet (confirmation inline) | Quick win |
-| ✏️ Édition infos projet (nom, ticker, blockchain, description depuis le dashboard) | Quick win |
-| 📱 Mobile — sidebar responsive + hero lisible sur petit écran | Quick win |
+| 🗑️ Suppression projet (confirmation inline) | V2 |
+| ✏️ Édition infos projet (nom, ticker, blockchain, description depuis le dashboard) | V2 |
+| 📱 Mobile — sidebar responsive + hero lisible sur petit écran | V2 |
 
 #### Landing page
 | Fonctionnalité | Prévu |
