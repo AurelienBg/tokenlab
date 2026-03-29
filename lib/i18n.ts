@@ -128,7 +128,7 @@ export const translations = {
     or: 'or',
 
     // Projects list page
-    projectsTitle: 'My projects',
+    projectsTitle: 'All projects',
     projectsSubtitle: 'Structure your post-workshop tokenomics',
     createProject: 'Create a project',
     open: 'Open',
