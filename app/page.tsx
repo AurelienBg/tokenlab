@@ -295,22 +295,60 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
-        <div className="inline-flex items-center gap-2 text-xs font-medium text-accent bg-accent/10 px-3 py-1.5 rounded-full mb-6 border border-accent/20">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          {c.hero.badge}
-        </div>
-        <h1 className="text-5xl font-bold leading-tight tracking-tight text-foreground mb-6 whitespace-pre-line">
-          {c.hero.title}
-        </h1>
-        <p className="text-lg text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-          {c.hero.subtitle}
-        </p>
-        <div className="flex flex-col items-center gap-3">
-          <Link href="/projects/new" className="btn btn-primary text-base px-8 py-3">
-            {c.hero.cta} →
-          </Link>
-          <span className="text-xs text-muted">{c.hero.sub}</span>
+      <section className="relative overflow-hidden">
+        {/* Network background SVG */}
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <radialGradient id="heroGlow" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#0A0A0F" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect width="1200" height="520" fill="url(#heroGlow)" />
+          {/* Lines */}
+          <line x1="160" y1="80"  x2="420" y2="180" stroke="#7C3AED" strokeOpacity="0.2" strokeWidth="1" />
+          <line x1="420" y1="180" x2="680" y2="100" stroke="#7C3AED" strokeOpacity="0.2" strokeWidth="1" />
+          <line x1="680" y1="100" x2="960" y2="260" stroke="#7C3AED" strokeOpacity="0.15" strokeWidth="1" />
+          <line x1="420" y1="180" x2="560" y2="340" stroke="#7C3AED" strokeOpacity="0.15" strokeWidth="1" />
+          <line x1="560" y1="340" x2="800" y2="360" stroke="#7C3AED" strokeOpacity="0.12" strokeWidth="1" />
+          <line x1="160" y1="80"  x2="240" y2="280" stroke="#7C3AED" strokeOpacity="0.12" strokeWidth="1" />
+          <line x1="240" y1="280" x2="420" y2="180" stroke="#7C3AED" strokeOpacity="0.15" strokeWidth="1" />
+          <line x1="680" y1="100" x2="760" y2="40"  stroke="#7C3AED" strokeOpacity="0.12" strokeWidth="1" />
+          <line x1="960" y1="260" x2="1060" y2="130" stroke="#7C3AED" strokeOpacity="0.12" strokeWidth="1" />
+          <line x1="560" y1="340" x2="960" y2="260" stroke="#7C3AED" strokeOpacity="0.1"  strokeWidth="1" />
+          <line x1="240" y1="280" x2="560" y2="340" stroke="#7C3AED" strokeOpacity="0.1"  strokeWidth="1" />
+          <line x1="100" y1="240" x2="240" y2="280" stroke="#7C3AED" strokeOpacity="0.1"  strokeWidth="1" />
+          <line x1="800" y1="360" x2="960" y2="260" stroke="#7C3AED" strokeOpacity="0.1"  strokeWidth="1" />
+          {/* Nodes */}
+          <circle cx="160"  cy="80"  r="4" fill="#7C3AED" fillOpacity="0.8" />
+          <circle cx="420"  cy="180" r="6" fill="#7C3AED" fillOpacity="0.9" />
+          <circle cx="680"  cy="100" r="4" fill="#7C3AED" fillOpacity="0.7" />
+          <circle cx="960"  cy="260" r="5" fill="#7C3AED" fillOpacity="0.6" />
+          <circle cx="560"  cy="340" r="4" fill="#7C3AED" fillOpacity="0.5" />
+          <circle cx="240"  cy="280" r="3" fill="#7C3AED" fillOpacity="0.5" />
+          <circle cx="760"  cy="40"  r="3" fill="#7C3AED" fillOpacity="0.4" />
+          <circle cx="1060" cy="130" r="3" fill="#7C3AED" fillOpacity="0.4" />
+          <circle cx="100"  cy="240" r="2" fill="#7C3AED" fillOpacity="0.3" />
+          <circle cx="800"  cy="360" r="3" fill="#7C3AED" fillOpacity="0.4" />
+        </svg>
+
+        <div className="relative max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
+          <div className="inline-flex items-center gap-2 text-xs font-medium text-accent bg-accent/10 px-3 py-1.5 rounded-full mb-6 border border-accent/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            {c.hero.badge}
+          </div>
+          <h1 className="text-5xl font-bold leading-tight tracking-tight text-foreground mb-6 whitespace-pre-line">
+            {c.hero.title}
+          </h1>
+          <p className="text-lg text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
+            {c.hero.subtitle}
+          </p>
+          <div className="flex flex-col items-center gap-3">
+            <Link href="/projects/new" className="btn btn-primary text-base px-8 py-3">
+              {c.hero.cta} →
+            </Link>
+            <span className="text-xs text-muted">{c.hero.sub}</span>
+          </div>
         </div>
       </section>
 
