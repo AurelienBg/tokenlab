@@ -109,4 +109,4 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | v0.1 | 28/01/2026 | MVP initial — 10 modules, Coach IA, Dashboard, localStorage |
 | v0.2 | 28/03/2026 | Mode jour/nuit, FR/EN, auto-save, progress stepper, export PDF |
 | v0.3 | 28/03/2026 | Value Flow diagram SVG interactif, Auth Supabase + cloud sync |
-| v0.3.1 | 29/03/2026 | Landing page, édition projet, mobile responsive, i18n complète, favicon |
+| v2.0 | 29/03/2026 | Landing page, édition projet, mobile responsive, i18n complète, favicon |
