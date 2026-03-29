@@ -32,9 +32,19 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         <Link
           href="/projects/new"
-          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium bg-accent text-white hover:bg-accent-hover transition-colors mb-4"
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium bg-accent text-white hover:bg-accent-hover transition-colors mb-1"
         >
           {t.newProject}
+        </Link>
+        <Link
+          href="/projects"
+          className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors mb-3 ${
+            pathname === '/projects'
+              ? 'bg-accent/15 text-accent font-medium'
+              : 'text-muted hover:text-foreground hover:bg-surface-hover'
+          }`}
+        >
+          {t.allProjects}
         </Link>
 
         {projects.length > 0 && (
@@ -134,9 +144,6 @@ export default function Sidebar() {
             >
               {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
             </button>
-            <Link href="/projects" className="text-xs text-muted hover:text-foreground transition-colors">
-              {t.allProjects}
-            </Link>
           </div>
         </div>
       </div>
