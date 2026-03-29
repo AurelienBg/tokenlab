@@ -44,12 +44,29 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 
 ### Backlog / Hors scope V2
 
+#### Bloquants infra
 | Fonctionnalité | Prévu |
 |---|---|
 | **Setup Supabase prod** (upgrade plan / libérer un slot + schema SQL + env vars Vercel) | À faire — bloquant |
 | **Google OAuth — configuration prod** (Google Cloud credentials + redirect URL Supabase) | À faire |
-| Édition du projet (nom, ticker, blockchain depuis le dashboard) | V3 |
-| Landing page `/` (vitrine + CTA) | V3 |
+
+#### Quick wins (~30 min chacun)
+| Fonctionnalité | Prévu |
+|---|---|
+| 🗑️ Suppression projet (confirmation inline) | Quick win |
+| ✏️ Édition infos projet (nom, ticker, blockchain, description depuis le dashboard) | Quick win |
+| 📱 Mobile — sidebar responsive + hero lisible sur petit écran | Quick win |
+
+#### Landing page
+| Fonctionnalité | Prévu |
+|---|---|
+| 💬 Photo / background hero | À faire |
+| 🔍 SEO — meta description + og:image pour partage LinkedIn/X | À faire |
+
+#### Features produit
+| Fonctionnalité | Prévu |
+|---|---|
+| 🔗 Lien de partage lecture seule (sans compte) | V3 |
 | Duplicate projet | V3 |
 | Multi-utilisateurs par projet | V3 |
 | Export Notion | V3 |
