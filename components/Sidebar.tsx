@@ -9,7 +9,7 @@ import { useTheme } from './ThemeProvider'
 import { useLang } from './LangProvider'
 import { useAuth } from '@/lib/useAuth'
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const pathname = usePathname()
   const [projects, setProjects] = useState<Project[]>([])
   const { theme, toggle } = useTheme()
@@ -21,7 +21,7 @@ export default function Sidebar() {
   }, [pathname])
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-[240px] flex flex-col border-r border-border bg-sidebar z-10">
+    <aside className={`fixed left-0 top-0 h-full w-[240px] flex flex-col border-r border-border bg-sidebar z-30 transition-transform duration-200 ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
       {/* Logo */}
       <Link href="/projects" className="flex items-center gap-2.5 px-5 py-4 border-b border-border hover:opacity-80 transition-opacity">
         <TokenlabIcon />
@@ -117,7 +117,7 @@ export default function Sidebar() {
 
         {/* Controls row */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-muted font-mono">v0.3</span>
+          <span className="text-xs text-muted font-mono">v0.3.1</span>
           <div className="flex items-center gap-3">
             <div className="flex items-center rounded-lg overflow-hidden border border-border text-xs font-semibold">
               <button

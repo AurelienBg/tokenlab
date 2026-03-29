@@ -53,9 +53,9 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 #### Quick wins V2 (~30 min chacun)
 | Fonctionnalité | Prévu |
 |---|---|
-| 🗑️ Suppression projet (confirmation inline) | V2 |
-| ✏️ Édition infos projet (nom, ticker, blockchain, description depuis le dashboard) | V2 |
-| 📱 Mobile — sidebar responsive + hero lisible sur petit écran | V2 |
+| 🗑️ Suppression projet (confirmation inline) | ✅ v0.2 |
+| ✏️ Édition infos projet (nom, ticker, blockchain, description depuis le dashboard) | ✅ v0.3.1 |
+| 📱 Mobile — sidebar responsive + hero lisible sur petit écran | ✅ v0.3.1 |
 
 #### Landing page
 | Fonctionnalité | Prévu |
@@ -109,3 +109,4 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | v0.1 | 28/01/2026 | MVP initial — 10 modules, Coach IA, Dashboard, localStorage |
 | v0.2 | 28/03/2026 | Mode jour/nuit, FR/EN, auto-save, progress stepper, export PDF |
 | v0.3 | 28/03/2026 | Value Flow diagram SVG interactif, Auth Supabase + cloud sync |
+| v0.3.1 | 29/03/2026 | Landing page, édition projet, mobile responsive, i18n complète, favicon |

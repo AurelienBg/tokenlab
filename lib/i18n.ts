@@ -57,6 +57,9 @@ export const translations = {
     create: 'Créer le projet →',
     cancel: 'Annuler',
 
+    // Dashboard
+    editProject: 'Modifier le projet',
+
     // ModuleShell
     save: 'Sauvegarder',
     markComplete: 'Marquer comme complet ✓',
@@ -156,6 +159,9 @@ export const translations = {
     tokenType: 'Token type (planned)',
     create: 'Create project →',
     cancel: 'Cancel',
+
+    // Dashboard
+    editProject: 'Edit project',
 
     // ModuleShell
     save: 'Save',
