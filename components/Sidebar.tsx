@@ -101,7 +101,7 @@ export default function Sidebar() {
             <button
               onClick={signOut}
               className="text-xs text-muted hover:text-red transition-colors shrink-0"
-              title="Se déconnecter"
+              title={t.signOut}
             >
               ↩
             </button>
@@ -111,7 +111,7 @@ export default function Sidebar() {
             href="/auth/login"
             className="flex items-center gap-1.5 text-xs text-muted hover:text-accent transition-colors"
           >
-            <span className="text-[10px]">⬡</span> Se connecter
+            <span className="text-[10px]">⬡</span> {t.signIn}
           </Link>
         )}
 
