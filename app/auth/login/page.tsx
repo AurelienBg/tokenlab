@@ -4,10 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/useAuth'
+import { useLang } from '@/components/LangProvider'
 
 export default function LoginPage() {
   const router = useRouter()
   const { signIn, signUp, signInWithGoogle } = useAuth()
+  const { t } = useLang()
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,7 +42,7 @@ export default function LoginPage() {
       await signInWithGoogle()
       // redirect handled by OAuth callback
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erreur Google OAuth'
+      const msg = err instanceof Error ? err.message : t.errorGoogle
       setError(msg)
       setLoading(false)
     }
@@ -57,7 +59,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-xl font-bold text-foreground">Tokenlab</h1>
           <p className="text-sm text-muted mt-1">
-            {mode === 'signin' ? 'Connectez-vous à votre compte' : 'Créez votre compte'}
+            {mode === 'signin' ? t.signInSubtitle : t.signUpSubtitle}
           </p>
         </div>
 
@@ -69,12 +71,12 @@ export default function LoginPage() {
             className="btn btn-ghost w-full gap-2"
           >
             <GoogleIcon />
-            Continuer avec Google
+            {t.continueWithGoogle}
           </button>
 
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted">ou</span>
+            <span className="text-xs text-muted">{t.or}</span>
             <div className="flex-1 h-px bg-border" />
           </div>
 
@@ -118,22 +120,22 @@ export default function LoginPage() {
                 <span className="flex items-center gap-2">
                   <SpinnerIcon /> Chargement…
                 </span>
-              ) : mode === 'signin' ? 'Se connecter' : 'Créer le compte'}
+              ) : mode === 'signin' ? t.signInButton : t.signUpButton}
             </button>
           </form>
 
           {/* Toggle mode */}
           <p className="text-xs text-center text-muted">
             {mode === 'signin' ? (
-              <>Pas encore de compte ?{' '}
+              <>{t.noAccount}{' '}
                 <button onClick={() => { setMode('signup'); setError('') }} className="text-accent hover:underline font-medium">
-                  S&apos;inscrire
+                  {t.register}
                 </button>
               </>
             ) : (
-              <>Déjà un compte ?{' '}
+              <>{t.alreadyAccount}{' '}
                 <button onClick={() => { setMode('signin'); setError('') }} className="text-accent hover:underline font-medium">
-                  Se connecter
+                  {t.signInButton}
                 </button>
               </>
             )}
@@ -142,7 +144,7 @@ export default function LoginPage() {
 
         <p className="text-xs text-center text-muted mt-6">
           <Link href="/projects" className="hover:text-foreground transition-colors">
-            ← Continuer sans compte
+            {t.continueWithoutAccount}
           </Link>
         </p>
       </div>
