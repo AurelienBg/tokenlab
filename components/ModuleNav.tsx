@@ -27,6 +27,7 @@ export default function ModuleNav({ project }: Props) {
         isComplete: !!(project.completed_modules & (1 << MODULES.indexOf(m))),
       }
     }),
+    { href: `${base}/simulation`, label: t.simulation, icon: '∿' },
     { href: `${base}/coach`, label: t.coachIA, icon: '✦' },
   ]
 

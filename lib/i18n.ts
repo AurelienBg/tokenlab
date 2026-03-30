@@ -90,6 +90,7 @@ export const translations = {
 
     // ModuleNav
     dashboard: 'Dashboard',
+    simulation: 'Simulation',
     coachIA: 'Coach IA',
     exportPDF: 'Export PDF',
 
@@ -215,6 +216,7 @@ export const translations = {
 
     // ModuleNav
     dashboard: 'Dashboard',
+    simulation: 'Simulation',
     coachIA: 'AI Coach',
     exportPDF: 'Export PDF',
 
