@@ -45,20 +45,25 @@ export default function ModuleNav({ project }: Props) {
                 : 'text-muted hover:text-foreground hover:bg-surface-hover'
             }`}
           >
-            <span className="text-xs w-4 text-center shrink-0">{item.icon}</span>
+            {'isComplete' in item && item.isComplete ? (
+              <span className="w-4 h-4 rounded-full bg-green/20 flex items-center justify-center shrink-0">
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3.5" stroke="#10B981" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            ) : (
+              <span className="text-xs w-4 text-center shrink-0 opacity-50">{item.icon}</span>
+            )}
             <span className="flex-1 truncate">
               {'sublabel' in item ? (
                 <span className="flex flex-col">
-                  <span className="text-xs font-medium">{item.label}</span>
-                  <span className="text-[10px] opacity-60 truncate">{'sublabel' in item ? item.sublabel : ''}</span>
+                  <span className={`text-xs font-medium ${'isComplete' in item && item.isComplete ? 'text-foreground' : ''}`}>{item.label}</span>
+                  <span className="text-[10px] opacity-60 truncate">{item.sublabel}</span>
                 </span>
               ) : (
                 item.label
               )}
             </span>
-            {'isComplete' in item && item.isComplete && (
-              <span className="text-green text-xs shrink-0">✓</span>
-            )}
           </Link>
         )
       })}
