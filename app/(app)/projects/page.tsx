@@ -156,35 +156,38 @@ export default function ProjectsPage() {
 
                 {/* Actions hover */}
                 <div className="absolute top-3 right-3 flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={(e) => { e.preventDefault(); router.push(`/project/${p.id}/dashboard`) }}
-                    className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-foreground hover:border-accent/50 transition-colors"
-                    title={t.editProject}
-                  >
-                    <EditIcon />
-                  </button>
-                  <button
-                    onClick={(e) => { e.preventDefault(); handleDuplicate(p.id) }}
-                    className={`p-1.5 rounded-lg bg-surface border transition-colors ${
-                      duplicatedId && projects.find(x => x.id === duplicatedId)?.name.startsWith(p.name)
-                        ? 'border-accent/30 text-accent'
-                        : 'border-border text-muted hover:text-foreground hover:border-accent/50'
-                    }`}
-                    title={t.duplicate}
-                  >
-                    <DuplicateIcon />
-                  </button>
-                  <button
-                    onClick={(e) => { e.preventDefault(); handleShare(p.id) }}
-                    className={`p-1.5 rounded-lg bg-surface border transition-colors ${
-                      copiedId === p.id
-                        ? 'border-green/30 text-green'
-                        : 'border-border text-muted hover:text-foreground hover:border-accent/50'
-                    }`}
-                    title={t.copyLink}
-                  >
-                    {copiedId === p.id ? <CheckIcon /> : <ShareIcon />}
-                  </button>
+                  <Tip label={t.editProject}>
+                    <button
+                      onClick={(e) => { e.preventDefault(); router.push(`/project/${p.id}/dashboard`) }}
+                      className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-foreground hover:border-accent/50 transition-colors"
+                    >
+                      <EditIcon />
+                    </button>
+                  </Tip>
+                  <Tip label={t.duplicate}>
+                    <button
+                      onClick={(e) => { e.preventDefault(); handleDuplicate(p.id) }}
+                      className={`p-1.5 rounded-lg bg-surface border transition-colors ${
+                        duplicatedId && projects.find(x => x.id === duplicatedId)?.name.startsWith(p.name)
+                          ? 'border-accent/30 text-accent'
+                          : 'border-border text-muted hover:text-foreground hover:border-accent/50'
+                      }`}
+                    >
+                      <DuplicateIcon />
+                    </button>
+                  </Tip>
+                  <Tip label={copiedId === p.id ? '✓' : t.copyLink}>
+                    <button
+                      onClick={(e) => { e.preventDefault(); handleShare(p.id) }}
+                      className={`p-1.5 rounded-lg bg-surface border transition-colors ${
+                        copiedId === p.id
+                          ? 'border-green/30 text-green'
+                          : 'border-border text-muted hover:text-foreground hover:border-accent/50'
+                      }`}
+                    >
+                      {copiedId === p.id ? <CheckIcon /> : <ShareIcon />}
+                    </button>
+                  </Tip>
                   {confirmDelete === p.id ? (
                     <>
                       <button
@@ -201,13 +204,14 @@ export default function ProjectsPage() {
                       </button>
                     </>
                   ) : (
-                    <button
-                      onClick={(e) => { e.preventDefault(); setConfirmDelete(p.id) }}
-                      className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-red hover:border-red/30 transition-colors"
-                      title={t.delete}
-                    >
-                      <TrashIcon />
-                    </button>
+                    <Tip label={t.delete}>
+                      <button
+                        onClick={(e) => { e.preventDefault(); setConfirmDelete(p.id) }}
+                        className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-red hover:border-red/30 transition-colors"
+                      >
+                        <TrashIcon />
+                      </button>
+                    </Tip>
                   )}
                 </div>
               </li>
@@ -215,6 +219,19 @@ export default function ProjectsPage() {
           })}
         </ul>
       )}
+    </div>
+  )
+}
+
+function Tip({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="relative group/tip">
+      {children}
+      <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap
+        bg-foreground text-background text-[10px] font-medium px-1.5 py-0.5 rounded
+        opacity-0 group-hover/tip:opacity-100 transition-opacity z-50">
+        {label}
+      </div>
     </div>
   )
 }
