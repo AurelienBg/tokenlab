@@ -79,6 +79,12 @@ export default function DashboardPage() {
     project.completed_modules & (1 << MODULES.indexOf(m))
   ).length
 
+  const moduleStatuses = MODULES.map((m) => {
+    const bit = project.completed_modules & (1 << MODULES.indexOf(m))
+    const mod = lp.modules[m.key]
+    return bit ? 'complete' : mod ? 'partial' : 'empty'
+  })
+
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
       {/* Header */}
@@ -190,15 +196,33 @@ export default function DashboardPage() {
         </div>
 
         <div className="card col-span-2 flex flex-col justify-center">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-foreground">{t.globalProgress}</span>
             <span className="text-sm text-muted">{completedCount} / {MODULES.length} {t.modules}</span>
           </div>
-          <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-accent rounded-full transition-all"
-              style={{ width: `${Math.round((completedCount / MODULES.length) * 100)}%` }}
-            />
+          <div className="flex gap-1">
+            {moduleStatuses.map((status, i) => (
+              <div
+                key={i}
+                title={MODULES[i].shortLabel}
+                className={`flex-1 h-2 rounded-sm transition-all ${
+                  status === 'complete' ? 'bg-accent' :
+                  status === 'partial' ? 'bg-accent/35' :
+                  'bg-surface-2'
+                }`}
+              />
+            ))}
+          </div>
+          <div className="flex gap-1 mt-1">
+            {moduleStatuses.map((status, i) => (
+              <div key={i} className="flex-1 text-center">
+                <span className={`text-[8px] font-mono ${
+                  status === 'complete' ? 'text-accent' : 'text-muted opacity-40'
+                }`}>
+                  {i === 0 ? '0' : i}
+                </span>
+              </div>
+            ))}
           </div>
           {health && health.gaps.length > 0 && (
             <div className="mt-4 space-y-1">
