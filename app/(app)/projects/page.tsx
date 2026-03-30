@@ -18,7 +18,8 @@ export default function ProjectsPage() {
   const router = useRouter()
 
   function handleDuplicate(id: string) {
-    const newId = duplicateLocalProject(id)
+    const suffix = lang === 'fr' ? '(copie)' : '(copy)'
+    const newId = duplicateLocalProject(id, suffix)
     if (!newId) return
     setProjects(getLocalProjects())
     setDuplicatedId(newId)

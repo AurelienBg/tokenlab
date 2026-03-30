@@ -74,7 +74,7 @@ export function generateId(): string {
   return crypto.randomUUID()
 }
 
-export function duplicateLocalProject(id: string): string | null {
+export function duplicateLocalProject(id: string, suffix = '(copie)'): string | null {
   const lp = getLocalProject(id)
   if (!lp) return null
   const newId = crypto.randomUUID()
@@ -83,7 +83,7 @@ export function duplicateLocalProject(id: string): string | null {
     project: {
       ...lp.project,
       id: newId,
-      name: lp.project.name + ' (copie)',
+      name: lp.project.name + ' ' + suffix,
       created_at: now,
       updated_at: now,
     },
