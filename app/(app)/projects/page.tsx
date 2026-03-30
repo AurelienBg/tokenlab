@@ -119,12 +119,20 @@ export default function ProjectsPage() {
 
                   {/* Progress */}
                   <div className="mb-3">
-                    <div className="flex items-center justify-between text-[10px] text-muted mb-1">
+                    <div className="flex items-center justify-between text-[10px] text-muted mb-1.5">
                       <span>{t.progressLabel}</span>
                       <span>{completed}/{total}</span>
                     </div>
-                    <div className="h-1 bg-surface-2 rounded-full overflow-hidden">
-                      <div className="h-full bg-accent rounded-full transition-all" style={{ width: `${pct}%` }} />
+                    <div className="flex gap-0.5">
+                      {MODULES.map((m, i) => {
+                        const done = !!(p.completed_modules & (1 << i))
+                        return (
+                          <div
+                            key={m.key}
+                            className={`flex-1 h-1.5 rounded-sm transition-all ${done ? 'bg-accent' : 'bg-surface-2'}`}
+                          />
+                        )
+                      })}
                     </div>
                   </div>
 
