@@ -44,7 +44,13 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
               : 'text-muted hover:text-foreground hover:bg-surface-hover'
           }`}
         >
-          {t.allProjects}
+          <GridIcon />
+          <span className="flex-1">{t.allProjects}</span>
+          {projects.length > 0 && (
+            <span className="text-xs font-semibold bg-surface-2 text-muted px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+              {projects.length}
+            </span>
+          )}
         </Link>
 
         {projects.length > 0 && (
@@ -168,6 +174,17 @@ function MoonIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  )
+}
+
+function GridIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+      <rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+      <rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+      <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5"/>
     </svg>
   )
 }
