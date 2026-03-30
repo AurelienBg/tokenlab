@@ -88,19 +88,19 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="vous@exemple.com"
+                placeholder={t.emailPlaceholder}
                 required
                 autoFocus
                 className="input"
               />
             </div>
             <div>
-              <label className="label">Mot de passe</label>
+              <label className="label">{t.passwordLabel}</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={mode === 'signup' ? '8 caractères minimum' : '••••••••'}
+                placeholder={mode === 'signup' ? t.passwordPlaceholderSignup : '••••••••'}
                 required
                 minLength={mode === 'signup' ? 8 : undefined}
                 className="input"
@@ -118,7 +118,7 @@ export default function LoginPage() {
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <SpinnerIcon /> Chargement…
+                  <SpinnerIcon /> {t.loading}
                 </span>
               ) : mode === 'signin' ? t.signInButton : t.signUpButton}
             </button>

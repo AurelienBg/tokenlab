@@ -8,10 +8,12 @@ import { saveLocalProject, getLocalProject } from '@/lib/storage'
 import { LocalProject } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
 import { computeHealthScore } from '@/lib/healthScore'
+import { useLang } from '@/components/LangProvider'
 
 export default function SharePage() {
   const params = useParams()
   const router = useRouter()
+  const { t } = useLang()
   const [lp, setLp] = useState<LocalProject | null>(null)
   const [invalid, setInvalid] = useState(false)
   const [imported, setImported] = useState(false)
@@ -39,9 +41,9 @@ export default function SharePage() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="text-center">
         <p className="text-2xl mb-2">⬡</p>
-        <h1 className="text-lg font-semibold text-foreground mb-1">Lien invalide</h1>
-        <p className="text-sm text-muted mb-4">Ce lien de partage est introuvable ou corrompu.</p>
-        <Link href="/projects" className="btn btn-primary">Mes projets</Link>
+        <h1 className="text-lg font-semibold text-foreground mb-1">{t.invalidLink}</h1>
+        <p className="text-sm text-muted mb-4">{t.invalidLinkDesc}</p>
+        <Link href="/projects" className="btn btn-primary">{t.myProjects}</Link>
       </div>
     </div>
   )
@@ -73,9 +75,9 @@ export default function SharePage() {
           <span className="font-bold text-sm text-foreground">Tokenlab</span>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted hidden sm:block">Partagé en lecture seule</span>
+          <span className="text-xs text-muted hidden sm:block">{t.sharedReadOnly}</span>
           <Link href="/projects/new" className="btn btn-primary text-xs">
-            Créer mon projet
+            {t.createMyProject}
           </Link>
         </div>
       </div>
@@ -106,7 +108,7 @@ export default function SharePage() {
               disabled={imported}
               className={`btn shrink-0 ${imported ? 'btn-ghost text-green' : 'btn-primary'}`}
             >
-              {imported ? '✓ Importé' : '⬇ Importer dans Tokenlab'}
+              {imported ? t.alreadyImported : t.importToTokenlab}
             </button>
           </div>
         </div>
@@ -120,7 +122,7 @@ export default function SharePage() {
             }`}>
               {health.total}
             </div>
-            <div className="text-xs text-muted uppercase tracking-wider">Score santé</div>
+            <div className="text-xs text-muted uppercase tracking-wider">{t.healthScoreLabel}</div>
             <div className="text-xs text-muted mt-1">/ 100</div>
           </div>
           <div className="card col-span-2 flex flex-col justify-center py-5 px-5">
@@ -135,7 +137,7 @@ export default function SharePage() {
               />
             </div>
             <p className="text-xs text-muted mt-2">
-              {Math.round((completedCount / MODULES.length) * 100)}% des modules complétés
+              {Math.round((completedCount / MODULES.length) * 100)}{t.modulesCompleted}
             </p>
           </div>
         </div>
@@ -180,9 +182,8 @@ export default function SharePage() {
         </div>
 
         <p className="text-center text-xs text-muted mt-8">
-          Structuré avec{' '}
+          {t.structuredWith}{' '}
           <Link href="/" className="text-accent hover:underline">Tokenlab</Link>
-          {' '}— le workshop tokenomics post-session
         </p>
       </div>
     </div>

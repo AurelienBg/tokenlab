@@ -111,7 +111,7 @@ export default function DashboardPage() {
                 <label className="label">{t.projectStage}</label>
                 <select className="input" value={editForm.project_stage ?? ''} onChange={e => setEditForm(f => ({ ...f, project_stage: e.target.value as ProjectStage | undefined }))}>
                   <option value="">—</option>
-                  <option value="ideation">Idéation</option>
+                  <option value="ideation">{t.stageIdeation}</option>
                   <option value="mvp">MVP</option>
                   <option value="live">Live</option>
                 </select>
@@ -159,12 +159,12 @@ export default function DashboardPage() {
               <button
                 onClick={handleShare}
                 className={`btn btn-ghost text-sm gap-1.5 ${copied ? 'text-green' : ''}`}
-                title="Copier le lien de partage"
+                title={t.copyLink}
               >
                 {copied ? (
-                  <><CheckIcon /> Copié !</>
+                  <><CheckIcon /> {t.copyLink}</>
                 ) : (
-                  <><ShareIcon /> Partager</>
+                  <><ShareIcon /> {t.share}</>
                 )}
               </button>
               <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />

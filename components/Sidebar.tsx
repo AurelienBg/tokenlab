@@ -121,7 +121,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
 
         {/* Controls row */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-muted font-mono">v3.0</span>
+          <span className="text-xs text-muted font-mono">v4.0</span>
           <div className="flex items-center gap-3">
             <div className="flex items-center rounded-lg overflow-hidden border border-border text-xs font-semibold">
               <button

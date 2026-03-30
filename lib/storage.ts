@@ -74,6 +74,33 @@ export function generateId(): string {
   return crypto.randomUUID()
 }
 
+export function duplicateLocalProject(id: string): string | null {
+  const lp = getLocalProject(id)
+  if (!lp) return null
+  const newId = crypto.randomUUID()
+  const now = new Date().toISOString()
+  const newLp: LocalProject = {
+    project: {
+      ...lp.project,
+      id: newId,
+      name: lp.project.name + ' (copie)',
+      created_at: now,
+      updated_at: now,
+    },
+    modules: Object.fromEntries(
+      Object.entries(lp.modules).map(([key, mod]) => [
+        key,
+        { ...mod, id: crypto.randomUUID(), project_id: newId },
+      ])
+    ) as typeof lp.modules,
+  }
+  const all = getAllLocalProjects()
+  const idx = all.findIndex((p) => p.project.id === id)
+  all.splice(idx + 1, 0, newLp)
+  setAllLocalProjects(all)
+  return newId
+}
+
 // Exposed for AuthSync — returns full LocalProject array for migration
 export function getAllLocalProjectsRaw(): LocalProject[] {
   return getAllLocalProjects()

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { getLocalProjects, deleteLocalProject, getLocalProject } from '@/lib/storage'
+import { getLocalProjects, deleteLocalProject, getLocalProject, duplicateLocalProject } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
 import { useLang } from '@/components/LangProvider'
@@ -13,8 +13,17 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [duplicatedId, setDuplicatedId] = useState<string | null>(null)
   const { t, lang } = useLang()
   const router = useRouter()
+
+  function handleDuplicate(id: string) {
+    const newId = duplicateLocalProject(id)
+    if (!newId) return
+    setProjects(getLocalProjects())
+    setDuplicatedId(newId)
+    setTimeout(() => setDuplicatedId(null), 2000)
+  }
 
   function handleShare(id: string) {
     const lp = getLocalProject(id)
@@ -147,13 +156,24 @@ export default function ProjectsPage() {
                     <EditIcon />
                   </button>
                   <button
+                    onClick={(e) => { e.preventDefault(); handleDuplicate(p.id) }}
+                    className={`p-1.5 rounded-lg bg-surface border transition-colors ${
+                      duplicatedId && projects.find(x => x.id === duplicatedId)?.name.startsWith(p.name)
+                        ? 'border-accent/30 text-accent'
+                        : 'border-border text-muted hover:text-foreground hover:border-accent/50'
+                    }`}
+                    title={t.duplicate}
+                  >
+                    <DuplicateIcon />
+                  </button>
+                  <button
                     onClick={(e) => { e.preventDefault(); handleShare(p.id) }}
                     className={`p-1.5 rounded-lg bg-surface border transition-colors ${
                       copiedId === p.id
                         ? 'border-green/30 text-green'
                         : 'border-border text-muted hover:text-foreground hover:border-accent/50'
                     }`}
-                    title="Copier le lien"
+                    title={t.copyLink}
                   >
                     {copiedId === p.id ? <CheckIcon /> : <ShareIcon />}
                   </button>
@@ -214,6 +234,15 @@ function CheckIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
       <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function DuplicateIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+      <path d="M2 11V3a1 1 0 0 1 1-1h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   )
 }
