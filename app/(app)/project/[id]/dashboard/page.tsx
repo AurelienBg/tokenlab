@@ -9,6 +9,7 @@ import { computeHealthScore } from '@/lib/healthScore'
 import { MODULES } from '@/lib/constants'
 import { useLang } from '@/components/LangProvider'
 import { ExportButton } from '@/components/pdf/ExportButton'
+import { encodeShareToken } from '@/lib/share'
 
 export default function DashboardPage() {
   const params = useParams()
@@ -17,7 +18,19 @@ export default function DashboardPage() {
   const [health, setHealth] = useState<HealthScore | null>(null)
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState<Partial<Project>>({})
+  const [copied, setCopied] = useState(false)
   const { t } = useLang()
+
+  function handleShare() {
+    const current = getLocalProject(id)
+    if (!current) return
+    const token = encodeShareToken(current)
+    const url = `${window.location.origin}/share/${token}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   useEffect(() => {
     const data = getLocalProject(id)
@@ -143,6 +156,17 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <button
+                onClick={handleShare}
+                className={`btn btn-ghost text-sm gap-1.5 ${copied ? 'text-green' : ''}`}
+                title="Copier le lien de partage"
+              >
+                {copied ? (
+                  <><CheckIcon /> Copié !</>
+                ) : (
+                  <><ShareIcon /> Partager</>
+                )}
+              </button>
               <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />
               <Link href={`/project/${id}/coach`} className="btn btn-primary">
                 ✦ {t.coachIA}
@@ -236,6 +260,25 @@ export default function DashboardPage() {
         })}
       </div>
     </div>
+  )
+}
+
+function ShareIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <circle cx="13" cy="3" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="13" cy="13" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="3" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <path d="M5 7l6-3M5 9l6 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
   )
 }
 
