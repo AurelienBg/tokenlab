@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { getLocalProject, saveLocalProject } from '@/lib/storage'
+import { getLocalProject, saveLocalProject, deleteLocalProject } from '@/lib/storage'
+import { useRouter } from 'next/navigation'
 import { LocalProject, HealthScore, Project, ProjectType, ProjectStage } from '@/lib/types'
 import { computeHealthScore } from '@/lib/healthScore'
 import { MODULES } from '@/lib/constants'
@@ -19,7 +20,14 @@ export default function DashboardPage() {
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState<Partial<Project>>({})
   const [copied, setCopied] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const { t } = useLang()
+  const router = useRouter()
+
+  function handleDelete() {
+    deleteLocalProject(id)
+    router.push('/projects')
+  }
 
   function handleShare() {
     const current = getLocalProject(id)
@@ -162,21 +170,41 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleShare}
-                className={`btn btn-ghost text-sm gap-1.5 ${copied ? 'text-green' : ''}`}
-                title={t.copyLink}
-              >
-                {copied ? (
-                  <><CheckIcon /> {t.copyLink}</>
-                ) : (
-                  <><ShareIcon /> {t.share}</>
-                )}
-              </button>
-              <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />
-              <Link href={`/project/${id}/coach`} className="btn btn-primary">
-                ✦ {t.coachIA}
-              </Link>
+              {confirmDelete ? (
+                <>
+                  <span className="text-xs text-muted">{t.deleteConfirm}</span>
+                  <button onClick={handleDelete} className="btn text-xs bg-red/10 text-red border border-red/30 hover:bg-red/20">
+                    {t.delete}
+                  </button>
+                  <button onClick={() => setConfirmDelete(false)} className="btn btn-ghost text-xs">
+                    {t.cancel}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setConfirmDelete(true)}
+                    className="p-2 rounded-lg text-muted hover:text-red hover:bg-red/10 transition-colors"
+                    title={t.delete}
+                  >
+                    <TrashIcon />
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className={`btn btn-ghost text-sm gap-1.5 ${copied ? 'text-green' : ''}`}
+                  >
+                    {copied ? (
+                      <><CheckIcon /> {t.copyLink}</>
+                    ) : (
+                      <><ShareIcon /> {t.share}</>
+                    )}
+                  </button>
+                  <ExportButton projectId={id} label={t.exportPDF ?? 'Export PDF'} />
+                  <Link href={`/project/${id}/coach`} className="btn btn-primary">
+                    ✦ {t.coachIA}
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -302,6 +330,14 @@ function CheckIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
       <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function TrashIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )
 }
