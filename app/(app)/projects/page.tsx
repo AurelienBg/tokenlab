@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { getLocalProjects, deleteLocalProject } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
@@ -10,7 +11,8 @@ import { useLang } from '@/components/LangProvider'
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
-  const { t } = useLang()
+  const { t, lang } = useLang()
+  const router = useRouter()
 
   useEffect(() => {
     setProjects(getLocalProjects())
@@ -27,7 +29,7 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10">
+    <div className="max-w-5xl mx-auto px-6 py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">{t.projectsTitle}</h1>
@@ -40,7 +42,7 @@ export default function ProjectsPage() {
 
       {projects.length === 0 ? (
         <div className="card text-center py-16">
-          <div className="text-4xl mb-4">🪙</div>
+          <div className="text-4xl mb-4">⬡</div>
           <h2 className="text-lg font-semibold text-foreground mb-2">{t.noProjectsYet}</h2>
           <p className="text-sm text-muted mb-6 max-w-xs mx-auto">{t.noProjectsDesc}</p>
           <Link href="/projects/new" className="btn btn-primary">
@@ -48,95 +50,118 @@ export default function ProjectsPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((p) => {
             const completed = completedCount(p)
             const total = MODULES.length
             const pct = Math.round((completed / total) * 100)
+            const initial = p.name.charAt(0).toUpperCase()
+
             return (
-              <div key={p.id} className="card hover:border-accent/40 transition-colors group">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1">
-                      <Link
-                        href={`/project/${p.id}/dashboard`}
-                        className="text-base font-semibold text-foreground hover:text-accent transition-colors"
-                      >
-                        {p.name}
-                      </Link>
-                      {p.token_ticker && (
-                        <span className="text-xs font-mono bg-accent/10 text-accent px-2 py-0.5 rounded">
-                          ${p.token_ticker}
-                        </span>
-                      )}
-                      {p.project_type && (
-                        <span className="text-xs text-muted bg-surface-hover px-2 py-0.5 rounded">
-                          {projectTypeLabel(p.project_type)}
-                        </span>
-                      )}
+              <li key={p.id} className="relative group">
+                <Link
+                  href={`/project/${p.id}/dashboard`}
+                  className="block p-4 rounded-xl border border-border bg-surface hover:border-accent/50 transition-all"
+                >
+                  {/* Header */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm shrink-0">
+                      {initial}
                     </div>
-                    {p.description && (
-                      <p className="text-sm text-muted truncate">{p.description}</p>
-                    )}
-                    <div className="flex items-center gap-4 mt-3">
-                      <div className="flex-1 max-w-[200px]">
-                        <div className="flex items-center justify-between text-xs text-muted mb-1">
-                          <span>{t.progressLabel}</span>
-                          <span>{completed}/{total}</span>
-                        </div>
-                        <div className="h-1.5 bg-surface-2 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-accent rounded-full transition-all"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-foreground truncate">{p.name}</p>
+                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                        {p.project_type && (
+                          <span className="text-[10px] text-muted bg-surface-2 px-1.5 py-0.5 rounded">
+                            {projectTypeLabel(p.project_type)}
+                          </span>
+                        )}
+                        {p.project_stage && (
+                          <span className="text-[10px] text-muted bg-surface-2 px-1.5 py-0.5 rounded capitalize">
+                            {p.project_stage}
+                          </span>
+                        )}
+                        {p.blockchain && (
+                          <span className="text-[10px] text-muted bg-surface-2 px-1.5 py-0.5 rounded">
+                            {p.blockchain}
+                          </span>
+                        )}
                       </div>
-                      {p.health_score > 0 && (
-                        <div className="text-xs text-muted">
-                          {t.scoreLabel} : <span className={`font-semibold ${
-                            p.health_score >= 70 ? 'text-green' :
-                            p.health_score >= 40 ? 'text-yellow' : 'text-red'
-                          }`}>{p.health_score}/100</span>
-                        </div>
-                      )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Link
-                      href={`/project/${p.id}/dashboard`}
-                      className="btn btn-ghost text-xs"
-                    >
-                      {t.open}
-                    </Link>
-                    {confirmDelete === p.id ? (
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => handleDelete(p.id)}
-                          className="btn text-xs bg-red/10 text-red border border-red/30 hover:bg-red/20"
-                        >
-                          {t.deleteConfirm}
-                        </button>
-                        <button
-                          onClick={() => setConfirmDelete(null)}
-                          className="btn btn-ghost text-xs"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ) : (
+
+                  {/* Description */}
+                  {p.description && (
+                    <p className="text-xs text-muted line-clamp-2 leading-relaxed mb-3">{p.description}</p>
+                  )}
+
+                  {/* Progress */}
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between text-[10px] text-muted mb-1">
+                      <span>{t.progressLabel}</span>
+                      <span>{completed}/{total}</span>
+                    </div>
+                    <div className="h-1 bg-surface-2 rounded-full overflow-hidden">
+                      <div className="h-full bg-accent rounded-full transition-all" style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] text-muted">
+                      {new Date(p.created_at).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', {
+                        day: 'numeric', month: 'short', year: 'numeric',
+                      })}
+                    </p>
+                    {p.health_score > 0 && (
+                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                        p.health_score >= 70 ? 'bg-green/10 text-green' :
+                        p.health_score >= 40 ? 'bg-yellow/10 text-yellow' : 'bg-red/10 text-red'
+                      }`}>
+                        {p.health_score}/100
+                      </span>
+                    )}
+                  </div>
+                </Link>
+
+                {/* Actions hover */}
+                <div className="absolute top-3 right-3 flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => { e.preventDefault(); router.push(`/project/${p.id}/dashboard`) }}
+                    className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-foreground hover:border-accent/50 transition-colors"
+                    title={t.editProject}
+                  >
+                    <EditIcon />
+                  </button>
+                  {confirmDelete === p.id ? (
+                    <>
                       <button
-                        onClick={() => setConfirmDelete(p.id)}
-                        className="btn btn-ghost text-xs text-muted hover:text-red hover:border-red/30 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => { e.preventDefault(); handleDelete(p.id) }}
+                        className="p-1.5 rounded-lg bg-red/10 border border-red/30 text-red transition-colors text-[10px] font-medium px-2"
                       >
-                        {t.delete}
+                        {t.deleteConfirm}
                       </button>
-                    )}
-                  </div>
+                      <button
+                        onClick={(e) => { e.preventDefault(); setConfirmDelete(null) }}
+                        className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-foreground transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={(e) => { e.preventDefault(); setConfirmDelete(p.id) }}
+                      className="p-1.5 rounded-lg bg-surface border border-border text-muted hover:text-red hover:border-red/30 transition-colors"
+                      title={t.delete}
+                    >
+                      <TrashIcon />
+                    </button>
+                  )}
                 </div>
-              </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       )}
     </div>
   )
@@ -144,11 +169,24 @@ export default function ProjectsPage() {
 
 function projectTypeLabel(type: string): string {
   const labels: Record<string, string> = {
-    web3_native: 'Web3 natif',
-    web2_to_web3: 'Web2 → Web3',
-    dao: 'DAO',
-    rwa: 'RWA',
-    social_impact: 'Social Impact',
+    web3_native: 'Web3', web2_to_web3: 'Web2→Web3',
+    dao: 'DAO', rwa: 'RWA', social_impact: 'Social',
   }
   return labels[type] || type
+}
+
+function EditIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function TrashIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
 }
