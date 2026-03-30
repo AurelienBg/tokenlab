@@ -48,6 +48,7 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Fonctionnalité | Prévu |
 |---|---|
 | **Setup Supabase prod** (upgrade plan / libérer un slot + schema SQL + env vars Vercel) | À faire — bloquant |
+| **Intégrer Supabase** (ajouter NEXT_PUBLIC_SUPABASE_URL + ANON_KEY dans Vercel env vars) | À faire — bloquant |
 | **Google OAuth — configuration prod** (Google Cloud credentials + redirect URL Supabase) | À faire |
 
 #### Quick wins V2 (~30 min chacun)

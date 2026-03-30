@@ -40,7 +40,7 @@ function CallbackHandler() {
             <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
           </svg>
         </div>
-        <p className="text-sm text-muted">Connexion en cours…</p>
+        <p className="text-sm text-muted">Signing in…</p>
       </div>
     </div>
   )
@@ -50,7 +50,7 @@ export default function AuthCallbackPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-muted">Chargement…</p>
+        <p className="text-sm text-muted">Loading…</p>
       </div>
     }>
       <CallbackHandler />
