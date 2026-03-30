@@ -3,16 +3,29 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { getLocalProjects, deleteLocalProject } from '@/lib/storage'
+import { getLocalProjects, deleteLocalProject, getLocalProject } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
 import { useLang } from '@/components/LangProvider'
+import { encodeShareToken } from '@/lib/share'
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
   const { t, lang } = useLang()
   const router = useRouter()
+
+  function handleShare(id: string) {
+    const lp = getLocalProject(id)
+    if (!lp) return
+    const token = encodeShareToken(lp)
+    const url = `${window.location.origin}/share/${token}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(null), 2000)
+    })
+  }
 
   useEffect(() => {
     setProjects(getLocalProjects())
@@ -133,6 +146,17 @@ export default function ProjectsPage() {
                   >
                     <EditIcon />
                   </button>
+                  <button
+                    onClick={(e) => { e.preventDefault(); handleShare(p.id) }}
+                    className={`p-1.5 rounded-lg bg-surface border transition-colors ${
+                      copiedId === p.id
+                        ? 'border-green/30 text-green'
+                        : 'border-border text-muted hover:text-foreground hover:border-accent/50'
+                    }`}
+                    title="Copier le lien"
+                  >
+                    {copiedId === p.id ? <CheckIcon /> : <ShareIcon />}
+                  </button>
                   {confirmDelete === p.id ? (
                     <>
                       <button
@@ -173,6 +197,25 @@ function projectTypeLabel(type: string): string {
     dao: 'DAO', rwa: 'RWA', social_impact: 'Social',
   }
   return labels[type] || type
+}
+
+function ShareIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <circle cx="13" cy="3" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="13" cy="13" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="3" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/>
+      <path d="M5 7l6-3M5 9l6 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
 }
 
 function EditIcon() {
