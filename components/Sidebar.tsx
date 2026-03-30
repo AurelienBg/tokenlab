@@ -91,28 +91,32 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-border space-y-2">
-        {/* Auth row */}
+      <div className="px-3 py-3 border-t border-border space-y-2">
+        {/* Auth banner */}
         {user ? (
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted truncate max-w-[130px]" title={user.email ?? ''}>
-              {user.email}
-            </span>
-            <button
-              onClick={signOut}
-              className="text-xs text-muted hover:text-red transition-colors shrink-0"
-              title={t.signOut}
-            >
-              ↩
-            </button>
+          <div className="rounded-lg bg-green/10 border border-green/20 px-3 py-2">
+            <p className="text-xs font-semibold text-green mb-1">{t.dataSaved}</p>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] text-muted truncate">{user.email}</span>
+              <button
+                onClick={signOut}
+                className="text-[11px] text-muted hover:text-foreground transition-colors shrink-0 underline underline-offset-2"
+              >
+                {t.signOut}
+              </button>
+            </div>
           </div>
         ) : (
-          <Link
-            href="/auth/login"
-            className="flex items-center gap-1.5 text-xs text-muted hover:text-accent transition-colors"
-          >
-            <span className="text-[10px]">⬡</span> {t.signIn}
-          </Link>
+          <div className="rounded-lg bg-accent/10 border border-accent/20 px-3 py-2">
+            <p className="text-xs font-semibold text-accent mb-0.5">{t.saveToCloud}</p>
+            <p className="text-[11px] text-muted leading-snug mb-2">{t.saveToCloudDesc}</p>
+            <Link
+              href="/auth/login"
+              className="flex items-center gap-1 text-[11px] text-accent hover:underline font-medium"
+            >
+              🔑 {t.signIn}
+            </Link>
+          </div>
         )}
 
         {/* Controls row */}

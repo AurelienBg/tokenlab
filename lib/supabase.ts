@@ -13,9 +13,15 @@ export function getSupabaseClient(): SupabaseClient | null {
   return _client
 }
 
+const noop = new Proxy(
+  (() => Promise.resolve({ data: null, error: new Error('Supabase not configured') })) as unknown as SupabaseClient,
+  { get(t, p) { return p in t ? (t as unknown as Record<string|symbol,unknown>)[p] : noop } }
+)
+
 export const supabase = new Proxy({} as SupabaseClient, {
   get(_target, prop) {
     const client = getSupabaseClient()
+    if (!client) return (noop as unknown as Record<string|symbol,unknown>)[prop]
     const value = (client as unknown as Record<string | symbol, unknown>)[prop]
     return typeof value === 'function' ? value.bind(client) : value
   },
