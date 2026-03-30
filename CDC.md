@@ -60,8 +60,8 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 #### Landing page
 | Fonctionnalité | Prévu |
 |---|---|
-| 💬 Photo / background hero | À faire |
-| 🔍 SEO — meta description + og:image pour partage LinkedIn/X | À faire |
+| 💬 Photo / background hero | ✅ v3.0 |
+| 🔍 SEO — meta description + og:image pour partage LinkedIn/X | ✅ v3.0 |
 
 #### Features produit
 | Fonctionnalité | Prévu |
@@ -110,3 +110,4 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | v0.2 | 28/03/2026 | Mode jour/nuit, FR/EN, auto-save, progress stepper, export PDF |
 | v0.3 | 28/03/2026 | Value Flow diagram SVG interactif, Auth Supabase + cloud sync |
 | v2.0 | 29/03/2026 | Landing page, édition projet, mobile responsive, i18n complète, favicon |
+| v3.0 | 30/03/2026 | Hero background SVG réseau de nœuds, SEO og:image, meta Twitter/OG |
