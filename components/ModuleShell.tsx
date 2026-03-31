@@ -29,11 +29,18 @@ export default function ModuleShell({
   const { t } = useLang()
   const [completedBits, setCompletedBits] = useState(0)
 
-  // Load completion status for progress stepper
+  // Load + refresh completion status
   useEffect(() => {
     const lp = getLocalProject(projectId)
     if (lp) setCompletedBits(lp.project.completed_modules)
-  }, [projectId, saved])
+
+    function onSaved() {
+      const updated = getLocalProject(projectId)
+      if (updated) setCompletedBits(updated.project.completed_modules)
+    }
+    window.addEventListener('tokenlab:module-saved', onSaved)
+    return () => window.removeEventListener('tokenlab:module-saved', onSaved)
+  }, [projectId])
 
   const currentIdx = MODULES.findIndex((m) => m.key === moduleKey)
   const nextModule = MODULES[currentIdx + 1] ?? null
@@ -110,7 +117,7 @@ export default function ModuleShell({
                 onClick={() => onSave(!isComplete)}
                 className={`btn text-xs ${isComplete ? 'btn-ghost text-green border-green/30' : 'btn-primary'}`}
               >
-                {isComplete ? '✓ ' + t.complete : t.markComplete}
+                {isComplete ? t.markIncomplete : t.markComplete}
               </button>
             )
           })()}

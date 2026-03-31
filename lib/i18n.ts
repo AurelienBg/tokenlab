@@ -85,6 +85,7 @@ export const translations = {
     // ModuleShell
     save: 'Sauvegarder',
     markComplete: 'Marquer comme complet ✓',
+    markIncomplete: '✓ Complet — annuler',
     saved: '✓ Sauvegardé',
     backDashboard: '← Dashboard',
 
@@ -211,6 +212,7 @@ export const translations = {
     // ModuleShell
     save: 'Save',
     markComplete: 'Mark as complete ✓',
+    markIncomplete: '✓ Complete — undo',
     saved: '✓ Saved',
     backDashboard: '← Dashboard',
 
