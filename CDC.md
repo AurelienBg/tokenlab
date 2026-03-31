@@ -1,5 +1,5 @@
 # Tokenlab — CDC (Cahier des Charges)
-> Version 0.2 — Mis à jour le 28/03/2026
+> Version 0.3 — Mis à jour le 31/03/2026
 
 Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 
@@ -42,45 +42,103 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | Cloud sync localStorage → Supabase au login | ✅ |
 | Multi-device sync (pull Supabase → localStorage) | ✅ |
 
-### Backlog / Hors scope V2
+---
 
-#### Bloquants infra
-| Fonctionnalité | Prévu |
-|---|---|
-| **Setup Supabase prod** (upgrade plan / libérer un slot + schema SQL + env vars Vercel) | À faire — bloquant |
-| **Intégrer Supabase** (ajouter NEXT_PUBLIC_SUPABASE_URL + ANON_KEY dans Vercel env vars) | À faire — bloquant |
-| **Google OAuth — configuration prod** (Google Cloud credentials + redirect URL Supabase) | À faire |
+## Roadmap complète
 
-#### Quick wins V2 (~30 min chacun)
-| Fonctionnalité | Prévu |
-|---|---|
-| 🗑️ Suppression projet (confirmation inline) | ✅ v0.2 |
-| ✏️ Édition infos projet (nom, ticker, blockchain, description depuis le dashboard) | ✅ v0.3.1 |
-| 📱 Mobile — sidebar responsive + hero lisible sur petit écran | ✅ v0.3.1 |
+### 🔴 Bloquants infra (à faire en priorité — sans ça, pas d'auth)
 
-#### Landing page
-| Fonctionnalité | Prévu |
-|---|---|
-| 💬 Photo / background hero | ✅ v3.0 |
-| 🔍 SEO — meta description + og:image pour partage LinkedIn/X | ✅ v3.0 |
+| # | Feature | Détail | Owner |
+|---|---|---|---|
+| I-1 | **Setup Supabase prod** | Libérer un slot, appliquer le schema SQL, configurer RLS | Toi |
+| I-2 | **Env vars Vercel** | Ajouter `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` dans Vercel Dashboard | Toi |
+| I-3 | **Google OAuth prod** | Créer credentials dans Google Cloud Console, ajouter redirect URI Supabase, activer provider dans Supabase Dashboard | Toi |
 
-#### Features produit
-| Fonctionnalité | Prévu |
+---
+
+### ✅ Sprint 1–4 (livré)
+
+| Feature | Version |
 |---|---|
-| 🔗 Lien de partage lecture seule (sans compte) | ✅ v4.0 |
-| Duplicate projet | ✅ v4.0 |
-| Simulation dynamique (graphe supply dans le temps) | ✅ v4.0 |
-| i18n complète FR/EN | ✅ v4.0 |
-| Barre de progression segmentée | ✅ v4.0 |
-| Suppression projet depuis le dashboard | ✅ v4.0 |
-| 📊 Mini-chart simulation sur le dashboard | V5 — en cours |
-| Coach IA proactif (suggestions basées sur health score gaps) | V5 |
-| Export PDF avec graphe simulation | V5 |
-| Lien de partage V2 court (via Supabase) | Après infra |
-| Multi-utilisateurs par projet | V6 |
-| Export Notion | V6 |
-| MOOC théorique | V6 |
-| Benchmark on-chain automatique | V6 |
+| 10 modules tokenomics (Step 0 → M9) | v1.0 |
+| Coach IA streaming context-aware | v1.0 |
+| Dashboard health score + progression | v1.0 |
+| localStorage sans auth | v1.0 |
+| Export PDF rapport complet | v1.0 |
+| Mode jour/nuit | v2.0 |
+| i18n FR/EN complète | v2.0 |
+| Auto-save debounce 1.5s + Cmd/Ctrl+S | v2.0 |
+| Value Flow SVG interactif | v2.0 |
+| Auth Supabase email/password + cloud sync | v2.0 |
+| Landing page bilingue (hero, modules, pricing, FAQ) | v3.0 |
+| Hero background SVG réseau de nœuds | v3.0 |
+| SEO — og:image 1200×630 + meta Twitter/OG | v3.0 |
+| Favicon icon.tsx ImageResponse | v3.0 |
+| Mobile sidebar hamburger + overlay | v3.0 |
+| Édition projet inline depuis dashboard | v3.0 |
+| Formulaire nouveau projet simplifié (sans token name/ticker) | v4.0 |
+| Cards projets redesign (grid, avatar, tags, date) | v4.0 |
+| Lien de partage read-only base64 `/share/[token]` | v4.0 |
+| Page `/share/[token]` publique + bouton "Importer" | v4.0 |
+| Duplicate projet (copy/copie selon langue) | v4.0 |
+| Suppression projet depuis le dashboard | v4.0 |
+| Simulation supply `/simulation` (graphe SVG stacked 48m) | v4.0 |
+| Mini-chart simulation sur le dashboard | v4.0 |
+| Barre de progression segmentée (1 segment / module) | v4.0 |
+| Checkmark vert dans le nav quand module complet | v4.0 |
+| Tooltips CSS sur les boutons d'action | v4.0 |
+| Sidebar : icône grille + badge nb projets sur "All projects" | v4.0 |
+| Banner "Save to cloud" / "Data saved" dans sidebar | v4.0 |
+
+---
+
+### 🟡 Sprint 5 — IA & Export (V5)
+
+| # | Feature | Détail | Effort |
+|---|---|---|---|
+| S5-1 | **Coach IA proactif** | Message d'alerte sur le dashboard si health score < 40 ou gaps critiques détectés. Suggestions cliquables → renvoie vers le bon module | M |
+| S5-2 | **Auto-fill par le Coach** | Depuis la page Coach, bouton "Remplir ce module" → le Coach génère un draft JSON pour le module actif à partir d'une description textuelle | L |
+| S5-3 | **Export PDF avec simulation** | Inclure le graphe supply (SVG → canvas → image) dans le rapport PDF existant, après la section M6 | M |
+| S5-4 | **Simulation dans la share page** | Afficher le mini-chart sur `/share/[token]` si les données M4+M5 sont présentes | S |
+| S5-5 | **Alertes simulation améliorées** | Sur `/simulation` : détecter cliff overlaps, TGE > 30%, supply > 80% en circulation à M12, et proposer des corrections | S |
+
+---
+
+### 🟡 Sprint 6 — Growth & UX (V5)
+
+| # | Feature | Détail | Effort |
+|---|---|---|---|
+| S6-1 | **Onboarding tooltip** | Au premier projet : highlight séquentiel (Step 0 → modules → dashboard). Dismissible, persisté en localStorage | M |
+| S6-2 | **Templates projets** | 4 templates pré-remplis : DeFi, DAO, RWA, Social Impact. Sélectable à la création du projet | M |
+| S6-3 | **Analyse comparative** | Page `/compare` — sélectionner 2 projets, afficher côte à côte : health score, allocations, supply curve | L |
+| S6-4 | **Historique des modifications** | Par module : stocker les 5 dernières versions avec timestamp. Bouton "Voir l'historique" → modal diff simplifié | L |
+| S6-5 | **Image OG par projet** | Route `/api/og/[id]` générant une ImageResponse 1200×630 avec nom du projet, health score, graphe supply minimaliste | M |
+| S6-6 | **Embed widget** | Snippet `<iframe>` pour intégrer le graphe simulation sur un site / deck externe. Page `/embed/[id]` sans sidebar | M |
+| S6-7 | **Waitlist landing** | Formulaire email sur la landing page → stocké en Supabase. Email de confirmation automatique | S |
+| S6-8 | **Mobile : tester + fixer les modules** | Scroll horizontal sur M5 bar chart, inputs trop petits sur M6, layout M3 SVG sur < 400px | S |
+
+---
+
+### 🔵 Sprint 7 — Collaboration (V6, après Supabase)
+
+| # | Feature | Détail | Effort |
+|---|---|---|---|
+| S7-1 | **Lien de partage V2 court** | UUID en DB, lien court `/s/[uuid]`, toujours à jour (pas de base64) | M |
+| S7-2 | **Multi-utilisateurs par projet** | Inviter des collaborateurs par email. Rôles : Owner / Editor / Viewer. RLS Supabase par projet | L |
+| S7-3 | **Commentaires sur les modules** | Thread de commentaires par module (comme Notion/Figma). Notifications email | L |
+| S7-4 | **Versioning cloud** | Snapshots nommés d'un projet complet ("v1 seed round", "v2 post-audit"). Restauration en 1 clic | L |
+
+---
+
+### 🔵 Sprint 8 — Données & Intégrations (V6)
+
+| # | Feature | Détail | Effort |
+|---|---|---|---|
+| S8-1 | **Benchmark on-chain automatique** | API CoinGecko/DefiLlama : comparer les tokenomics du projet avec des projets similaires on-chain (supply, vesting, TGE %) | XL |
+| S8-2 | **Export Notion** | Exporter le rapport tokenomics en page Notion via Notion API. Inclure les tableaux M5/M6 et le graphe simulation | L |
+| S8-3 | **MOOC théorique** | Section learning : articles courts par module (théorie tokenomics). Gated pour les users connectés | XL |
+| S8-4 | **Simulation Monte Carlo** | Sur `/simulation` : mode avancé avec fourchettes (min/max supply, vesting incertain) → afficher percentiles P10/P50/P90 | XL |
+| S8-5 | **Webhook / API publique** | API REST pour récupérer les données d'un projet (lecture seule, clé API par user). Pour intégrations externes | L |
 
 ---
 
@@ -119,3 +177,4 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 | v0.3 | 28/03/2026 | Value Flow diagram SVG interactif, Auth Supabase + cloud sync |
 | v2.0 | 29/03/2026 | Landing page, édition projet, mobile responsive, i18n complète, favicon |
 | v3.0 | 30/03/2026 | Hero background SVG réseau de nœuds, SEO og:image, meta Twitter/OG |
+| v4.0 | 31/03/2026 | Cards projets, share link, duplicate, simulation supply, mini-chart dashboard, progress segmentée, delete dashboard, tooltips, sidebar polish |
