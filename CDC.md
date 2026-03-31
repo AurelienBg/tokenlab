@@ -67,13 +67,20 @@ Voir spec complète : `/Users/Aurelien/Downloads/tokenlab_spec.md`
 #### Features produit
 | Fonctionnalité | Prévu |
 |---|---|
-| 🔗 Lien de partage lecture seule (sans compte) | V3 |
-| Duplicate projet | V3 |
-| Multi-utilisateurs par projet | V3 |
-| Export Notion | V3 |
-| MOOC théorique | V3 |
-| Simulation dynamique (graphe supply dans le temps) | V3 |
-| Benchmark on-chain automatique | V3 |
+| 🔗 Lien de partage lecture seule (sans compte) | ✅ v4.0 |
+| Duplicate projet | ✅ v4.0 |
+| Simulation dynamique (graphe supply dans le temps) | ✅ v4.0 |
+| i18n complète FR/EN | ✅ v4.0 |
+| Barre de progression segmentée | ✅ v4.0 |
+| Suppression projet depuis le dashboard | ✅ v4.0 |
+| 📊 Mini-chart simulation sur le dashboard | V5 — en cours |
+| Coach IA proactif (suggestions basées sur health score gaps) | V5 |
+| Export PDF avec graphe simulation | V5 |
+| Lien de partage V2 court (via Supabase) | Après infra |
+| Multi-utilisateurs par projet | V6 |
+| Export Notion | V6 |
+| MOOC théorique | V6 |
+| Benchmark on-chain automatique | V6 |
 
 ---
 
