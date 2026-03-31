@@ -115,12 +115,12 @@ export default function ModuleShell({
             return (
               <button
                 onClick={() => onSave(!isComplete)}
-                className={`btn text-xs group/complete ${isComplete ? 'btn-ghost text-green border-green/30 hover:text-red hover:border-red/30' : 'btn-primary'}`}
+                className={`btn text-xs group ${isComplete ? 'btn-ghost text-green border-green/30 hover:text-red hover:border-red/30' : 'btn-primary'}`}
               >
                 {isComplete ? (
                   <>
-                    <span className="group-hover/complete:hidden">✓ {t.complete}</span>
-                    <span className="hidden group-hover/complete:inline">{t.markIncomplete}</span>
+                    <span className="group-hover:hidden">✓ {t.complete}</span>
+                    <span className="hidden group-hover:inline">{t.markIncomplete}</span>
                   </>
                 ) : t.markComplete}
               </button>
