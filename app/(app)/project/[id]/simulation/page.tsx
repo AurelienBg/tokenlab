@@ -157,24 +157,62 @@ export default function SimulationPage() {
             </div>
           </div>
 
-          {/* Warnings */}
+          {/* Warnings S5-5 */}
           {(() => {
-            const m12pt = points[Math.min(12, points.length - 1)]
-            const m12pct = m12pt ? Math.round((m12pt.total / totalSupply) * 100) : 0
+            type Warning = { level: 'red' | 'yellow'; msg: string; fix: string }
+            const warnings: Warning[] = []
             const tgePt = points[0]
             const tgePct = tgePt ? Math.round((tgePt.total / totalSupply) * 100) : 0
-            const warnings: string[] = []
-            if (tgePct > 20) warnings.push(`⚠ ${tgePct}% de la supply circulante au TGE — risque de sell pressure élevé`)
-            if (m12pct > 60) warnings.push(`⚠ ${m12pct}% en circulation à M12 — vérifiez la rétention des holders`)
-            if (warnings.length === 0) return null
+            const m12pt = points[Math.min(12, points.length - 1)]
+            const m12pct = m12pt ? Math.round((m12pt.total / totalSupply) * 100) : 0
+            const m6pt = points[Math.min(6, points.length - 1)]
+            const m6pct = m6pt ? Math.round((m6pt.total / totalSupply) * 100) : 0
+
+            if (tgePct > 30)
+              warnings.push({ level: 'red', msg: `${tgePct}% de la supply circule au TGE`, fix: 'Réduire les TGE unlock % dans M6, ou augmenter le cliff.' })
+            else if (tgePct > 20)
+              warnings.push({ level: 'yellow', msg: `${tgePct}% au TGE — sell pressure modéré`, fix: 'Envisager un cliff plus long ou un TGE unlock < 10%.' })
+
+            if (m12pct > 70)
+              warnings.push({ level: 'red', msg: `${m12pct}% en circulation à M12`, fix: 'Allonger le vesting des catégories majeures (Team, Investors).' })
+            else if (m12pct > 50)
+              warnings.push({ level: 'yellow', msg: `${m12pct}% en circulation à M12`, fix: 'Vérifier que les mécanismes de rétention (staking, lock) sont en place.' })
+
+            // Cliff overlap detection: multiple categories unlocking in the same month
+            const cliffMonths = categories.map(c => c.cliff).filter(c => c > 0)
+            const cliffCounts: Record<number, number> = {}
+            cliffMonths.forEach(c => { cliffCounts[c] = (cliffCounts[c] ?? 0) + 1 })
+            const overlaps = Object.entries(cliffCounts).filter(([, count]) => count >= 2)
+            overlaps.forEach(([month]) => {
+              warnings.push({ level: 'yellow', msg: `Plusieurs catégories débloquent simultanément à M${month}`, fix: 'Décaler les cliffs de 1–2 mois pour étaler la sell pressure.' })
+            })
+
+            // No vesting on large categories
+            categories.forEach(cat => {
+              if (cat.vesting === 0 && cat.tokens / totalSupply > 0.1)
+                warnings.push({ level: 'red', msg: `"${cat.category}" (${Math.round(cat.tokens/totalSupply*100)}%) sans vesting`, fix: 'Ajouter un vesting d\'au moins 12 mois pour cette catégorie.' })
+            })
+
+            if (warnings.length === 0) return (
+              <div className="card bg-green/5 border-green/20">
+                <p className="text-xs text-green font-medium">✓ Aucune alerte — profil de distribution équilibré</p>
+              </div>
+            )
             return (
-              <div className="card bg-yellow/5 border-yellow/20">
-                <h2 className="text-xs font-semibold text-yellow mb-2 uppercase tracking-wider">Alertes</h2>
-                <ul className="space-y-1">
-                  {warnings.map((w, i) => (
-                    <li key={i} className="text-xs text-muted">{w}</li>
-                  ))}
-                </ul>
+              <div className="space-y-2">
+                {warnings.map((w, i) => (
+                  <div key={i} className={`card border ${w.level === 'red' ? 'bg-red/5 border-red/20' : 'bg-yellow/5 border-yellow/20'}`}>
+                    <div className="flex items-start gap-2">
+                      <span className={`shrink-0 font-bold text-sm ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>
+                        {w.level === 'red' ? '⛔' : '⚠'}
+                      </span>
+                      <div>
+                        <p className={`text-xs font-semibold ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>{w.msg}</p>
+                        <p className="text-xs text-muted mt-0.5">→ {w.fix}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )
           })()}
