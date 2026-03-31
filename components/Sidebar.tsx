@@ -23,7 +23,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
   return (
     <aside className={`fixed left-0 top-0 h-full w-[240px] flex flex-col border-r border-border bg-sidebar z-30 transition-transform duration-200 ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
       {/* Logo */}
-      <Link href="/projects" className="flex items-center gap-2.5 px-5 py-4 border-b border-border hover:opacity-80 transition-opacity">
+      <Link href="/" className="flex items-center gap-2.5 px-5 py-4 border-b border-border hover:opacity-80 transition-opacity">
         <TokenlabIcon />
         <span className="text-base font-bold tracking-tight text-foreground">Tokenlab</span>
       </Link>
