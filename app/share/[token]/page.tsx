@@ -5,9 +5,10 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { decodeShareToken } from '@/lib/share'
 import { saveLocalProject, getLocalProject } from '@/lib/storage'
-import { LocalProject } from '@/lib/types'
+import { LocalProject, M4Data, M5Data, M6Data } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
 import { computeHealthScore } from '@/lib/healthScore'
+import { computeSupplySimulation, formatSupply } from '@/lib/supplySimulation'
 import { useLang } from '@/components/LangProvider'
 
 export default function SharePage() {
@@ -141,6 +142,54 @@ export default function SharePage() {
             </p>
           </div>
         </div>
+
+        {/* Mini supply chart */}
+        {(() => {
+          const m4 = modules['m4']?.data as M4Data | undefined
+          const m5 = modules['m5']?.data as M5Data | undefined
+          const m6 = modules['m6']?.data as M6Data | undefined
+          if (!m4?.total_supply || !m5?.allocations?.length) return null
+          const { points, categories, totalSupply } = computeSupplySimulation(m4 ?? null, m5 ?? null, m6 ?? null, 48)
+          if (points.length === 0) return null
+          const W = 600; const H = 90
+          const PL = 8; const PR = 8; const PT = 8; const PB = 8
+          const cW = W - PL - PR; const cH = H - PT - PB
+          const xPos = (m: number) => PL + (m / 48) * cW
+          const yPos = (v: number) => PT + cH - (v / totalSupply) * cH
+          const totalLine = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${xPos(p.month).toFixed(1)},${yPos(p.total).toFixed(1)}`).join(' ')
+          const tgePct = Math.round((points[0].total / totalSupply) * 100)
+          const m24Pct = Math.round(((points[24]?.total ?? 0) / totalSupply) * 100)
+          const m48Pct = Math.round(((points[48]?.total ?? 0) / totalSupply) * 100)
+          return (
+            <div className="card mb-8">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-sm font-semibold text-foreground">{t.simulation}</h2>
+                <span className="text-xs text-muted">{formatSupply(totalSupply)} tokens · 48 months</span>
+              </div>
+              <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 90 }}>
+                {categories.map((cat, ci) => {
+                  const getBase = (month: number) => { let b = 0; for (let i = 0; i < ci; i++) b += points[month].byCategory[categories[i].category] ?? 0; return b }
+                  const top = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${xPos(p.month).toFixed(1)},${yPos(getBase(p.month) + (p.byCategory[cat.category] ?? 0)).toFixed(1)}`).join(' ')
+                  const bot = [...points].reverse().map((p) => `L${xPos(p.month).toFixed(1)},${yPos(getBase(p.month)).toFixed(1)}`).join(' ')
+                  return <path key={cat.category} d={`${top} ${bot} Z`} fill={cat.color} fillOpacity={0.2} />
+                })}
+                <path d={totalLine} fill="none" stroke="var(--color-accent)" strokeWidth={1.5} strokeOpacity={0.8} />
+                {[0, 24, 48].map((m) => {
+                  const pt = points[m]; if (!pt) return null
+                  return <circle key={m} cx={xPos(m)} cy={yPos(pt.total)} r={2.5} fill="var(--color-accent)" />
+                })}
+              </svg>
+              <div className="flex gap-4 mt-2">
+                {[{ label: 'TGE', pct: tgePct }, { label: 'M24', pct: m24Pct }, { label: 'M48', pct: m48Pct }].map(({ label, pct }) => (
+                  <div key={label} className="text-center">
+                    <p className="text-[10px] text-muted">{label}</p>
+                    <p className={`text-xs font-semibold ${pct >= 70 ? 'text-red' : pct >= 40 ? 'text-yellow' : 'text-green'}`}>{pct}%</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        })()}
 
         {/* Modules */}
         <div>

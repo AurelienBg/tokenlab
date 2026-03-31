@@ -98,7 +98,7 @@ export default function Module6Page() {
                 <button onClick={() => removeSchedule(s.id)} className="text-muted hover:text-red transition-colors px-2">✕</button>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="label">Cliff (mois)</label>
                   <input

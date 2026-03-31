@@ -116,7 +116,8 @@ export default function Module5Page() {
           <button onClick={addAllocation} className="btn btn-ghost text-xs">+ Ajouter</button>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile: stacked cards; Desktop: table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-xs text-muted border-b border-border">
@@ -133,23 +134,12 @@ export default function Module5Page() {
                 return (
                   <tr key={a.id} className="group">
                     <td className="py-2 pr-2">
-                      <input
-                        value={a.category}
-                        onChange={(e) => updateAllocation(a.id, { category: e.target.value })}
-                        className="bg-transparent text-foreground focus:outline-none w-full"
-                      />
+                      <input value={a.category} onChange={(e) => updateAllocation(a.id, { category: e.target.value })} className="bg-transparent text-foreground focus:outline-none w-full" />
                     </td>
                     <td className="py-2 text-right">
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.5"
-                        value={a.percentage}
+                      <input type="number" min="0" max="100" step="0.5" value={a.percentage}
                         onChange={(e) => updateAllocation(a.id, { percentage: Number(e.target.value) })}
-                        className={`bg-transparent text-right focus:outline-none w-20 font-mono font-medium ${
-                          outOfRange ? 'text-yellow' : 'text-foreground'
-                        }`}
+                        className={`bg-transparent text-right focus:outline-none w-20 font-mono font-medium ${outOfRange ? 'text-yellow' : 'text-foreground'}`}
                       />
                     </td>
                     <td className="py-2 pl-4 text-xs text-muted">
@@ -157,16 +147,33 @@ export default function Module5Page() {
                       {outOfRange && <span className="text-yellow ml-1">⚠</span>}
                     </td>
                     <td className="py-2">
-                      <button
-                        onClick={() => removeAllocation(a.id)}
-                        className="text-muted hover:text-red transition-colors opacity-0 group-hover:opacity-100"
-                      >✕</button>
+                      <button onClick={() => removeAllocation(a.id)} className="text-muted hover:text-red transition-colors opacity-0 group-hover:opacity-100">✕</button>
                     </td>
                   </tr>
                 )
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile cards */}
+        <div className="sm:hidden space-y-2">
+          {data.allocations.map((a) => {
+            const bench = ALLOCATION_BENCHMARKS.find((b) => b.category.toLowerCase() === a.category.toLowerCase())
+            const outOfRange = bench && (a.percentage < bench.min || a.percentage > bench.max)
+            return (
+              <div key={a.id} className="flex items-center gap-2 p-2 rounded-lg border border-border">
+                <input value={a.category} onChange={(e) => updateAllocation(a.id, { category: e.target.value })}
+                  className="bg-transparent text-foreground focus:outline-none flex-1 text-sm min-w-0" />
+                <input type="number" min="0" max="100" step="0.5" value={a.percentage}
+                  onChange={(e) => updateAllocation(a.id, { percentage: Number(e.target.value) })}
+                  className={`w-16 text-right input py-1 text-sm font-mono ${outOfRange ? 'text-yellow' : ''}`}
+                />
+                <span className="text-xs text-muted shrink-0">%</span>
+                <button onClick={() => removeAllocation(a.id)} className="text-muted hover:text-red transition-colors shrink-0">✕</button>
+              </div>
+            )
+          })}
         </div>
 
         {!isBalanced && (
