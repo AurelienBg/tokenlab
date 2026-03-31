@@ -67,6 +67,11 @@ export function saveLocalModuleData(moduleData: ModuleData): void {
     all[idx].project.updated_at = new Date().toISOString()
 
     setAllLocalProjects(all)
+
+    // Notify layout to refresh project state
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('tokenlab:module-saved', { detail: { projectId: moduleData.project_id } }))
+    }
   }
 }
 

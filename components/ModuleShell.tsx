@@ -103,12 +103,17 @@ export default function ModuleShell({
           >
             {t.save}
           </button>
-          <button
-            onClick={() => onSave(true)}
-            className="btn btn-primary text-xs"
-          >
-            {t.markComplete}
-          </button>
+          {(() => {
+            const isComplete = !!(completedBits & (1 << currentIdx))
+            return (
+              <button
+                onClick={() => onSave(!isComplete)}
+                className={`btn text-xs ${isComplete ? 'btn-ghost text-green border-green/30' : 'btn-primary'}`}
+              >
+                {isComplete ? '✓ ' + t.complete : t.markComplete}
+              </button>
+            )
+          })()}
           <Link
             href={nextHref}
             className="btn btn-ghost text-xs flex items-center gap-1"
