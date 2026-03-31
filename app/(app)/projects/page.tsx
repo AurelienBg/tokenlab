@@ -177,7 +177,7 @@ export default function ProjectsPage() {
                       <DuplicateIcon />
                     </button>
                   </Tip>
-                  <Tip label={copiedId === p.id ? '✓' : t.copyLink}>
+                  <Tip label={copiedId === p.id ? '✓ Copied' : t.share}>
                     <button
                       onClick={(e) => { e.preventDefault(); handleShare(p.id) }}
                       className={`p-1.5 rounded-lg bg-surface border transition-colors ${
