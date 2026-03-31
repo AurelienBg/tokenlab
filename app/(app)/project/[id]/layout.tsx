@@ -17,9 +17,18 @@ export default function ProjectLayout({ children }: { children: React.ReactNode 
     if (lp) {
       setProject(lp.project)
     } else {
-      // Unknown project — redirect to list
       window.location.href = '/projects'
     }
+
+    function onModuleSaved(e: Event) {
+      const detail = (e as CustomEvent).detail
+      if (detail?.projectId === id) {
+        const updated = getLocalProject(id)
+        if (updated) setProject(updated.project)
+      }
+    }
+    window.addEventListener('tokenlab:module-saved', onModuleSaved)
+    return () => window.removeEventListener('tokenlab:module-saved', onModuleSaved)
   }, [id])
 
   if (!project) {
