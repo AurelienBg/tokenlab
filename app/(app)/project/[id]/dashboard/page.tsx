@@ -43,11 +43,16 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    const data = getLocalProject(id)
-    if (data) {
-      setLp(data)
-      setHealth(computeHealthScore(data.modules))
+    function load() {
+      const data = getLocalProject(id)
+      if (data) {
+        setLp(data)
+        setHealth(computeHealthScore(data.modules))
+      }
     }
+    load()
+    window.addEventListener('tokenlab:module-saved', load)
+    return () => window.removeEventListener('tokenlab:module-saved', load)
   }, [id])
 
   function startEdit() {
