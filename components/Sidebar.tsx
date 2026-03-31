@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
           <GridIcon />
           <span className="flex-1">{t.allProjects}</span>
           {projects.length > 0 && (
-            <span className="text-xs font-semibold bg-surface-2 text-muted px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+            <span className="text-xs font-semibold bg-surface-2 text-muted w-5 h-5 rounded-full flex items-center justify-center shrink-0">
               {projects.length}
             </span>
           )}
