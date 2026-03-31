@@ -38,7 +38,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
         </Link>
         <Link
           href="/projects"
-          className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors mb-3 ${
+          className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors mb-1 ${
             pathname === '/projects'
               ? 'bg-accent/15 text-accent font-medium'
               : 'text-muted hover:text-foreground hover:bg-surface-hover'
@@ -52,6 +52,8 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
             </span>
           )}
         </Link>
+
+        <div className="border-b border-border mx-1 mb-3 mt-2" />
 
         {projects.length > 0 && (
           <div>
