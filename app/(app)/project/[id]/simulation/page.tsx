@@ -125,11 +125,11 @@ export default function SimulationPage() {
               <p className="text-xs text-green font-medium">{t.simNoAlerts}</p>
             </div>
           ) : (
-            <div className="space-y-2">
-              {warnings.map((w, i) => (
-                <div key={i} className={`card border ${w.level === 'red' ? 'bg-red/5 border-red/20' : 'bg-yellow/5 border-yellow/20'}`}>
-                  <div className="flex items-start gap-2">
-                    <span className={`shrink-0 font-bold text-sm ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>
+            <div className={`card border ${warnings.some(w => w.level === 'red') ? 'bg-red/5 border-red/20' : 'bg-yellow/5 border-yellow/20'}`}>
+              <div className="space-y-3">
+                {warnings.map((w, i) => (
+                  <div key={i} className={`flex items-start gap-2 ${i > 0 ? 'pt-3 border-t border-border/50' : ''}`}>
+                    <span className={`shrink-0 text-sm ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>
                       {w.level === 'red' ? '⛔' : '⚠'}
                     </span>
                     <div>
@@ -137,8 +137,8 @@ export default function SimulationPage() {
                       <p className="text-xs text-muted mt-0.5">→ {w.fix}</p>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
