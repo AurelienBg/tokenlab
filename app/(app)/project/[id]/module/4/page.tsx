@@ -6,6 +6,7 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M4Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: M4Data = {
   total_supply: null,
@@ -16,24 +17,27 @@ const DEFAULT: M4Data = {
   notes: '',
 }
 
-const SUPPLY_TYPES = [
-  { value: 'fixed', label: 'Fixed Supply', examples: 'BTC, ADA', description: 'Max prédéfini, scarcité digitale' },
-  { value: 'inflationary', label: 'Inflationary', examples: 'ETH PoW, MATIC', description: 'Émission continue' },
-  { value: 'deflationary', label: 'Deflationary', examples: 'XRP, BNB', description: 'Burn progressif' },
-  { value: 'elastic', label: 'Dynamic/Elastic', examples: 'ETH 2.0 PoS', description: 'Ajustement selon conditions réseau' },
-] as const
+const SUPPLY_TYPE_VALUES = ['fixed', 'inflationary', 'deflationary', 'elastic'] as const
+const SUPPLY_TYPE_LABELS: Record<string, { label: string; examples: string }> = {
+  fixed: { label: 'Fixed Supply', examples: 'BTC, ADA' },
+  inflationary: { label: 'Inflationary', examples: 'ETH PoW, MATIC' },
+  deflationary: { label: 'Deflationary', examples: 'XRP, BNB' },
+  elastic: { label: 'Dynamic/Elastic', examples: 'ETH 2.0 PoS' },
+}
 
-const EMISSION_MODELS = [
-  { value: 'fixed', label: 'Fixed', description: 'Émission fixe par période' },
-  { value: 'decaying', label: 'Decaying', description: 'Réduction progressive (ex: halving)' },
-  { value: 'event_based', label: 'Event-based', description: 'Déclenchée par des milestones' },
-  { value: 'adaptive', label: 'Adaptive', description: 'Trigger-based, adapté à l\'activité' },
-] as const
+const EMISSION_MODEL_VALUES = ['fixed', 'decaying', 'event_based', 'adaptive'] as const
+const EMISSION_MODEL_LABELS: Record<string, string> = {
+  fixed: 'Fixed',
+  decaying: 'Decaying',
+  event_based: 'Event-based',
+  adaptive: 'Adaptive',
+}
 
 export default function Module4Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M4Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm4')
@@ -67,10 +71,24 @@ export default function Module4Page() {
     return String(n)
   }
 
+  const supplyTypeDescriptions: Record<string, string> = {
+    fixed: t.m4_descFixed,
+    inflationary: t.m4_descInflationary,
+    deflationary: t.m4_descDeflationary,
+    elastic: t.m4_descElastic,
+  }
+
+  const emissionModelDescriptions: Record<string, string> = {
+    fixed: t.m4_descEmissionFixed,
+    decaying: t.m4_descEmissionDecaying,
+    event_based: t.m4_descEmissionEventBased,
+    adaptive: t.m4_descEmissionAdaptive,
+  }
+
   return (
     <ModuleShell
       title="Supply-Side & Emission Design"
-      subtitle="Module 4 — Définissez la supply totale et le modèle d'émission"
+      subtitle={t.m4_subtitle}
       projectId={id}
       moduleKey="m4"
       saved={saved}
@@ -78,16 +96,16 @@ export default function Module4Page() {
     >
       {/* Supply basics */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Supply</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m4_supplyTitle}</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="label">Total Supply</label>
+            <label className="label">{t.m4_totalSupplyLabel}</label>
             <input
               type="number"
               min="0"
               value={data.total_supply ?? ''}
               onChange={(e) => update({ total_supply: e.target.value ? Number(e.target.value) : null })}
-              placeholder="ex: 1000000000"
+              placeholder={t.m4_totalSupplyPlaceholder}
               className="input"
             />
             {data.total_supply && (
@@ -95,14 +113,14 @@ export default function Module4Page() {
             )}
           </div>
           <div>
-            <label className="label">Taux d'inflation max (% / an)</label>
+            <label className="label">{t.m4_inflationLabel}</label>
             <input
               type="number"
               min="0"
               step="0.1"
               value={data.max_inflation_rate ?? ''}
               onChange={(e) => update({ max_inflation_rate: e.target.value ? Number(e.target.value) : null })}
-              placeholder="ex: 5 (si inflationary)"
+              placeholder={t.m4_inflationPlaceholder}
               className="input"
             />
           </div>
@@ -111,25 +129,25 @@ export default function Module4Page() {
 
       {/* Supply type */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Modèle de supply</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m4_supplyModelTitle}</h3>
         <div className="grid grid-cols-2 gap-2">
-          {SUPPLY_TYPES.map((t) => (
+          {SUPPLY_TYPE_VALUES.map((val) => (
             <label
-              key={t.value}
+              key={val}
               className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                data.supply_type === t.value ? 'border-accent bg-accent/5' : 'border-border hover:bg-surface-hover'
+                data.supply_type === val ? 'border-accent bg-accent/5' : 'border-border hover:bg-surface-hover'
               }`}
             >
               <div className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${
-                data.supply_type === t.value ? 'border-accent bg-accent' : 'border-muted'
+                data.supply_type === val ? 'border-accent bg-accent' : 'border-muted'
               }`} />
-              <input type="radio" name="supply_type" checked={data.supply_type === t.value} onChange={() => update({ supply_type: t.value })} className="sr-only" />
+              <input type="radio" name="supply_type" checked={data.supply_type === val} onChange={() => update({ supply_type: val })} className="sr-only" />
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-sm font-medium text-foreground">{t.label}</span>
-                  <span className="text-xs text-muted">({t.examples})</span>
+                  <span className="text-sm font-medium text-foreground">{SUPPLY_TYPE_LABELS[val].label}</span>
+                  <span className="text-xs text-muted">({SUPPLY_TYPE_LABELS[val].examples})</span>
                 </div>
-                <p className="text-xs text-muted">{t.description}</p>
+                <p className="text-xs text-muted">{supplyTypeDescriptions[val]}</p>
               </div>
             </label>
           ))}
@@ -138,22 +156,22 @@ export default function Module4Page() {
 
       {/* Emission model */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Modèle d'émission</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m4_emissionModelTitle}</h3>
         <div className="grid grid-cols-2 gap-2">
-          {EMISSION_MODELS.map((m) => (
+          {EMISSION_MODEL_VALUES.map((val) => (
             <label
-              key={m.value}
+              key={val}
               className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                data.emission_model === m.value ? 'border-accent bg-accent/5' : 'border-border hover:bg-surface-hover'
+                data.emission_model === val ? 'border-accent bg-accent/5' : 'border-border hover:bg-surface-hover'
               }`}
             >
               <div className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${
-                data.emission_model === m.value ? 'border-accent bg-accent' : 'border-muted'
+                data.emission_model === val ? 'border-accent bg-accent' : 'border-muted'
               }`} />
-              <input type="radio" name="emission_model" checked={data.emission_model === m.value} onChange={() => update({ emission_model: m.value })} className="sr-only" />
+              <input type="radio" name="emission_model" checked={data.emission_model === val} onChange={() => update({ emission_model: val })} className="sr-only" />
               <div>
-                <p className="text-sm font-medium text-foreground">{m.label}</p>
-                <p className="text-xs text-muted">{m.description}</p>
+                <p className="text-sm font-medium text-foreground">{EMISSION_MODEL_LABELS[val]}</p>
+                <p className="text-xs text-muted">{emissionModelDescriptions[val]}</p>
               </div>
             </label>
           ))}
@@ -161,13 +179,13 @@ export default function Module4Page() {
       </div>
 
       <div className="card">
-        <label className="label">Notes & justifications</label>
+        <label className="label">{t.m4_notesLabel}</label>
         <textarea
           value={data.notes}
           onChange={(e) => update({ notes: e.target.value })}
           rows={3}
           className="input"
-          placeholder="Pourquoi ce modèle ? Références à des projets similaires..."
+          placeholder={t.m4_notesPlaceholder}
         />
       </div>
     </ModuleShell>
