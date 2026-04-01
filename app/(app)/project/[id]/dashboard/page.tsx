@@ -295,46 +295,48 @@ export default function DashboardPage() {
         const m24Pct = Math.round(((points[24]?.total ?? 0) / totalSupply) * 100)
         const m48Pct = Math.round(((points[48]?.total ?? 0) / totalSupply) * 100)
         return (
-          <div className="card mb-8">
+          <div className="card mb-8 overflow-hidden">
+            {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h2 className="text-sm font-semibold text-foreground">{t.simulation}</h2>
-                <p className="text-xs text-muted">{formatSupply(totalSupply)} tokens — circulating over 48 months</p>
+                <p className="text-xs text-muted">{formatSupply(totalSupply)} tokens · 48 months</p>
               </div>
-              <Link href={`/project/${id}/simulation`} className="text-xs text-accent hover:underline">
+              <Link href={`/project/${id}/simulation`} className="text-xs text-accent hover:underline shrink-0">
                 {t.simulation} →
               </Link>
             </div>
-            <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 80 }}>
-              {/* Category areas */}
-              {categories.map((cat, ci) => {
-                const getBase = (month: number) => {
-                  let base = 0
-                  for (let i = 0; i < ci; i++) base += points[month].byCategory[categories[i].category] ?? 0
-                  return base
-                }
-                const topPts = points.map((p) => ({ x: xPos(p.month), y: yPos(getBase(p.month) + (p.byCategory[cat.category] ?? 0)) }))
-                const botPts = points.map((p) => ({ x: xPos(p.month), y: yPos(getBase(p.month)) }))
-                const top = topPts.map((pt, i) => `${i === 0 ? 'M' : 'L'}${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')
-                const bot = [...botPts].reverse().map((pt) => `L${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')
-                return <path key={cat.category} d={`${top} ${bot} Z`} fill={cat.color} fillOpacity={0.2} />
-              })}
-              {/* Total line */}
-              <path d={totalLine} fill="none" stroke="var(--color-accent)" strokeWidth={1.5} strokeOpacity={0.8} />
-              {/* Key dots */}
-              {[0, 24, 48].map((m) => {
-                const pt = points[m]
-                if (!pt) return null
-                return <circle key={m} cx={xPos(m)} cy={yPos(pt.total)} r={2.5} fill="var(--color-accent)" />
-              })}
-            </svg>
-            <div className="flex gap-4 mt-2">
-              {[{ label: 'TGE', pct: tgePct }, { label: 'M24', pct: m24Pct }, { label: 'M48', pct: m48Pct }].map(({ label, pct }) => (
-                <div key={label} className="text-center">
-                  <p className="text-[10px] text-muted">{label}</p>
-                  <p className={`text-xs font-semibold ${pct >= 70 ? 'text-red' : pct >= 40 ? 'text-yellow' : 'text-green'}`}>{pct}%</p>
-                </div>
-              ))}
+            {/* Chart */}
+            <div className="rounded-lg overflow-hidden bg-surface-2 px-2 pt-2 pb-1">
+              <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 80 }}>
+                {categories.map((cat, ci) => {
+                  const getBase = (month: number) => {
+                    let base = 0
+                    for (let i = 0; i < ci; i++) base += points[month].byCategory[categories[i].category] ?? 0
+                    return base
+                  }
+                  const topPts = points.map((p) => ({ x: xPos(p.month), y: yPos(getBase(p.month) + (p.byCategory[cat.category] ?? 0)) }))
+                  const botPts = points.map((p) => ({ x: xPos(p.month), y: yPos(getBase(p.month)) }))
+                  const top = topPts.map((pt, i) => `${i === 0 ? 'M' : 'L'}${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')
+                  const bot = [...botPts].reverse().map((pt) => `L${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')
+                  return <path key={cat.category} d={`${top} ${bot} Z`} fill={cat.color} fillOpacity={0.25} />
+                })}
+                <path d={totalLine} fill="none" stroke="var(--color-accent)" strokeWidth={1.5} strokeOpacity={0.9} />
+                {[0, 24, 48].map((m) => {
+                  const pt = points[m]
+                  if (!pt) return null
+                  return <circle key={m} cx={xPos(m)} cy={yPos(pt.total)} r={2.5} fill="var(--color-accent)" />
+                })}
+              </svg>
+              {/* Stats row inside the chart area */}
+              <div className="flex gap-6 px-1 pb-1 mt-1">
+                {[{ label: 'TGE', pct: tgePct }, { label: 'M24', pct: m24Pct }, { label: 'M48', pct: m48Pct }].map(({ label, pct }) => (
+                  <div key={label} className="flex items-center gap-1.5">
+                    <span className="text-[10px] text-muted">{label}</span>
+                    <span className={`text-xs font-bold ${pct >= 70 ? 'text-red' : pct >= 40 ? 'text-yellow' : 'text-green'}`}>{pct}%</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )
