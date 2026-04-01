@@ -112,7 +112,7 @@ export default function ModuleShell({
                 : 'btn-ghost'
             }`}
           >
-            {saved ? `✓ ${t.saved}` : t.save}
+            {saved ? t.saved : t.save}
           </button>
 
           {/* Mark complete — navigates to next module on click */}
