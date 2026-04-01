@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/storage'
 import { Step0Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: Step0Data = {
   needs_token: null,
@@ -18,6 +19,7 @@ const DEFAULT: Step0Data = {
 
 export default function Step0Page() {
   const { id } = useParams() as { id: string }
+  const { t } = useLang()
   const [data, setData] = useState<Step0Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
 
@@ -61,7 +63,7 @@ export default function Step0Page() {
   return (
     <ModuleShell
       title="Token Decision Tree"
-      subtitle="Étape 0 — Avant de designer votre tokenomics, avez-vous vraiment besoin d'un token ?"
+      subtitle={t.step0_subtitle}
       projectId={id}
       moduleKey="step0"
       saved={saved}
@@ -70,12 +72,8 @@ export default function Step0Page() {
       <div className="space-y-8">
         {/* Q1 */}
         <div className="card">
-          <h3 className="text-sm font-semibold text-foreground mb-1">
-            Question 1 : Un token est-il nécessaire pour votre projet ?
-          </h3>
-          <p className="text-xs text-muted mb-4">
-            Les utilisateurs peuvent-ils pleinement utiliser le produit sans le token ?
-          </p>
+          <h3 className="text-sm font-semibold text-foreground mb-1">{t.step0_q1Title}</h3>
+          <p className="text-xs text-muted mb-4">{t.step0_q1Desc}</p>
           <div className="flex gap-3">
             {([true, false] as const).map((val) => (
               <button
@@ -89,13 +87,13 @@ export default function Step0Page() {
                     : 'border-border text-muted hover:bg-surface-hover'
                 }`}
               >
-                {val ? '✓ Oui, le token est nécessaire' : '✗ Non, le token n\'est pas nécessaire'}
+                {val ? t.step0_yes : t.step0_no}
               </button>
             ))}
           </div>
           {data.needs_token === false && (
             <div className="mt-3 p-3 rounded-lg bg-red/5 border border-red/20 text-xs text-red">
-              ⚠ Recommandation : utilisez des stablecoins ou des paiements fiat plutôt qu'un token natif.
+              {t.step0_warnNoToken}
             </div>
           )}
         </div>
@@ -103,42 +101,38 @@ export default function Step0Page() {
         {/* Q2 */}
         {data.needs_token === true && (
           <div className="card">
-            <h3 className="text-sm font-semibold text-foreground mb-1">
-              Question 2 : Le token verrouille-t-il l'accès ou absorbe-t-il du risque ?
-            </h3>
-            <p className="text-xs text-muted mb-4">
-              Sélectionnez toutes les propriétés qui s'appliquent à votre token.
-            </p>
+            <h3 className="text-sm font-semibold text-foreground mb-1">{t.step0_q2Title}</h3>
+            <p className="text-xs text-muted mb-4">{t.step0_q2Desc}</p>
             <div className="space-y-3">
               <Checkbox
                 checked={data.gate_access}
                 onChange={(v) => handleChange('gate_access', v)}
                 label="Gate access"
-                description="Le token verrouille l'accès ou crée des niveaux de service"
+                description={t.step0_descGateAccess}
               />
               <Checkbox
                 checked={data.absorb_risk}
                 onChange={(v) => handleChange('absorb_risk', v)}
                 label="Absorb risk"
-                description="Le token est staké/locké pour absorber du risque (ex: insurance)"
+                description={t.step0_descAbsorbRisk}
               />
               <Checkbox
                 checked={data.capture_value}
                 onChange={(v) => handleChange('capture_value', v)}
                 label="Capture value"
-                description="Le token capture de la valeur réelle (cash flows, revenus — pas d'émission spéculative)"
+                description={t.step0_descCaptureValue}
               />
               <Checkbox
                 checked={data.impact_verified}
                 onChange={(v) => handleChange('impact_verified', v)}
                 label="Impact verified"
-                description="L'impact est vérifié (data oracles + payouts automatiques, pas de claims déclaratifs)"
+                description={t.step0_descImpactVerified}
               />
             </div>
 
             {([data.gate_access, data.absorb_risk, data.capture_value].filter(Boolean).length === 0) && (
               <div className="mt-3 p-3 rounded-lg bg-yellow/5 border border-yellow/20 text-xs text-yellow">
-                ⚠ Aucune propriété sélectionnée — votre token risque d'être non-critique pour le système.
+                {t.step0_warnNoProps}
               </div>
             )}
           </div>
@@ -146,11 +140,11 @@ export default function Step0Page() {
 
         {/* Rationale */}
         <div className="card">
-          <label className="label">Justification (notes)</label>
+          <label className="label">{t.step0_rationaleLabel}</label>
           <textarea
             value={data.rationale}
             onChange={(e) => handleChange('rationale', e.target.value)}
-            placeholder="Expliquez pourquoi votre token est nécessaire et ce qu'il permet que les alternatives (stablecoins, fiat) ne permettent pas..."
+            placeholder={t.step0_rationalePlaceholder}
             rows={4}
             className="input"
           />
@@ -167,12 +161,10 @@ export default function Step0Page() {
               <span className="text-2xl">{result === 'launch' ? '✅' : '⚠️'}</span>
               <div>
                 <p className={`font-semibold ${result === 'launch' ? 'text-green' : 'text-yellow'}`}>
-                  {result === 'launch' ? 'Launch with utilities' : 'Rethink the token'}
+                  {result === 'launch' ? t.step0_resultLaunch : t.step0_resultRethink}
                 </p>
                 <p className="text-xs text-muted mt-0.5">
-                  {result === 'launch'
-                    ? 'Votre token couvre au moins 2 propriétés clés. Vous pouvez passer aux modules suivants.'
-                    : 'Faible utilité détectée. Reconsidérez si le token est vraiment nécessaire avant de continuer.'}
+                  {result === 'launch' ? t.step0_resultLaunchDesc : t.step0_resultRethinkDesc}
                 </p>
               </div>
             </div>
