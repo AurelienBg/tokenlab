@@ -7,6 +7,7 @@ import { M5Data, Allocation } from '@/lib/types'
 import { ALLOCATION_BENCHMARKS } from '@/lib/constants'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT_ALLOCATIONS: Allocation[] = [
   { id: '1', category: 'Team & Advisors', percentage: 15, rationale: '' },
@@ -24,6 +25,7 @@ export default function Module5Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M5Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm5')
@@ -39,7 +41,7 @@ export default function Module5Page() {
   }
 
   function addAllocation() {
-    setData((p) => ({ ...p, allocations: [...p.allocations, { id: generateId(), category: 'Nouveau', percentage: 0, rationale: '' }] }))
+    setData((p) => ({ ...p, allocations: [...p.allocations, { id: generateId(), category: t.m5_newCategory, percentage: 0, rationale: '' }] }))
     setSaved(false)
   }
 
@@ -66,7 +68,7 @@ export default function Module5Page() {
   return (
     <ModuleShell
       title="Distribution & Allocation"
-      subtitle="Module 5 — Répartissez les tokens par catégorie selon les standards de marché"
+      subtitle={t.m5_subtitle}
       projectId={id}
       moduleKey="m5"
       saved={saved}
@@ -75,9 +77,9 @@ export default function Module5Page() {
       {/* Donut visualization */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Répartition</h3>
+          <h3 className="text-sm font-semibold text-foreground">{t.m5_allocationTitle}</h3>
           <span className={`text-sm font-bold ${isBalanced ? 'text-green' : 'text-red'}`}>
-            Total : {total.toFixed(1)}%
+            {t.m5_totalLabel} {total.toFixed(1)}%
             {!isBalanced && ' ≠ 100%'}
           </span>
         </div>
@@ -112,8 +114,8 @@ export default function Module5Page() {
       {/* Allocations table */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Détail des allocations</h3>
-          <button onClick={addAllocation} className="btn btn-ghost text-xs">+ Ajouter</button>
+          <h3 className="text-sm font-semibold text-foreground">{t.m5_allocationDetailTitle}</h3>
+          <button onClick={addAllocation} className="btn btn-ghost text-xs">{t.m5_addBtn}</button>
         </div>
 
         {/* Mobile: stacked cards; Desktop: table */}
@@ -121,9 +123,9 @@ export default function Module5Page() {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-xs text-muted border-b border-border">
-                <th className="text-left pb-2 font-medium">Catégorie</th>
+                <th className="text-left pb-2 font-medium">{t.m5_colCategory}</th>
                 <th className="text-right pb-2 font-medium w-24">%</th>
-                <th className="text-left pb-2 font-medium pl-4">Fourchette ref.</th>
+                <th className="text-left pb-2 font-medium pl-4">{t.m5_colRef}</th>
                 <th className="w-8" />
               </tr>
             </thead>
@@ -178,14 +180,14 @@ export default function Module5Page() {
 
         {!isBalanced && (
           <div className="mt-3 p-2 rounded bg-red/5 border border-red/20 text-xs text-red">
-            Le total doit être 100%. Actuellement : {total.toFixed(1)}%
+            {t.m5_warnTotal} {total.toFixed(1)}%
           </div>
         )}
       </div>
 
       {/* Benchmarks reference */}
       <div className="card bg-surface-2">
-        <h3 className="text-xs font-semibold text-muted mb-3 uppercase tracking-wider">Références marché</h3>
+        <h3 className="text-xs font-semibold text-muted mb-3 uppercase tracking-wider">{t.m5_benchmarksTitle}</h3>
         <div className="space-y-1">
           {ALLOCATION_BENCHMARKS.map((b) => (
             <div key={b.category} className="flex items-center justify-between text-xs">
@@ -200,13 +202,13 @@ export default function Module5Page() {
       </div>
 
       <div className="card">
-        <label className="label">Notes & justifications</label>
+        <label className="label">{t.m5_notesLabel}</label>
         <textarea
           value={data.notes}
           onChange={(e) => { setData((p) => ({ ...p, notes: e.target.value })); setSaved(false) }}
           rows={3}
           className="input"
-          placeholder="Pourquoi ces choix d'allocation ? Contraintes spécifiques ?"
+          placeholder={t.m5_notesPlaceholder}
         />
       </div>
     </ModuleShell>

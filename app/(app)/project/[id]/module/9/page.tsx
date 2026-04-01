@@ -6,6 +6,7 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M9Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: M9Data = {
   jurisdictions: [],
@@ -22,6 +23,7 @@ export default function Module9Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M9Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm9')
@@ -58,10 +60,34 @@ export default function Module9Page() {
 
   const showMiCA = data.jurisdictions.includes('EU (MiCA)')
 
+  // Map stable jurisdiction key → display label (translate 'Autre' only)
+  const jurisdictionLabels: Record<string, string> = {
+    'EU (MiCA)': 'EU (MiCA)',
+    'US (SEC)': 'US (SEC)',
+    'Dubai (VARA)': 'Dubai (VARA)',
+    'UK (FCA)': 'UK (FCA)',
+    'Singapore (MAS)': 'Singapore (MAS)',
+    'Switzerland (FINMA)': 'Switzerland (FINMA)',
+    'Autre': t.m9_jurisdictionOther,
+  }
+
+  const classificationOptions = [
+    { value: 'utility', label: t.m9_labelUtility, description: t.m9_descUtility },
+    { value: 'art', label: t.m9_labelART, description: t.m9_descART },
+    { value: 'emt', label: t.m9_labelEMT, description: t.m9_descEMT },
+    { value: 'security', label: t.m9_labelSecurity, description: t.m9_descSecurity },
+    { value: 'unknown', label: t.m9_labelUnknown, description: t.m9_descUnknown },
+  ]
+
+  const checklistItems = [
+    { key: 'kyc_required', label: t.m9_kycLabel, description: t.m9_kycDesc },
+    { key: 'regulatory_counsel', label: t.m9_counselLabel, description: t.m9_counselDesc },
+  ]
+
   return (
     <ModuleShell
       title="Compliance"
-      subtitle="Module 9 — Cadre réglementaire applicable à votre token"
+      subtitle={t.m9_subtitle}
       projectId={id}
       moduleKey="m9"
       saved={saved}
@@ -69,12 +95,12 @@ export default function Module9Page() {
     >
       {/* Disclaimer */}
       <div className="p-3 rounded-lg bg-yellow/5 border border-yellow/20 text-xs text-yellow">
-        ⚠ Cette section est informative uniquement. Consultez un avocat spécialisé avant toute émission de token.
+        {t.m9_disclaimer}
       </div>
 
       {/* Jurisdictions */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Juridictions applicables</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m9_jurisdictionsTitle}</h3>
         <div className="flex flex-wrap gap-2">
           {JURISDICTIONS.map((j) => (
             <button
@@ -84,7 +110,7 @@ export default function Module9Page() {
                 data.jurisdictions.includes(j) ? 'border-accent bg-accent/10 text-accent' : 'border-border text-muted hover:bg-surface-hover hover:text-foreground'
               }`}
             >
-              {j}
+              {jurisdictionLabels[j]}
             </button>
           ))}
         </div>
@@ -92,15 +118,9 @@ export default function Module9Page() {
 
       {/* Token classification */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Classification du token</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m9_classificationTitle}</h3>
         <div className="grid grid-cols-2 gap-2">
-          {[
-            { value: 'utility', label: 'Utility Token', description: 'Accès à un service, pas de profit sharing' },
-            { value: 'art', label: 'Asset-Referenced Token (ART)', description: 'MiCA — adossé à un actif ou panier' },
-            { value: 'emt', label: 'E-Money Token (EMT)', description: 'MiCA — référencé à une devise fiat' },
-            { value: 'security', label: 'Security Token', description: 'Droits financiers, soumis au droit des valeurs mobilières' },
-            { value: 'unknown', label: 'À déterminer', description: 'Classification incertaine, nécessite avis juridique' },
-          ].map((opt) => (
+          {classificationOptions.map((opt) => (
             <label key={opt.value} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${data.token_classification === opt.value ? 'border-accent bg-accent/5' : 'border-border hover:bg-surface-hover'}`}>
               <div className={`w-3 h-3 rounded-full border-2 shrink-0 mt-0.5 ${data.token_classification === opt.value ? 'border-accent bg-accent' : 'border-muted'}`} />
               <input type="radio" name="token_classification" checked={data.token_classification === opt.value} onChange={() => update({ token_classification: opt.value as M9Data['token_classification'] })} className="sr-only" />
@@ -116,26 +136,23 @@ export default function Module9Page() {
       {/* MiCA specifics */}
       {showMiCA && (
         <div className="card bg-surface-2">
-          <h3 className="text-xs font-semibold text-muted mb-3 uppercase tracking-wider">MiCA — Obligations clés</h3>
+          <h3 className="text-xs font-semibold text-muted mb-3 uppercase tracking-wider">{t.m9_micaTitle}</h3>
           <ul className="text-xs text-muted space-y-1.5">
-            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Publication d'un whitepaper réglementaire</li>
-            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Autorisation préalable selon classification (ART/EMT)</li>
-            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Transparence continue (reporting périodique)</li>
-            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Séparer utility vs profit sharing dans le design</li>
-            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Structurer early (foundation / issuer / DAO)</li>
-            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Engager le régulateur avant le TGE</li>
+            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m9_mica1}</li>
+            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m9_mica2}</li>
+            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m9_mica3}</li>
+            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m9_mica4}</li>
+            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m9_mica5}</li>
+            <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m9_mica6}</li>
           </ul>
         </div>
       )}
 
       {/* Checklist */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Checklist conformité</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m9_checklistTitle}</h3>
         <div className="space-y-3">
-          {[
-            { key: 'kyc_required', label: 'KYC requis pour les participants', description: 'Vérification d\'identité des acheteurs/utilisateurs' },
-            { key: 'regulatory_counsel', label: 'Conseil juridique engagé', description: 'Avocat spécialisé Web3/Crypto consulté' },
-          ].map((item) => (
+          {checklistItems.map((item) => (
             <label key={item.key} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${data[item.key as keyof M9Data] ? 'border-green bg-green/5' : 'border-border hover:bg-surface-hover'}`}>
               <div className={`w-4 h-4 rounded border shrink-0 mt-0.5 flex items-center justify-center ${data[item.key as keyof M9Data] ? 'bg-green border-green' : 'border-muted'}`}>
                 {data[item.key as keyof M9Data] && <span className="text-white text-[10px]">✓</span>}
@@ -149,13 +166,13 @@ export default function Module9Page() {
           ))}
         </div>
         <div className="mt-4">
-          <label className="label">Notes de conformité</label>
-          <textarea value={data.compliance_notes} onChange={(e) => update({ compliance_notes: e.target.value })} rows={3} className="input" placeholder="Actions en cours, délais, contacts régulateurs..." />
+          <label className="label">{t.m9_complianceNotesLabel}</label>
+          <textarea value={data.compliance_notes} onChange={(e) => update({ compliance_notes: e.target.value })} rows={3} className="input" placeholder={t.m9_complianceNotesPlaceholder} />
         </div>
       </div>
 
       <div className="card">
-        <label className="label">Notes générales</label>
+        <label className="label">{t.m9_notesLabel}</label>
         <textarea value={data.notes} onChange={(e) => update({ notes: e.target.value })} rows={3} className="input" />
       </div>
     </ModuleShell>

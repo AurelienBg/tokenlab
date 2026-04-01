@@ -6,6 +6,7 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M2Data, Agent, Policy } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: M2Data = { agents: [], policies: [], notes: '' }
 
@@ -16,6 +17,7 @@ export default function Module2Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M2Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm2')
@@ -82,7 +84,7 @@ export default function Module2Page() {
   return (
     <ModuleShell
       title="Agents & Policies"
-      subtitle="Module 2 — Qui interagit avec le système, et selon quelles règles ?"
+      subtitle={t.m2_subtitle}
       projectId={id}
       moduleKey="m2"
       saved={saved}
@@ -91,11 +93,11 @@ export default function Module2Page() {
       {/* Agents */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Agents</h3>
-          <button onClick={addAgent} className="btn btn-ghost text-xs">+ Ajouter</button>
+          <h3 className="text-sm font-semibold text-foreground">{t.m2_agentsTitle}</h3>
+          <button onClick={addAgent} className="btn btn-ghost text-xs">{t.m2_addBtn}</button>
         </div>
         {data.agents.length === 0 && (
-          <p className="text-xs text-muted">Aucun agent. Qui interagit avec votre système ?</p>
+          <p className="text-xs text-muted">{t.m2_noAgents}</p>
         )}
         <div className="space-y-3">
           {data.agents.map((agent) => (
@@ -104,7 +106,7 @@ export default function Module2Page() {
                 <input
                   value={agent.name}
                   onChange={(e) => updateAgent(agent.id, { name: e.target.value })}
-                  placeholder="Nom de l'agent"
+                  placeholder={t.m2_agentNamePlaceholder}
                   className="input flex-1"
                 />
                 <select
@@ -119,7 +121,7 @@ export default function Module2Page() {
               <input
                 value={agent.incentive}
                 onChange={(e) => updateAgent(agent.id, { incentive: e.target.value })}
-                placeholder="Quelle est son incitation à participer ?"
+                placeholder={t.m2_agentIncentivePlaceholder}
                 className="input"
               />
             </div>
@@ -130,11 +132,11 @@ export default function Module2Page() {
       {/* Policies */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Policies</h3>
-          <button onClick={addPolicy} className="btn btn-ghost text-xs">+ Ajouter</button>
+          <h3 className="text-sm font-semibold text-foreground">{t.m2_policiesTitle}</h3>
+          <button onClick={addPolicy} className="btn btn-ghost text-xs">{t.m2_addBtn}</button>
         </div>
         {data.policies.length === 0 && (
-          <p className="text-xs text-muted">Aucune policy. Quelles règles gouvernent votre système ?</p>
+          <p className="text-xs text-muted">{t.m2_noPolicies}</p>
         )}
         <div className="space-y-3">
           {data.policies.map((policy) => (
@@ -143,7 +145,7 @@ export default function Module2Page() {
                 <input
                   value={policy.name}
                   onChange={(e) => updatePolicy(policy.id, { name: e.target.value })}
-                  placeholder="Nom de la policy"
+                  placeholder={t.m2_policyNamePlaceholder}
                   className="input flex-1"
                 />
                 <select
@@ -151,14 +153,14 @@ export default function Module2Page() {
                   onChange={(e) => updatePolicy(policy.id, { type: e.target.value })}
                   className="input w-52"
                 >
-                  {POLICY_TYPES.map((t) => <option key={t}>{t}</option>)}
+                  {POLICY_TYPES.map((pt) => <option key={pt}>{pt}</option>)}
                 </select>
                 <button onClick={() => removePolicy(policy.id)} className="text-muted hover:text-red transition-colors px-2">✕</button>
               </div>
               <textarea
                 value={policy.description}
                 onChange={(e) => updatePolicy(policy.id, { description: e.target.value })}
-                placeholder="Décrivez la règle, son déclencheur, et son impact"
+                placeholder={t.m2_policyDescPlaceholder}
                 rows={2}
                 className="input"
               />
@@ -168,13 +170,13 @@ export default function Module2Page() {
       </div>
 
       <div className="card">
-        <label className="label">Notes</label>
+        <label className="label">{t.m2_notesLabel}</label>
         <textarea
           value={data.notes}
           onChange={(e) => { setData((p) => ({ ...p, notes: e.target.value })); setSaved(false) }}
           rows={3}
           className="input"
-          placeholder="Questions ouvertes, incohérences à résoudre..."
+          placeholder={t.m2_notesPlaceholder}
         />
       </div>
     </ModuleShell>

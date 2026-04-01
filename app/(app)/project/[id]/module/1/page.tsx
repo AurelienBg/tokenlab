@@ -6,6 +6,7 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M1Data, TokenType } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: M1Data = {
   token_topology: null,
@@ -19,19 +20,19 @@ const DEFAULT: M1Data = {
   notes: '',
 }
 
-const TOKEN_TYPES: { value: TokenType; label: string; examples: string; description: string }[] = [
-  { value: 'utility', label: 'Utility', examples: 'XRP, LINK, FIL', description: 'Requis pour utiliser le service' },
-  { value: 'governance', label: 'Governance', examples: 'UNI, CRV, MKR', description: 'Droits de vote sur le protocole' },
-  { value: 'security', label: 'Security', examples: 'tokenized equity', description: 'Représente une participation financière' },
-  { value: 'stablecoin', label: 'Stablecoin', examples: 'USDC, DAI', description: 'Valeur stable, souvent adossée à un actif' },
-  { value: 'hybrid', label: 'Hybrid', examples: 'AAVE, BNB', description: 'Combine plusieurs fonctions (utility + governance...)' },
+const TOKEN_TYPES: { value: TokenType; label: string; examples: string }[] = [
+  { value: 'utility', label: 'Utility', examples: 'XRP, LINK, FIL' },
+  { value: 'governance', label: 'Governance', examples: 'UNI, CRV, MKR' },
+  { value: 'security', label: 'Security', examples: 'tokenized equity' },
+  { value: 'stablecoin', label: 'Stablecoin', examples: 'USDC, DAI' },
+  { value: 'hybrid', label: 'Hybrid', examples: 'AAVE, BNB' },
 ]
 
-const UTILITY_PRINCIPLES = [
-  { key: 'gate_access' as const, label: 'Gate access', description: 'Restreint l\'accès à des services ou à des niveaux de service' },
-  { key: 'coordinate_risk' as const, label: 'Coordinate risk', description: 'Staké/locké pour absorber du risque' },
-  { key: 'incentivize_actions' as const, label: 'Incentivize actions', description: 'Récompense les bonnes actions, pénalise les mauvaises' },
-  { key: 'scale_with_usage' as const, label: 'Scale with usage', description: 'La demande croît avec l\'activité réelle' },
+const UTILITY_PRINCIPLES: { key: 'gate_access' | 'coordinate_risk' | 'incentivize_actions' | 'scale_with_usage'; label: string }[] = [
+  { key: 'gate_access', label: 'Gate access' },
+  { key: 'coordinate_risk', label: 'Coordinate risk' },
+  { key: 'incentivize_actions', label: 'Incentivize actions' },
+  { key: 'scale_with_usage', label: 'Scale with usage' },
 ]
 
 const STANDARDS = ['ERC-20', 'ERC-721', 'ERC-1155', 'XLS-20', 'Custom'] as const
@@ -40,6 +41,7 @@ export default function Module1Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M1Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm1')
@@ -70,10 +72,25 @@ export default function Module1Page() {
 
   useAutoSave(data, handleSave)
 
+  const tokenTypeDescriptions: Record<string, string> = {
+    utility: t.m1_descUtility,
+    governance: t.m1_descGovernance,
+    security: t.m1_descSecurity,
+    stablecoin: t.m1_descStablecoin,
+    hybrid: t.m1_descHybrid,
+  }
+
+  const utilityDescriptions: Record<string, string> = {
+    gate_access: t.m1_descGateAccess,
+    coordinate_risk: t.m1_descCoordinateRisk,
+    incentivize_actions: t.m1_descIncentivizeActions,
+    scale_with_usage: t.m1_descScaleWithUsage,
+  }
+
   return (
     <ModuleShell
       title="Token Topology & Utility"
-      subtitle="Module 1 — Quel est le rôle de votre token dans le système ?"
+      subtitle={t.m1_subtitle}
       projectId={id}
       moduleKey="m1"
       saved={saved}
@@ -81,13 +98,13 @@ export default function Module1Page() {
     >
       {/* Token Topology */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Type de token (Topology)</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m1_tokenTopologyTitle}</h3>
         <div className="grid grid-cols-1 gap-2">
-          {TOKEN_TYPES.map((t) => (
+          {TOKEN_TYPES.map((type) => (
             <label
-              key={t.value}
+              key={type.value}
               className={`flex items-center gap-4 p-3 rounded-lg border cursor-pointer transition-colors ${
-                data.token_topology === t.value
+                data.token_topology === type.value
                   ? 'border-accent bg-accent/5'
                   : 'border-border hover:bg-surface-hover'
               }`}
@@ -95,20 +112,20 @@ export default function Module1Page() {
               <input
                 type="radio"
                 name="token_topology"
-                value={t.value}
-                checked={data.token_topology === t.value}
-                onChange={() => update({ token_topology: t.value })}
+                value={type.value}
+                checked={data.token_topology === type.value}
+                onChange={() => update({ token_topology: type.value })}
                 className="sr-only"
               />
               <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${
-                data.token_topology === t.value ? 'border-accent bg-accent' : 'border-muted'
+                data.token_topology === type.value ? 'border-accent bg-accent' : 'border-muted'
               }`} />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-foreground">{t.label}</span>
-                  <span className="text-xs text-muted font-mono">({t.examples})</span>
+                  <span className="text-sm font-medium text-foreground">{type.label}</span>
+                  <span className="text-xs text-muted font-mono">({type.examples})</span>
                 </div>
-                <p className="text-xs text-muted">{t.description}</p>
+                <p className="text-xs text-muted">{tokenTypeDescriptions[type.value]}</p>
               </div>
             </label>
           ))}
@@ -118,12 +135,12 @@ export default function Module1Page() {
       {/* Utility principles */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Principes d'utilité</h3>
+          <h3 className="text-sm font-semibold text-foreground">{t.m1_utilityPrinciplesTitle}</h3>
           <span className={`text-sm font-bold ${
             data.utility_score >= 3 ? 'text-green' :
             data.utility_score >= 2 ? 'text-yellow' : 'text-red'
           }`}>
-            Score : {data.utility_score}/4
+            {t.m1_scoreLabel} {data.utility_score}/4
           </span>
         </div>
         <div className="space-y-2">
@@ -147,21 +164,21 @@ export default function Module1Page() {
               />
               <div>
                 <p className="text-sm font-medium text-foreground">{p.label}</p>
-                <p className="text-xs text-muted">{p.description}</p>
+                <p className="text-xs text-muted">{utilityDescriptions[p.key]}</p>
               </div>
             </label>
           ))}
         </div>
         {data.utility_score < 2 && data.utility_score > 0 && (
           <div className="mt-3 p-3 rounded-lg bg-red/5 border border-red/20 text-xs text-red">
-            ⚠ Score &lt; 2 — votre token risque d'être perçu comme spéculatif. Renforcez son utilité.
+            {t.m1_warnLowScore}
           </div>
         )}
       </div>
 
       {/* Token standard */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Standard technique</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m1_technicalStandardTitle}</h3>
         <div className="flex flex-wrap gap-2">
           {STANDARDS.map((s) => (
             <button
@@ -181,11 +198,11 @@ export default function Module1Page() {
 
       {/* Notes */}
       <div className="card">
-        <label className="label">Notes & réflexions</label>
+        <label className="label">{t.m1_notesLabel}</label>
         <textarea
           value={data.notes}
           onChange={(e) => update({ notes: e.target.value })}
-          placeholder="Justifications, références à des projets similaires, questions ouvertes..."
+          placeholder={t.m1_notesPlaceholder}
           rows={4}
           className="input"
         />

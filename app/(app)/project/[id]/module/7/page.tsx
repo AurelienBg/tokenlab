@@ -6,6 +6,7 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M7Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: M7Data = {
   listing_type: null,
@@ -22,6 +23,7 @@ export default function Module7Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M7Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm7')
@@ -50,8 +52,8 @@ export default function Module7Page() {
 
   return (
     <ModuleShell
-      title="TGE & Stratégie de Liquidité"
-      subtitle="Module 7 — Stratégie de lancement, pools DEX, CEX, market makers"
+      title={t.m7_title}
+      subtitle={t.m7_subtitle}
       projectId={id}
       moduleKey="m7"
       saved={saved}
@@ -59,11 +61,11 @@ export default function Module7Page() {
     >
       {/* Launch strategy */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Stratégie de lancement</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m7_launchTitle}</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { value: 'dex_only', label: 'DEX-only', description: 'Low cost, full control. Idéal community-driven', icon: '⬡' },
-            { value: 'dex_cex', label: 'DEX + CEX', description: 'Exposition maximale, coût élevé', icon: '⬡⊕' },
+            { value: 'dex_only', label: 'DEX-only', description: t.m7_descDexOnly, icon: '⬡' },
+            { value: 'dex_cex', label: 'DEX + CEX', description: t.m7_descDexCex, icon: '⬡⊕' },
           ].map((opt) => (
             <label
               key={opt.value}
@@ -84,13 +86,13 @@ export default function Module7Page() {
         </div>
         <p className="text-xs text-muted mt-3 flex gap-1.5">
           <span className="text-accent">→</span>
-          Recommandation : DEX-first + CEX listing post-stabilization (2–6 semaines)
+          {t.m7_launchReco}
         </p>
       </div>
 
       {/* Pool model */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Modèle de pool DEX</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m7_poolModelTitle}</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
@@ -126,12 +128,12 @@ export default function Module7Page() {
 
       {/* Liquidity */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Stratégie de liquidité</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m7_liquidityTitle}</h3>
         <div className="space-y-2 mb-4">
           {[
             { value: 'pol', label: 'POL (Protocol-Owned Liquidity)', description: 'Sustainable, no mercenary capital' },
             { value: 'lp_incentives', label: 'LP Incentives (External)', description: 'Flexible, sell pressure risk' },
-            { value: 'skewed', label: 'Skewed Pools (70:30, 80:20)', description: 'Buy pressure, volatile si demande baisse' },
+            { value: 'skewed', label: 'Skewed Pools (70:30, 80:20)', description: t.m7_descSkewed },
           ].map((opt) => (
             <label
               key={opt.value}
@@ -150,12 +152,12 @@ export default function Module7Page() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="label">Liquidité initiale (% du supply)</label>
-            <input type="number" min="0" max="100" step="0.5" value={data.liquidity_pct ?? ''} onChange={(e) => update({ liquidity_pct: e.target.value ? Number(e.target.value) : null })} className="input" placeholder="ex: 5" />
-            <p className="text-xs text-muted mt-1">Healthy range : 3–8% de la circulating supply</p>
+            <label className="label">{t.m7_liquidityPctLabel}</label>
+            <input type="number" min="0" max="100" step="0.5" value={data.liquidity_pct ?? ''} onChange={(e) => update({ liquidity_pct: e.target.value ? Number(e.target.value) : null })} className="input" placeholder={t.m7_liquidityPctPlaceholder} />
+            <p className="text-xs text-muted mt-1">{t.m7_liquidityPctHint}</p>
           </div>
           <div>
-            <label className="label">Date TGE cible</label>
+            <label className="label">{t.m7_tgeDateLabel}</label>
             <input type="date" value={data.tge_date_target} onChange={(e) => update({ tge_date_target: e.target.value })} className="input" />
           </div>
         </div>
@@ -163,10 +165,10 @@ export default function Module7Page() {
 
       {/* CEX */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-4">CEX Listing (optionnel)</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">{t.m7_cexTitle}</h3>
         <div className="space-y-2 mb-4">
           {[
-            { value: 'none', label: 'Pas de CEX prévu', description: 'DEX-only' },
+            { value: 'none', label: t.m7_cexNone, description: 'DEX-only' },
             { value: 'tier3', label: 'Tier 3', description: 'LBank, BingX — $10K–$60K' },
             { value: 'tier2', label: 'Tier 2', description: 'Gate, MEXC, Kucoin — $80K–$600K' },
             { value: 'tier1', label: 'Tier 1', description: 'Binance, OKX, Kraken — $250K–$1M+' },
@@ -182,13 +184,13 @@ export default function Module7Page() {
           ))}
         </div>
         <div>
-          <label className="label">Market Maker envisagé</label>
-          <input value={data.market_maker} onChange={(e) => update({ market_maker: e.target.value })} placeholder="ex: Wintermute, Vortex, TradeDog, Yellowstone Capital" className="input" />
+          <label className="label">{t.m7_marketMakerLabel}</label>
+          <input value={data.market_maker} onChange={(e) => update({ market_maker: e.target.value })} placeholder={t.m7_marketMakerPlaceholder} className="input" />
         </div>
       </div>
 
       <div className="card">
-        <label className="label">Notes</label>
+        <label className="label">{t.m7_notesLabel}</label>
         <textarea value={data.notes} onChange={(e) => update({ notes: e.target.value })} rows={3} className="input" />
       </div>
     </ModuleShell>

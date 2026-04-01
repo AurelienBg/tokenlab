@@ -6,19 +6,21 @@ import { getLocalModuleData, saveLocalModuleData, generateId } from '@/lib/stora
 import { M6Data, VestingSchedule } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
+import { useLang } from '@/components/LangProvider'
 
 const DEFAULT: M6Data = { vesting_schedules: [], sell_pressure_notes: '', notes: '' }
 
 const VESTING_TYPES = [
-  { value: 'linear', label: 'Linear/Time-based', description: 'Moins de volatilité, flux prévisible' },
-  { value: 'event_driven', label: 'Event-driven', description: 'Déclenché par milestone ou KPI' },
-  { value: 'specific_date', label: 'Specific date', description: 'Blocs à dates fixes, plus de volatilité' },
+  { value: 'linear', label: 'Linear/Time-based' },
+  { value: 'event_driven', label: 'Event-driven' },
+  { value: 'specific_date', label: 'Specific date' },
 ] as const
 
 export default function Module6Page() {
   const { id } = useParams() as { id: string }
   const [data, setData] = useState<M6Data>(DEFAULT)
   const [saved, setSaved] = useState(false)
+  const { t } = useLang()
 
   useEffect(() => {
     const mod = getLocalModuleData(id, 'm6')
@@ -65,10 +67,16 @@ export default function Module6Page() {
 
   useAutoSave(data, handleSave)
 
+  const vestingTypeDescriptions: Record<string, string> = {
+    linear: t.m6_descLinear,
+    event_driven: t.m6_descEventDriven,
+    specific_date: t.m6_descSpecificDate,
+  }
+
   return (
     <ModuleShell
       title="Vesting & Sell Pressure"
-      subtitle="Module 6 — Calendrier de déblocage et analyse de la pression vendeuse"
+      subtitle={t.m6_subtitle}
       projectId={id}
       moduleKey="m6"
       saved={saved}
@@ -77,12 +85,12 @@ export default function Module6Page() {
       {/* Vesting schedules */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-foreground">Calendriers de vesting</h3>
-          <button onClick={addSchedule} className="btn btn-ghost text-xs">+ Ajouter</button>
+          <h3 className="text-sm font-semibold text-foreground">{t.m6_vestingTitle}</h3>
+          <button onClick={addSchedule} className="btn btn-ghost text-xs">{t.m6_addBtn}</button>
         </div>
 
         {data.vesting_schedules.length === 0 && (
-          <p className="text-xs text-muted">Ajoutez un calendrier par catégorie d'allocation.</p>
+          <p className="text-xs text-muted">{t.m6_noSchedules}</p>
         )}
 
         <div className="space-y-4">
@@ -92,7 +100,7 @@ export default function Module6Page() {
                 <input
                   value={s.category}
                   onChange={(e) => updateSchedule(s.id, { category: e.target.value })}
-                  placeholder="Catégorie (ex: Team, Investors)"
+                  placeholder={t.m6_categoryPlaceholder}
                   className="input flex-1"
                 />
                 <button onClick={() => removeSchedule(s.id)} className="text-muted hover:text-red transition-colors px-2">✕</button>
@@ -100,7 +108,7 @@ export default function Module6Page() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="label">Cliff (mois)</label>
+                  <label className="label">{t.m6_cliffLabel}</label>
                   <input
                     type="number"
                     min="0"
@@ -109,11 +117,11 @@ export default function Module6Page() {
                     className="input"
                   />
                   {s.cliff_months < 6 && s.category.toLowerCase().includes('team') && (
-                    <p className="text-[10px] text-yellow mt-0.5">⚠ Recommandé : ≥ 6 mois</p>
+                    <p className="text-[10px] text-yellow mt-0.5">{t.m6_warnCliff}</p>
                   )}
                 </div>
                 <div>
-                  <label className="label">Vesting (mois)</label>
+                  <label className="label">{t.m6_vestingLabel}</label>
                   <input
                     type="number"
                     min="0"
@@ -123,7 +131,7 @@ export default function Module6Page() {
                   />
                 </div>
                 <div>
-                  <label className="label">TGE unlock (%)</label>
+                  <label className="label">{t.m6_tgeUnlockLabel}</label>
                   <input
                     type="number"
                     min="0"
@@ -136,20 +144,20 @@ export default function Module6Page() {
               </div>
 
               <div>
-                <label className="label">Type de vesting</label>
+                <label className="label">{t.m6_vestingTypeLabel}</label>
                 <div className="flex gap-2">
-                  {VESTING_TYPES.map((t) => (
+                  {VESTING_TYPES.map((vt) => (
                     <button
-                      key={t.value}
-                      onClick={() => updateSchedule(s.id, { vesting_type: t.value })}
-                      title={t.description}
+                      key={vt.value}
+                      onClick={() => updateSchedule(s.id, { vesting_type: vt.value })}
+                      title={vestingTypeDescriptions[vt.value]}
                       className={`flex-1 py-1.5 rounded text-xs font-medium border transition-colors ${
-                        s.vesting_type === t.value
+                        s.vesting_type === vt.value
                           ? 'border-accent bg-accent/10 text-accent'
                           : 'border-border text-muted hover:bg-surface-hover'
                       }`}
                     >
-                      {t.label}
+                      {vt.label}
                     </button>
                   ))}
                 </div>
@@ -157,7 +165,7 @@ export default function Module6Page() {
 
               {/* Summary */}
               <div className="text-xs text-muted bg-surface px-3 py-2 rounded">
-                {s.tge_unlock_pct}% au TGE → cliff {s.cliff_months}m → {s.vesting_months}m de vesting {s.vesting_type === 'linear' ? 'linéaire' : s.vesting_type}
+                {s.tge_unlock_pct}{t.m6_summaryAtTge} {s.cliff_months}m → {s.vesting_months}m {t.m6_summaryVesting} {s.vesting_type === 'linear' ? t.m6_summaryLinear : s.vesting_type}
               </div>
             </div>
           ))}
@@ -166,33 +174,33 @@ export default function Module6Page() {
 
       {/* Sell pressure */}
       <div className="card">
-        <h3 className="text-sm font-semibold text-foreground mb-2">Analyse de sell pressure</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-2">{t.m6_sellPressureTitle}</h3>
         <div className="text-xs text-muted bg-surface-2 px-3 py-2 rounded mb-3 font-mono">
           Sell Pressure = (Unlocked Supply + Realized Rewards) – Treasury Recapture via buybacks
         </div>
-        <label className="label">Notes sur la pression vendeuse</label>
+        <label className="label">{t.m6_sellPressureLabel}</label>
         <textarea
           value={data.sell_pressure_notes}
           onChange={(e) => { setData((p) => ({ ...p, sell_pressure_notes: e.target.value })); setSaved(false) }}
           rows={3}
           className="input"
-          placeholder="Pics de sell pressure identifiés ? Mécanismes de rétention prévus (ve-locking, staking, reinvestment) ?"
+          placeholder={t.m6_sellPressurePlaceholder}
         />
       </div>
 
       {/* Best practices */}
       <div className="card bg-surface-2">
-        <h3 className="text-xs font-semibold text-muted mb-3 uppercase tracking-wider">Bonnes pratiques (Pantera Capital)</h3>
+        <h3 className="text-xs font-semibold text-muted mb-3 uppercase tracking-wider">{t.m6_bestPracticesTitle}</h3>
         <ul className="text-xs text-muted space-y-1.5">
-          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Linear vesting &gt; specific date pour la stabilité du prix</li>
-          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Larger initial unlocks → less negative price impact</li>
-          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>6-month cliff préférable à 1-year ou no cliff</li>
-          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>Ratio L/S sain : 3–8% de la circulating supply en liquidité DEX</li>
+          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m6_bestPractice1}</li>
+          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m6_bestPractice2}</li>
+          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m6_bestPractice3}</li>
+          <li className="flex gap-2"><span className="text-accent shrink-0">→</span>{t.m6_bestPractice4}</li>
         </ul>
       </div>
 
       <div className="card">
-        <label className="label">Notes générales</label>
+        <label className="label">{t.m6_notesLabel}</label>
         <textarea
           value={data.notes}
           onChange={(e) => { setData((p) => ({ ...p, notes: e.target.value })); setSaved(false) }}
