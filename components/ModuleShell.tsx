@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ModuleKey } from '@/lib/types'
 import { useLang } from './LangProvider'
 import { MODULES } from '@/lib/constants'
@@ -27,6 +28,7 @@ export default function ModuleShell({
   children,
 }: Props) {
   const { t } = useLang()
+  const router = useRouter()
   const [completedBits, setCompletedBits] = useState(0)
 
   // Load + refresh completion status
@@ -100,27 +102,39 @@ export default function ModuleShell({
           {t.backDashboard}
         </Link>
         <div className="flex items-center gap-3">
-          {saved && (
-            <span className="text-xs text-green animate-fade-in">{t.saved}</span>
-          )}
+          {/* Save button — changes to green when saved */}
           <button
             onClick={() => onSave(false)}
-            className="btn btn-ghost text-xs"
             title="Cmd+S / Ctrl+S"
+            className={`btn text-xs transition-colors ${
+              saved
+                ? 'btn-ghost text-green border-green/40'
+                : 'btn-ghost'
+            }`}
           >
-            {t.save}
+            {saved ? `✓ ${t.saved}` : t.save}
           </button>
+
+          {/* Mark complete — navigates to next module on click */}
           {(() => {
             const isComplete = !!(completedBits & (1 << currentIdx))
             return (
               <button
-                onClick={() => onSave(!isComplete)}
+                onClick={() => {
+                  if (!isComplete) {
+                    onSave(true)
+                    router.push(nextHref)
+                  } else {
+                    onSave(false)
+                  }
+                }}
                 className={`btn text-xs ${isComplete ? 'btn-ghost text-green border-green/30 hover:text-red hover:border-red/30' : 'btn-primary'}`}
               >
                 {isComplete ? `✓ ${t.complete}` : t.markComplete}
               </button>
             )
           })()}
+
           <Link
             href={nextHref}
             className="btn btn-ghost text-xs flex items-center gap-1"
