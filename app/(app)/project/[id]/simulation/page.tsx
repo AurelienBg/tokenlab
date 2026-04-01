@@ -7,11 +7,13 @@ import { getLocalModuleData } from '@/lib/storage'
 import { M4Data, M5Data, M6Data } from '@/lib/types'
 import { computeSupplySimulation, formatSupply } from '@/lib/supplySimulation'
 import SupplyChart from '@/components/SupplyChart'
+import { useLang } from '@/components/LangProvider'
 
 const HORIZONS = [24, 36, 48, 60]
 
 export default function SimulationPage() {
   const { id } = useParams() as { id: string }
+  const { t } = useLang()
   const [m4, setM4] = useState<M4Data | null>(null)
   const [m5, setM5] = useState<M5Data | null>(null)
   const [m6, setM6] = useState<M6Data | null>(null)
@@ -30,11 +32,40 @@ export default function SimulationPage() {
 
   const hasData = totalSupply > 0 && categories.length > 0
 
-  // Key milestones: months where a new category starts unlocking
-  const milestones = categories
-    .map((cat) => ({ category: cat.category, month: cat.cliff, fullyAt: cat.cliff + cat.vesting, color: cat.color }))
-    .filter((m) => m.month > 0 || m.fullyAt > 0)
-    .sort((a, b) => a.month - b.month)
+  // Helper to fill template strings like "{n}" or "{cat}"
+  const fill = (tpl: string, vars: Record<string, string | number>) =>
+    Object.entries(vars).reduce((s, [k, v]) => s.replace(`{${k}}`, String(v)), tpl)
+
+  // Warnings S5-5
+  type Warning = { level: 'red' | 'yellow'; msg: string; fix: string }
+  const warnings: Warning[] = []
+  if (hasData) {
+    const tgePt = points[0]
+    const tgePct = tgePt ? Math.round((tgePt.total / totalSupply) * 100) : 0
+    const m12pt = points[Math.min(12, points.length - 1)]
+    const m12pct = m12pt ? Math.round((m12pt.total / totalSupply) * 100) : 0
+
+    if (tgePct > 30)
+      warnings.push({ level: 'red', msg: fill(t.simWarnTgeHigh, { n: tgePct }), fix: t.simFixTgeHigh })
+    else if (tgePct > 20)
+      warnings.push({ level: 'yellow', msg: fill(t.simWarnTgeMed, { n: tgePct }), fix: t.simFixTgeMed })
+
+    if (m12pct > 70)
+      warnings.push({ level: 'red', msg: fill(t.simWarnM12High, { n: m12pct }), fix: t.simFixM12High })
+    else if (m12pct > 50)
+      warnings.push({ level: 'yellow', msg: fill(t.simWarnM12Med, { n: m12pct }), fix: t.simFixM12Med })
+
+    const cliffCounts: Record<number, number> = {}
+    categories.map(c => c.cliff).filter(c => c > 0).forEach(c => { cliffCounts[c] = (cliffCounts[c] ?? 0) + 1 })
+    Object.entries(cliffCounts).filter(([, count]) => count >= 2).forEach(([month]) => {
+      warnings.push({ level: 'yellow', msg: fill(t.simWarnCliff, { n: month }), fix: t.simFixCliff })
+    })
+
+    categories.forEach(cat => {
+      if (cat.vesting === 0 && cat.tokens / totalSupply > 0.1)
+        warnings.push({ level: 'red', msg: fill(t.simWarnNoVesting, { cat: cat.category, n: Math.round(cat.tokens/totalSupply*100) }), fix: t.simFixNoVesting })
+    })
+  }
 
   // Circulating at key months
   const keyMonths = [0, 6, 12, 24, 36, 48].filter((m) => m <= horizon)
@@ -50,17 +81,15 @@ export default function SimulationPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Supply Simulation</h1>
-        <p className="text-sm text-muted mt-1">Circulating supply dans le temps — M4 + M5 + M6</p>
+        <h1 className="text-2xl font-bold text-foreground">{t.simTitle}</h1>
+        <p className="text-sm text-muted mt-1">{t.simSubtitle}</p>
       </div>
 
       {!hasData ? (
         <div className="card text-center py-12">
           <p className="text-3xl mb-3">∿</p>
-          <h2 className="text-base font-semibold text-foreground mb-2">Données insuffisantes</h2>
-          <p className="text-sm text-muted mb-5 max-w-sm mx-auto">
-            Remplissez au minimum <strong>M4</strong> (supply totale) et <strong>M5</strong> (allocations) pour générer la simulation.
-          </p>
+          <h2 className="text-base font-semibold text-foreground mb-2">{t.simNoData}</h2>
+          <p className="text-sm text-muted mb-5 max-w-sm mx-auto">{t.simNoDataDesc}</p>
           <div className="flex justify-center gap-3">
             <Link href={`/project/${id}/module/4`} className="btn btn-ghost text-sm">→ Module 4</Link>
             <Link href={`/project/${id}/module/5`} className="btn btn-ghost text-sm">→ Module 5</Link>
@@ -71,7 +100,7 @@ export default function SimulationPage() {
         <div className="space-y-6">
           {/* Horizon selector */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted">Horizon :</span>
+            <span className="text-xs text-muted">{t.simHorizon}</span>
             {HORIZONS.map((h) => (
               <button
                 key={h}
@@ -86,17 +115,40 @@ export default function SimulationPage() {
               </button>
             ))}
             <span className="text-xs text-muted ml-2">
-              Supply totale : <strong className="text-foreground">{formatSupply(totalSupply)}</strong>
+              {t.simTotalSupply} <strong className="text-foreground">{formatSupply(totalSupply)}</strong>
             </span>
           </div>
+
+          {/* Alerts S5-5 */}
+          {warnings.length === 0 ? (
+            <div className="card bg-green/5 border-green/20">
+              <p className="text-xs text-green font-medium">{t.simNoAlerts}</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {warnings.map((w, i) => (
+                <div key={i} className={`card border ${w.level === 'red' ? 'bg-red/5 border-red/20' : 'bg-yellow/5 border-yellow/20'}`}>
+                  <div className="flex items-start gap-2">
+                    <span className={`shrink-0 font-bold text-sm ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>
+                      {w.level === 'red' ? '⛔' : '⚠'}
+                    </span>
+                    <div>
+                      <p className={`text-xs font-semibold ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>{w.msg}</p>
+                      <p className="text-xs text-muted mt-0.5">→ {w.fix}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Chart */}
           <div className="card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-foreground">Circulating Supply (%)</h2>
+              <h2 className="text-sm font-semibold text-foreground">{t.simChartTitle}</h2>
               {!m6 || (m6.vesting_schedules.length === 0) ? (
                 <span className="text-[10px] text-yellow bg-yellow/10 px-2 py-0.5 rounded">
-                  ⚠ M6 manquant — vesting supposé 100% au TGE
+                  {t.simM6Missing}
                 </span>
               ) : null}
             </div>
@@ -110,7 +162,7 @@ export default function SimulationPage() {
 
           {/* Key months table */}
           <div className="card">
-            <h2 className="text-sm font-semibold text-foreground mb-3">Supply circulante aux jalons clés</h2>
+            <h2 className="text-sm font-semibold text-foreground mb-3">{t.simKeyMonths}</h2>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
               {keyData.map(({ month, total, pct }) => (
                 <div key={month} className="text-center p-3 rounded-lg bg-surface-2">
@@ -126,7 +178,7 @@ export default function SimulationPage() {
 
           {/* Per-category breakdown */}
           <div className="card">
-            <h2 className="text-sm font-semibold text-foreground mb-3">Détail par catégorie</h2>
+            <h2 className="text-sm font-semibold text-foreground mb-3">{t.simBreakdown}</h2>
             <div className="space-y-2">
               {categories.map((cat) => {
                 const tgeTokens = cat.tokens * (cat.tge_pct / 100)
@@ -138,17 +190,17 @@ export default function SimulationPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground truncate">{cat.category}</p>
                       <p className="text-xs text-muted">
-                        {formatSupply(cat.tokens)} tokens
-                        {cat.cliff > 0 && ` · cliff ${cat.cliff}m`}
-                        {cat.vesting > 0 && ` · vesting ${cat.vesting}m`}
+                        {formatSupply(cat.tokens)} {t.simTokens}
+                        {cat.cliff > 0 && ` · ${t.simCliff} ${cat.cliff}m`}
+                        {cat.vesting > 0 && ` · ${t.simVesting} ${cat.vesting}m`}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-xs font-semibold text-foreground">{tgePct}% au TGE</p>
+                      <p className="text-xs font-semibold text-foreground">{tgePct}% {t.simAtTge}</p>
                       {fullyAt > 0 ? (
-                        <p className="text-[10px] text-muted">100% à M{fullyAt}</p>
+                        <p className="text-[10px] text-muted">{fill(t.simFullAtMonth, { n: fullyAt })}</p>
                       ) : (
-                        <p className="text-[10px] text-muted">100% au TGE</p>
+                        <p className="text-[10px] text-muted">{t.simFullAtTge}</p>
                       )}
                     </div>
                   </div>
@@ -157,65 +209,6 @@ export default function SimulationPage() {
             </div>
           </div>
 
-          {/* Warnings S5-5 */}
-          {(() => {
-            type Warning = { level: 'red' | 'yellow'; msg: string; fix: string }
-            const warnings: Warning[] = []
-            const tgePt = points[0]
-            const tgePct = tgePt ? Math.round((tgePt.total / totalSupply) * 100) : 0
-            const m12pt = points[Math.min(12, points.length - 1)]
-            const m12pct = m12pt ? Math.round((m12pt.total / totalSupply) * 100) : 0
-            const m6pt = points[Math.min(6, points.length - 1)]
-            const m6pct = m6pt ? Math.round((m6pt.total / totalSupply) * 100) : 0
-
-            if (tgePct > 30)
-              warnings.push({ level: 'red', msg: `${tgePct}% de la supply circule au TGE`, fix: 'Réduire les TGE unlock % dans M6, ou augmenter le cliff.' })
-            else if (tgePct > 20)
-              warnings.push({ level: 'yellow', msg: `${tgePct}% au TGE — sell pressure modéré`, fix: 'Envisager un cliff plus long ou un TGE unlock < 10%.' })
-
-            if (m12pct > 70)
-              warnings.push({ level: 'red', msg: `${m12pct}% en circulation à M12`, fix: 'Allonger le vesting des catégories majeures (Team, Investors).' })
-            else if (m12pct > 50)
-              warnings.push({ level: 'yellow', msg: `${m12pct}% en circulation à M12`, fix: 'Vérifier que les mécanismes de rétention (staking, lock) sont en place.' })
-
-            // Cliff overlap detection: multiple categories unlocking in the same month
-            const cliffMonths = categories.map(c => c.cliff).filter(c => c > 0)
-            const cliffCounts: Record<number, number> = {}
-            cliffMonths.forEach(c => { cliffCounts[c] = (cliffCounts[c] ?? 0) + 1 })
-            const overlaps = Object.entries(cliffCounts).filter(([, count]) => count >= 2)
-            overlaps.forEach(([month]) => {
-              warnings.push({ level: 'yellow', msg: `Plusieurs catégories débloquent simultanément à M${month}`, fix: 'Décaler les cliffs de 1–2 mois pour étaler la sell pressure.' })
-            })
-
-            // No vesting on large categories
-            categories.forEach(cat => {
-              if (cat.vesting === 0 && cat.tokens / totalSupply > 0.1)
-                warnings.push({ level: 'red', msg: `"${cat.category}" (${Math.round(cat.tokens/totalSupply*100)}%) sans vesting`, fix: 'Ajouter un vesting d\'au moins 12 mois pour cette catégorie.' })
-            })
-
-            if (warnings.length === 0) return (
-              <div className="card bg-green/5 border-green/20">
-                <p className="text-xs text-green font-medium">✓ Aucune alerte — profil de distribution équilibré</p>
-              </div>
-            )
-            return (
-              <div className="space-y-2">
-                {warnings.map((w, i) => (
-                  <div key={i} className={`card border ${w.level === 'red' ? 'bg-red/5 border-red/20' : 'bg-yellow/5 border-yellow/20'}`}>
-                    <div className="flex items-start gap-2">
-                      <span className={`shrink-0 font-bold text-sm ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>
-                        {w.level === 'red' ? '⛔' : '⚠'}
-                      </span>
-                      <div>
-                        <p className={`text-xs font-semibold ${w.level === 'red' ? 'text-red' : 'text-yellow'}`}>{w.msg}</p>
-                        <p className="text-xs text-muted mt-0.5">→ {w.fix}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )
-          })()}
         </div>
       )}
     </div>
