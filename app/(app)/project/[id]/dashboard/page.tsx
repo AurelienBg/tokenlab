@@ -53,7 +53,7 @@ export default function DashboardPage() {
     load()
     window.addEventListener('tokenlab:module-saved', load)
     return () => window.removeEventListener('tokenlab:module-saved', load)
-  }, [id])
+  }, [id, lang])
 
   function startEdit() {
     if (!lp) return
