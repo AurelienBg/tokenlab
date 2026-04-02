@@ -214,6 +214,16 @@ export default function SimulationPage() {
 
         </div>
       )}
+
+      {/* Bottom navigation */}
+      <div className="mt-8 flex items-center justify-between pt-6 border-t border-border">
+        <Link href={`/project/${id}/dashboard`} className="btn btn-ghost">
+          {t.backDashboard}
+        </Link>
+        <Link href={`/project/${id}/module/6`} className="btn btn-ghost text-xs flex items-center gap-1">
+          {t.modules_labels['m6'].shortLabel} →
+        </Link>
+      </div>
     </div>
   )
 }
