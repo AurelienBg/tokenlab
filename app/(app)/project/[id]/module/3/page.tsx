@@ -161,6 +161,8 @@ export default function Module3Page() {
         data={data}
         tokenName={project?.token_name || undefined}
         tokenTicker={project?.token_ticker || undefined}
+        onAddFaucet={addFaucet}
+        onAddSink={addSink}
       />
 
       <FlowList

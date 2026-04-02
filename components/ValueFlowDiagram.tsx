@@ -6,6 +6,8 @@ interface ValueFlowDiagramProps {
   data: M3Data
   tokenName?: string
   tokenTicker?: string
+  onAddFaucet?: () => void
+  onAddSink?: () => void
 }
 
 // ─── Layout constants ──────────────────────────────────────────────────────────
@@ -134,12 +136,12 @@ function ArrowCurve({
   )
 }
 
-function EmptyPlaceholder({ x, y, label, color }: {
-  x: number; y: number; label: string; color: 'green' | 'red'
+function EmptyPlaceholder({ x, y, label, color, onClick }: {
+  x: number; y: number; label: string; color: 'green' | 'red'; onClick?: () => void
 }) {
   const colorVar = color === 'green' ? 'var(--green)' : 'var(--red)'
   return (
-    <g>
+    <g onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       <rect
         x={x} y={y - NODE_H / 2}
         width={NODE_W} height={NODE_H}
@@ -149,14 +151,15 @@ function EmptyPlaceholder({ x, y, label, color }: {
           stroke: colorVar,
           strokeWidth: 1,
           strokeDasharray: '4 3',
-          strokeOpacity: 0.4,
+          strokeOpacity: onClick ? 0.7 : 0.4,
+          transition: 'stroke-opacity 0.15s',
         }}
       />
       <text
         x={x + NODE_W / 2} y={y}
         textAnchor="middle"
         dominantBaseline="middle"
-        style={{ fontSize: 10, fill: colorVar, fillOpacity: 0.4, fontFamily: 'inherit' }}
+        style={{ fontSize: 10, fill: colorVar, fillOpacity: onClick ? 0.7 : 0.4, fontFamily: 'inherit', userSelect: 'none' }}
       >
         {label}
       </text>
@@ -166,7 +169,7 @@ function EmptyPlaceholder({ x, y, label, color }: {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function ValueFlowDiagram({ data, tokenName, tokenTicker }: ValueFlowDiagramProps) {
+export function ValueFlowDiagram({ data, tokenName, tokenTicker, onAddFaucet, onAddSink }: ValueFlowDiagramProps) {
   const { faucets, sinks } = data
   const maxRows = Math.max(faucets.length, sinks.length, 2)
   const H = Math.max(maxRows * 76 + 80, 240)
@@ -214,7 +217,7 @@ export function ValueFlowDiagram({ data, tokenName, tokenTicker }: ValueFlowDiag
       >
         {/* ── Faucets ── */}
         {faucets.length === 0 && (
-          <EmptyPlaceholder x={LEFT_X} y={cy} label="+ Ajouter un faucet" color="green" />
+          <EmptyPlaceholder x={LEFT_X} y={cy} label="+ Ajouter un faucet" color="green" onClick={onAddFaucet} />
         )}
         {faucets.map((f, i) => {
           const fy = nodeY(i, faucets.length, H)
@@ -234,7 +237,7 @@ export function ValueFlowDiagram({ data, tokenName, tokenTicker }: ValueFlowDiag
 
         {/* ── Sinks ── */}
         {sinks.length === 0 && (
-          <EmptyPlaceholder x={RIGHT_X} y={cy} label="+ Ajouter un sink" color="red" />
+          <EmptyPlaceholder x={RIGHT_X} y={cy} label="+ Ajouter un sink" color="red" onClick={onAddSink} />
         )}
         {sinks.map((s, i) => {
           const sy = nodeY(i, sinks.length, H)
