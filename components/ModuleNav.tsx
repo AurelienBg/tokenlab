@@ -43,7 +43,7 @@ export default function ModuleNav({ project }: Props) {
       </div>
 
       {/* Étapes */}
-      {MODULES.map((m) => {
+      {MODULES.filter((m) => !m.hidden).map((m) => {
         const ml = t.modules_labels[m.key]
         const href = `${base}/${m.path}`
         const isActive = pathname.startsWith(href)

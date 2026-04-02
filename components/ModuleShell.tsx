@@ -46,7 +46,9 @@ export default function ModuleShell({
     return () => window.removeEventListener('tokenlab:module-saved', onSaved)
   }, [projectId])
 
+  const visibleModules = MODULES.filter((m) => !m.hidden)
   const currentIdx = MODULES.findIndex((m) => m.key === moduleKey)
+  const visibleIdx = visibleModules.findIndex((m) => m.key === moduleKey)
   const nextModule = MODULES[currentIdx + 1] ?? null
   const defaultNextHref = nextModule
     ? `/project/${projectId}/${nextModule.path}`
@@ -62,9 +64,9 @@ export default function ModuleShell({
       {/* Progress stepper */}
       <div className="mb-6">
         <div className="flex items-center gap-1 mb-3">
-          {MODULES.map((m, i) => {
-            const isComplete = !!(completedBits & (1 << i))
-            const isCurrent = m.key === moduleKey
+          {visibleModules.map((m, i) => {
+            const isComplete = !!(completedBits & (1 << MODULES.indexOf(m)))
+            const isCurrent = m.key === moduleKey || (m.key === 'm4' && moduleKey === 'm5')
             return (
               <Link
                 key={m.key}
@@ -87,7 +89,7 @@ export default function ModuleShell({
             {subtitle && <p className="text-sm text-muted mt-0.5">{subtitle}</p>}
           </div>
           <span className="text-xs text-muted font-mono shrink-0">
-            {currentIdx + 1} / {MODULES.length}
+            {(visibleIdx >= 0 ? visibleIdx : visibleModules.findIndex(m => m.key === 'm4')) + 1} / {visibleModules.length}
           </span>
         </div>
       </div>

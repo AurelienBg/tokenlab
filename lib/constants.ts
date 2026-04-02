@@ -8,6 +8,7 @@ export interface ModuleInfo {
   path: string
   optional: boolean
   optionalCondition?: string
+  hidden?: boolean  // hidden from nav + progress bar (tab inside another step)
 }
 
 export const MODULES: ModuleInfo[] = [
@@ -50,6 +51,15 @@ export const MODULES: ModuleInfo[] = [
     description: 'Supply totale, allocation, simulation',
     path: 'module/4',
     optional: false,
+  },
+  {
+    key: 'm5',
+    label: 'Distribution & Allocation',
+    shortLabel: 'Allocation',
+    description: 'Allocation des tokens par catégorie',
+    path: 'module/5',
+    optional: false,
+    hidden: true,
   },
   {
     key: 'm6',
