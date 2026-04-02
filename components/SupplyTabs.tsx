@@ -11,8 +11,8 @@ export default function SupplyTabs({ projectId }: Props) {
   const pathname = usePathname()
 
   const tabs = [
-    { label: 'M4 — Supply & Emission', href: `/project/${projectId}/module/4` },
-    { label: 'M5 — Allocation', href: `/project/${projectId}/module/5` },
+    { label: 'Supply & Emission', href: `/project/${projectId}/module/4` },
+    { label: 'Allocation', href: `/project/${projectId}/module/5` },
     { label: 'Simulation', href: `/project/${projectId}/simulation` },
   ]
 

@@ -224,10 +224,9 @@ export default function DashboardPage() {
             (health?.total ?? 0) >= 70 ? 'text-green' :
             (health?.total ?? 0) >= 40 ? 'text-yellow' : 'text-red'
           }`}>
-            {health?.total ?? 0}
+            {health?.total ?? 0}%
           </div>
           <div className="text-xs text-muted uppercase tracking-wider">{t.healthScore}</div>
-          <div className="text-xs text-muted mt-1">/ 100</div>
         </div>
 
         <div className="card col-span-2 flex flex-col justify-center">

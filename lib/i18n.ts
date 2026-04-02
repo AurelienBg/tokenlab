@@ -145,7 +145,7 @@ export const translations = {
     simFixNoVesting: 'Ajouter un vesting d\'au moins 12 mois pour cette catégorie.',
 
     // Step 0 — Token Decision Tree
-    step0_subtitle: 'Module 0 — Avant de designer votre tokenomics, avez-vous vraiment besoin d\'un token ?',
+    step0_subtitle: 'Étape 1 — Avant de designer votre tokenomics, avez-vous vraiment besoin d\'un token ?',
     step0_q1Title: 'Question 1 : Un token est-il nécessaire pour votre projet ?',
     step0_q1Desc: 'Les utilisateurs peuvent-ils pleinement utiliser le produit sans le token ?',
     step0_yes: '✓ Oui, le token est nécessaire',
@@ -166,7 +166,7 @@ export const translations = {
     step0_resultRethinkDesc: 'Faible utilité détectée. Reconsidérez si le token est vraiment nécessaire avant de continuer.',
 
     // Module 1 — Token Topology & Utility
-    m1_subtitle: 'Module 1 — Quel est le rôle de votre token dans le système ?',
+    m1_subtitle: 'Étape 2 — Quel est le rôle de votre token dans le système ?',
     m1_tokenTopologyTitle: 'Type de token (Topology)',
     m1_utilityPrinciplesTitle: 'Principes d\'utilité',
     m1_scoreLabel: 'Score :',
@@ -185,7 +185,7 @@ export const translations = {
     m1_descScaleWithUsage: 'La demande croît avec l\'activité réelle',
 
     // Module 2 — Agents & Policies
-    m2_subtitle: 'Module 2 — Qui interagit avec le système, et selon quelles règles ?',
+    m2_subtitle: 'Étape 3 — Qui interagit avec le système, et selon quelles règles ?',
     m2_agentsTitle: 'Agents',
     m2_addBtn: '+ Ajouter',
     m2_noAgents: 'Aucun agent. Qui interagit avec votre système ?',
@@ -200,7 +200,7 @@ export const translations = {
     m2_agentCategoryOther: 'Autre',
 
     // Module 3 — Value Flow
-    m3_subtitle: 'Module 3 — Comment les tokens entrent et sortent du système ?',
+    m3_subtitle: 'Étape 4 — Comment les tokens entrent et sortent du système ?',
     m3_addBtn: '+ Ajouter',
     m3_noFaucets: 'Aucun faucet. D\'où viennent les tokens dans votre système ?',
     m3_noSinks: 'Aucun sink. Comment les tokens sont-ils retirés du marché ?',
@@ -217,7 +217,7 @@ export const translations = {
     m3_notesPlaceholder: 'Schéma de flux, questions ouvertes...',
 
     // Module 4 — Supply-Side & Emission
-    m4_subtitle: 'Module 4 — Définissez la supply totale et le modèle d\'émission',
+    m4_subtitle: 'Étape 5 — Définissez la supply totale et le modèle d\'émission',
     m4_supplyTitle: 'Supply',
     m4_totalSupplyLabel: 'Total Supply',
     m4_totalSupplyPlaceholder: 'ex: 1000000000',
@@ -237,7 +237,7 @@ export const translations = {
     m4_descEmissionAdaptive: 'Trigger-based, adapté à l\'activité',
 
     // Module 5 — Distribution & Allocation
-    m5_subtitle: 'Module 5 — Répartissez les tokens par catégorie selon les standards de marché',
+    m5_subtitle: 'Étape 5 — Répartissez les tokens par catégorie selon les standards de marché',
     m5_allocationTitle: 'Répartition',
     m5_totalLabel: 'Total :',
     m5_allocationDetailTitle: 'Détail des allocations',
@@ -251,7 +251,7 @@ export const translations = {
     m5_newCategory: 'Nouveau',
 
     // Module 6 — Vesting & Sell Pressure
-    m6_subtitle: 'Module 6 — Calendrier de déblocage et analyse de la pression vendeuse',
+    m6_subtitle: 'Étape 6 — Calendrier de déblocage et analyse de la pression vendeuse',
     m6_vestingTitle: 'Calendriers de vesting',
     m6_addBtn: '+ Ajouter',
     m6_noSchedules: 'Ajoutez un calendrier par catégorie d\'allocation.',
@@ -279,7 +279,7 @@ export const translations = {
 
     // Module 7 — TGE & Liquidity Strategy
     m7_title: 'TGE & Stratégie de Liquidité',
-    m7_subtitle: 'Module 7 — Stratégie de lancement, pools DEX, CEX, market makers',
+    m7_subtitle: 'Étape 7 — Stratégie de lancement, pools DEX, CEX, market makers',
     m7_launchTitle: 'Stratégie de lancement',
     m7_descDexOnly: 'Low cost, full control. Idéal community-driven',
     m7_descDexCex: 'Exposition maximale, coût élevé',
@@ -299,7 +299,7 @@ export const translations = {
 
     // Module 8 — Governance
     m8_title: 'Gouvernance',
-    m8_subtitle: 'Module 8 — Modèle de gouvernance et droits associés au token',
+    m8_subtitle: 'Étape 8 — Modèle de gouvernance et droits associés au token',
     m8_govModelTitle: 'Modèle de gouvernance',
     m8_descOnChain: 'Votes enregistrés et exécutés on-chain',
     m8_descOffChain: 'Snapshot, forums, multisig exécution',
@@ -321,7 +321,7 @@ export const translations = {
     m8_rightDelegation: 'Délégation',
 
     // Module 9 — Compliance
-    m9_subtitle: 'Module 9 — Cadre réglementaire applicable à votre token',
+    m9_subtitle: 'Étape 9 — Cadre réglementaire applicable à votre token',
     m9_disclaimer: '⚠ Cette section est informative uniquement. Consultez un avocat spécialisé avant toute émission de token.',
     m9_jurisdictionsTitle: 'Juridictions applicables',
     m9_classificationTitle: 'Classification du token',
@@ -354,16 +354,16 @@ export const translations = {
 
     // Module labels
     modules_labels: {
-      step0: { label: 'Token Decision Tree', shortLabel: 'Étape 0', description: 'Avez-vous vraiment besoin d\'un token ?' },
-      m1: { label: 'Token Topology & Utility', shortLabel: 'Module 1', description: 'Type de token, utilité, standard technique' },
-      m2: { label: 'Agents & Policies', shortLabel: 'Module 2', description: 'Qui interagit et selon quelles règles ?' },
-      m3: { label: 'Value Flow (Sinks & Faucets)', shortLabel: 'Module 3', description: 'Sources et destructions de tokens' },
-      m4: { label: 'Supply-Side & Emission', shortLabel: 'Module 4', description: 'Supply totale, modèle d\'émission' },
-      m5: { label: 'Distribution & Allocation', shortLabel: 'Module 5', description: 'Répartition des tokens par catégorie' },
-      m6: { label: 'Vesting & Sell Pressure', shortLabel: 'Module 6', description: 'Calendrier de déblocage, analyse de pression vendeuse' },
-      m7: { label: 'TGE & Liquidity Strategy', shortLabel: 'Module 7', description: 'Lancement, pools DEX, market makers' },
-      m8: { label: 'Governance', shortLabel: 'Module 8', description: 'Modèle de gouvernance, droits de vote' },
-      m9: { label: 'Compliance', shortLabel: 'Module 9', description: 'MiCA, SEC, VARA — réglementation' },
+      step0: { label: 'Token Decision Tree', shortLabel: 'Étape 1', description: 'Avez-vous vraiment besoin d\'un token ?' },
+      m1: { label: 'Token Topology & Utility', shortLabel: 'Étape 2', description: 'Type de token, utilité, standard technique' },
+      m2: { label: 'Agents & Policies', shortLabel: 'Étape 3', description: 'Qui interagit et selon quelles règles ?' },
+      m3: { label: 'Value Flow (Sinks & Faucets)', shortLabel: 'Étape 4', description: 'Sources et destructions de tokens' },
+      m4: { label: 'Supply-Side & Emission', shortLabel: 'Étape 5', description: 'Supply totale, modèle d\'émission' },
+      m5: { label: 'Distribution & Allocation', shortLabel: 'Étape 5', description: 'Répartition des tokens par catégorie' },
+      m6: { label: 'Vesting & Sell Pressure', shortLabel: 'Étape 6', description: 'Calendrier de déblocage, analyse de pression vendeuse' },
+      m7: { label: 'TGE & Liquidity Strategy', shortLabel: 'Étape 7', description: 'Lancement, pools DEX, market makers' },
+      m8: { label: 'Governance', shortLabel: 'Étape 8', description: 'Modèle de gouvernance, droits de vote' },
+      m9: { label: 'Compliance', shortLabel: 'Étape 9', description: 'MiCA, SEC, VARA — réglementation' },
     },
   },
 
@@ -511,7 +511,7 @@ export const translations = {
     simFixNoVesting: 'Add at least 12 months of vesting for this category.',
 
     // Step 0 — Token Decision Tree
-    step0_subtitle: 'Step 0 — Before designing your tokenomics, do you really need a token?',
+    step0_subtitle: 'Step 1 — Before designing your tokenomics, do you really need a token?',
     step0_q1Title: 'Question 1: Is a token necessary for your project?',
     step0_q1Desc: 'Can users fully use the product without the token?',
     step0_yes: '✓ Yes, the token is necessary',
@@ -532,7 +532,7 @@ export const translations = {
     step0_resultRethinkDesc: 'Low utility detected. Reconsider whether the token is truly necessary before continuing.',
 
     // Module 1 — Token Topology & Utility
-    m1_subtitle: 'Module 1 — What is the role of your token in the system?',
+    m1_subtitle: 'Step 2 — What is the role of your token in the system?',
     m1_tokenTopologyTitle: 'Token type (Topology)',
     m1_utilityPrinciplesTitle: 'Utility principles',
     m1_scoreLabel: 'Score:',
@@ -551,7 +551,7 @@ export const translations = {
     m1_descScaleWithUsage: 'Demand grows with real activity',
 
     // Module 2 — Agents & Policies
-    m2_subtitle: 'Module 2 — Who interacts with the system, and under what rules?',
+    m2_subtitle: 'Step 3 — Who interacts with the system, and under what rules?',
     m2_agentsTitle: 'Agents',
     m2_addBtn: '+ Add',
     m2_noAgents: 'No agents. Who interacts with your system?',
@@ -566,7 +566,7 @@ export const translations = {
     m2_agentCategoryOther: 'Other',
 
     // Module 3 — Value Flow
-    m3_subtitle: 'Module 3 — How do tokens enter and leave the system?',
+    m3_subtitle: 'Step 4 — How do tokens enter and leave the system?',
     m3_addBtn: '+ Add',
     m3_noFaucets: 'No faucets. Where do tokens come from in your system?',
     m3_noSinks: 'No sinks. How are tokens removed from the market?',
@@ -583,7 +583,7 @@ export const translations = {
     m3_notesPlaceholder: 'Flow diagram, open questions...',
 
     // Module 4 — Supply-Side & Emission
-    m4_subtitle: 'Module 4 — Define total supply and emission model',
+    m4_subtitle: 'Step 5 — Define total supply and emission model',
     m4_supplyTitle: 'Supply',
     m4_totalSupplyLabel: 'Total Supply',
     m4_totalSupplyPlaceholder: 'e.g. 1000000000',
@@ -603,7 +603,7 @@ export const translations = {
     m4_descEmissionAdaptive: 'Trigger-based, adapted to activity',
 
     // Module 5 — Distribution & Allocation
-    m5_subtitle: 'Module 5 — Allocate tokens by category according to market standards',
+    m5_subtitle: 'Step 5 — Allocate tokens by category according to market standards',
     m5_allocationTitle: 'Allocation',
     m5_totalLabel: 'Total:',
     m5_allocationDetailTitle: 'Allocation breakdown',
@@ -617,7 +617,7 @@ export const translations = {
     m5_newCategory: 'New',
 
     // Module 6 — Vesting & Sell Pressure
-    m6_subtitle: 'Module 6 — Unlock schedule and sell pressure analysis',
+    m6_subtitle: 'Step 6 — Unlock schedule and sell pressure analysis',
     m6_vestingTitle: 'Vesting schedules',
     m6_addBtn: '+ Add',
     m6_noSchedules: 'Add a schedule per allocation category.',
@@ -645,7 +645,7 @@ export const translations = {
 
     // Module 7 — TGE & Liquidity Strategy
     m7_title: 'TGE & Liquidity Strategy',
-    m7_subtitle: 'Module 7 — Launch strategy, DEX pools, CEX, market makers',
+    m7_subtitle: 'Step 7 — Launch strategy, DEX pools, CEX, market makers',
     m7_launchTitle: 'Launch strategy',
     m7_descDexOnly: 'Low cost, full control. Ideal for community-driven',
     m7_descDexCex: 'Maximum exposure, high cost',
@@ -665,7 +665,7 @@ export const translations = {
 
     // Module 8 — Governance
     m8_title: 'Governance',
-    m8_subtitle: 'Module 8 — Governance model and token-associated rights',
+    m8_subtitle: 'Step 8 — Governance model and token-associated rights',
     m8_govModelTitle: 'Governance model',
     m8_descOnChain: 'Votes recorded and executed on-chain',
     m8_descOffChain: 'Snapshot, forums, multisig execution',
@@ -687,7 +687,7 @@ export const translations = {
     m8_rightDelegation: 'Delegation',
 
     // Module 9 — Compliance
-    m9_subtitle: 'Module 9 — Regulatory framework applicable to your token',
+    m9_subtitle: 'Step 9 — Regulatory framework applicable to your token',
     m9_disclaimer: '⚠ This section is for information purposes only. Consult a specialised lawyer before any token issuance.',
     m9_jurisdictionsTitle: 'Applicable jurisdictions',
     m9_classificationTitle: 'Token classification',
@@ -720,16 +720,16 @@ export const translations = {
 
     // Module labels
     modules_labels: {
-      step0: { label: 'Token Decision Tree', shortLabel: 'Step 0', description: 'Do you really need a token?' },
-      m1: { label: 'Token Topology & Utility', shortLabel: 'Module 1', description: 'Token type, utility, technical standard' },
-      m2: { label: 'Agents & Policies', shortLabel: 'Module 2', description: 'Who interacts and under what rules?' },
-      m3: { label: 'Value Flow (Sinks & Faucets)', shortLabel: 'Module 3', description: 'Token sources and sinks' },
-      m4: { label: 'Supply-Side & Emission', shortLabel: 'Module 4', description: 'Total supply, emission model' },
-      m5: { label: 'Distribution & Allocation', shortLabel: 'Module 5', description: 'Token allocation by category' },
-      m6: { label: 'Vesting & Sell Pressure', shortLabel: 'Module 6', description: 'Unlock schedule, sell pressure analysis' },
-      m7: { label: 'TGE & Liquidity Strategy', shortLabel: 'Module 7', description: 'Launch, DEX pools, market makers' },
-      m8: { label: 'Governance', shortLabel: 'Module 8', description: 'Governance model, voting rights' },
-      m9: { label: 'Compliance', shortLabel: 'Module 9', description: 'MiCA, SEC, VARA — regulations' },
+      step0: { label: 'Token Decision Tree', shortLabel: 'Step 1', description: 'Do you really need a token?' },
+      m1: { label: 'Token Topology & Utility', shortLabel: 'Step 2', description: 'Token type, utility, technical standard' },
+      m2: { label: 'Agents & Policies', shortLabel: 'Step 3', description: 'Who interacts and under what rules?' },
+      m3: { label: 'Value Flow (Sinks & Faucets)', shortLabel: 'Step 4', description: 'Token sources and sinks' },
+      m4: { label: 'Supply-Side & Emission', shortLabel: 'Step 5', description: 'Total supply, emission model' },
+      m5: { label: 'Distribution & Allocation', shortLabel: 'Step 5', description: 'Token allocation by category' },
+      m6: { label: 'Vesting & Sell Pressure', shortLabel: 'Step 6', description: 'Unlock schedule, sell pressure analysis' },
+      m7: { label: 'TGE & Liquidity Strategy', shortLabel: 'Step 7', description: 'Launch, DEX pools, market makers' },
+      m8: { label: 'Governance', shortLabel: 'Step 8', description: 'Governance model, voting rights' },
+      m9: { label: 'Compliance', shortLabel: 'Step 9', description: 'MiCA, SEC, VARA — regulations' },
     },
   },
 } as const
