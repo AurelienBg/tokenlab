@@ -8,6 +8,7 @@ import { ALLOCATION_BENCHMARKS } from '@/lib/constants'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
 import { useLang } from '@/components/LangProvider'
+import SupplyTabs from '@/components/SupplyTabs'
 
 const DEFAULT_ALLOCATIONS: Allocation[] = [
   { id: '1', category: 'Team & Advisors', percentage: 15, rationale: '' },
@@ -74,6 +75,7 @@ export default function Module5Page() {
       saved={saved}
       onSave={handleSave}
     >
+      <SupplyTabs projectId={id} />
       {/* Donut visualization */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">

@@ -79,7 +79,7 @@ export default function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean;
                           p.health_score >= 70 ? 'text-green' :
                           p.health_score >= 40 ? 'text-yellow' : 'text-red'
                         }`}>
-                          {p.health_score}
+                          {p.health_score}%
                         </span>
                       )}
                     </Link>

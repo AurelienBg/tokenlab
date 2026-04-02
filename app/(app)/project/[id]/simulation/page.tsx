@@ -8,6 +8,7 @@ import { M4Data, M5Data, M6Data } from '@/lib/types'
 import { computeSupplySimulation, formatSupply } from '@/lib/supplySimulation'
 import SupplyChart from '@/components/SupplyChart'
 import { useLang } from '@/components/LangProvider'
+import SupplyTabs from '@/components/SupplyTabs'
 
 const HORIZONS = [24, 36, 48, 60]
 
@@ -84,6 +85,8 @@ export default function SimulationPage() {
         <h1 className="text-2xl font-bold text-foreground">{t.simTitle}</h1>
         <p className="text-sm text-muted mt-1">{t.simSubtitle}</p>
       </div>
+
+      <SupplyTabs projectId={id} />
 
       {!hasData ? (
         <div className="card text-center py-12">
