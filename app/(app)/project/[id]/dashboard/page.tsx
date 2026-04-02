@@ -23,7 +23,7 @@ export default function DashboardPage() {
   const [editForm, setEditForm] = useState<Partial<Project>>({})
   const [copied, setCopied] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const router = useRouter()
 
   function handleDelete() {
@@ -47,7 +47,7 @@ export default function DashboardPage() {
       const data = getLocalProject(id)
       if (data) {
         setLp(data)
-        setHealth(computeHealthScore(data.modules))
+        setHealth(computeHealthScore(data.modules, lang))
       }
     }
     load()
@@ -65,6 +65,10 @@ export default function DashboardPage() {
       blockchain: lp.project.blockchain,
       project_type: lp.project.project_type ?? undefined,
       project_stage: lp.project.project_stage ?? undefined,
+      problem: lp.project.problem ?? '',
+      why_blockchain: lp.project.why_blockchain ?? '',
+      value_proposition: lp.project.value_proposition ?? '',
+      key_metrics: lp.project.key_metrics ?? '',
     })
     setEditing(true)
   }
@@ -80,6 +84,10 @@ export default function DashboardPage() {
       blockchain: editForm.blockchain?.trim() ?? lp.project.blockchain,
       project_type: (editForm.project_type || null) as ProjectType | null,
       project_stage: (editForm.project_stage || null) as ProjectStage | null,
+      problem: editForm.problem?.trim() || undefined,
+      why_blockchain: editForm.why_blockchain?.trim() || undefined,
+      value_proposition: editForm.value_proposition?.trim() || undefined,
+      key_metrics: editForm.key_metrics?.trim() || undefined,
       updated_at: new Date().toISOString(),
     }
     saveLocalProject(updated)
@@ -90,11 +98,13 @@ export default function DashboardPage() {
   if (!lp) return null
 
   const { project } = lp
-  const completedCount = MODULES.filter((m) =>
+  const visibleModules = MODULES.filter(m => !m.hidden)
+
+  const completedCount = visibleModules.filter((m) =>
     project.completed_modules & (1 << MODULES.indexOf(m))
   ).length
 
-  const moduleStatuses = MODULES.map((m) => {
+  const moduleStatuses = visibleModules.map((m) => {
     const bit = project.completed_modules & (1 << MODULES.indexOf(m))
     const mod = lp.modules[m.key]
     return bit ? 'complete' : mod ? 'partial' : 'empty'
@@ -138,7 +148,27 @@ export default function DashboardPage() {
                 </select>
               </div>
             </div>
-            <div className="flex gap-2 justify-end">
+            {/* Business context */}
+            <div className="col-span-2 pt-2 border-t border-border">
+              <p className="text-xs text-muted uppercase tracking-widest mb-3">{t.npContextSection}</p>
+            </div>
+            <div className="col-span-2">
+              <label className="label">{t.npProblem}</label>
+              <textarea className="input" rows={2} value={editForm.problem ?? ''} onChange={e => setEditForm(f => ({ ...f, problem: e.target.value }))} placeholder={t.npProblemPlaceholder} />
+            </div>
+            <div className="col-span-2">
+              <label className="label">{t.npWhyBlockchain}</label>
+              <textarea className="input" rows={2} value={editForm.why_blockchain ?? ''} onChange={e => setEditForm(f => ({ ...f, why_blockchain: e.target.value }))} placeholder={t.npWhyBlockchainPlaceholder} />
+            </div>
+            <div className="col-span-2">
+              <label className="label">{t.npValueProp}</label>
+              <textarea className="input" rows={2} value={editForm.value_proposition ?? ''} onChange={e => setEditForm(f => ({ ...f, value_proposition: e.target.value }))} placeholder={t.npValuePropPlaceholder} />
+            </div>
+            <div className="col-span-2">
+              <label className="label">{t.npKeyMetrics}</label>
+              <input className="input" value={editForm.key_metrics ?? ''} onChange={e => setEditForm(f => ({ ...f, key_metrics: e.target.value }))} placeholder={t.npKeyMetricsPlaceholder} />
+            </div>
+            <div className="col-span-2 flex gap-2 justify-end">
               <button onClick={() => setEditing(false)} className="btn btn-ghost text-sm">{t.cancel}</button>
               <button onClick={handleEditSave} className="btn btn-primary text-sm">{t.save}</button>
             </div>
@@ -232,13 +262,13 @@ export default function DashboardPage() {
         <div className="card col-span-2 flex flex-col justify-center">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-foreground">{t.globalProgress}</span>
-            <span className="text-sm text-muted">{completedCount} / {MODULES.length} {t.modules}</span>
+            <span className="text-sm text-muted">{completedCount} / {visibleModules.length} {t.modules}</span>
           </div>
           <div className="flex gap-1">
             {moduleStatuses.map((status, i) => (
               <div
                 key={i}
-                title={MODULES[i].shortLabel}
+                title={visibleModules[i].shortLabel}
                 className={`flex-1 h-2 rounded-sm transition-all ${
                   status === 'complete' ? 'bg-accent' :
                   status === 'partial' ? 'bg-accent/35' :
@@ -253,7 +283,7 @@ export default function DashboardPage() {
                 <span className={`text-[8px] font-mono ${
                   status === 'complete' ? 'text-accent' : 'text-muted opacity-40'
                 }`}>
-                  {i === 0 ? '0' : i}
+                  {i + 1}
                 </span>
               </div>
             ))}
@@ -344,7 +374,7 @@ export default function DashboardPage() {
       {/* Modules grid */}
       <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4">{t.modulesSection}</h2>
       <div className="grid grid-cols-2 gap-3">
-        {MODULES.map((mod) => {
+        {visibleModules.map((mod) => {
           const data = lp.modules[mod.key]
           const isComplete = data?.is_complete ?? false
           const hasData = !!data
