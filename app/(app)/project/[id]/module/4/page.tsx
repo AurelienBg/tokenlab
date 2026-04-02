@@ -94,6 +94,7 @@ export default function Module4Page() {
       moduleKey="m4"
       saved={saved}
       onSave={handleSave}
+      overrideNext={{ href: `/project/${id}/module/5`, label: 'Allocation' }}
     >
       <SupplyTabs projectId={id} />
       {/* Supply basics */}

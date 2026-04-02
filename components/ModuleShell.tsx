@@ -16,6 +16,7 @@ interface Props {
   saved: boolean
   onSave: (isComplete: boolean) => void
   children: React.ReactNode
+  overrideNext?: { href: string; label: string }
 }
 
 export default function ModuleShell({
@@ -26,6 +27,7 @@ export default function ModuleShell({
   saved,
   onSave,
   children,
+  overrideNext,
 }: Props) {
   const { t } = useLang()
   const router = useRouter()
@@ -46,12 +48,14 @@ export default function ModuleShell({
 
   const currentIdx = MODULES.findIndex((m) => m.key === moduleKey)
   const nextModule = MODULES[currentIdx + 1] ?? null
-  const nextHref = nextModule
+  const defaultNextHref = nextModule
     ? `/project/${projectId}/${nextModule.path}`
     : `/project/${projectId}/coach`
-  const nextLabel = nextModule
+  const defaultNextLabel = nextModule
     ? t.modules_labels[nextModule.key].shortLabel
     : t.coachIA
+  const nextHref = overrideNext?.href ?? defaultNextHref
+  const nextLabel = overrideNext?.label ?? defaultNextLabel
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-8">

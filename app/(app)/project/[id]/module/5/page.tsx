@@ -74,6 +74,7 @@ export default function Module5Page() {
       moduleKey="m5"
       saved={saved}
       onSave={handleSave}
+      overrideNext={{ href: `/project/${id}/simulation`, label: 'Simulation' }}
     >
       <SupplyTabs projectId={id} />
       {/* Donut visualization */}
