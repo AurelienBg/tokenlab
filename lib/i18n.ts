@@ -93,6 +93,7 @@ export const translations = {
     dashboard: 'Dashboard',
     simulation: 'Simulation',
     coachIA: 'Coach IA',
+    stepsLabel: 'Étapes',
     exportPDF: 'Export PDF',
 
     // Dashboard
@@ -108,10 +109,13 @@ export const translations = {
 
     // Coach page
     coachTitle: 'Coach IA',
-    coachSubtitle: 'Posez vos questions sur votre tokenomics',
-    coachPlaceholder: 'Posez votre question…',
+    coachSubtitle: 'Votre expert tokenomics — challenger & suggère sur la base du workshop XRPL Commons',
+    coachPlaceholder: 'Posez votre question au Coach IA…',
     coachSend: 'Envoyer',
     coachThinking: 'Le Coach réfléchit…',
+    coachClear: 'Effacer la conversation',
+    coachError: 'Erreur de connexion au Coach IA. Réessayez.',
+    coachGreetingDesc: 'Je connais votre projet et ses modules renseignés. Posez-moi n\'importe quelle question sur votre tokenomics.',
 
     // Simulation page
     simTitle: 'Supply Simulation',
@@ -459,6 +463,7 @@ export const translations = {
     dashboard: 'Dashboard',
     simulation: 'Simulation',
     coachIA: 'AI Coach',
+    stepsLabel: 'Steps',
     exportPDF: 'Export PDF',
 
     // Dashboard
@@ -474,10 +479,13 @@ export const translations = {
 
     // Coach page
     coachTitle: 'AI Coach',
-    coachSubtitle: 'Ask any questions about your tokenomics',
-    coachPlaceholder: 'Ask your question…',
+    coachSubtitle: 'Your tokenomics expert — challenge & suggest based on the XRPL Commons workshop',
+    coachPlaceholder: 'Ask your question to the AI Coach…',
     coachSend: 'Send',
     coachThinking: 'The Coach is thinking…',
+    coachClear: 'Clear conversation',
+    coachError: 'Connection error with the AI Coach. Please retry.',
+    coachGreetingDesc: 'I know your project and its filled modules. Ask me anything about your tokenomics.',
 
     // Simulation page
     simTitle: 'Supply Simulation',

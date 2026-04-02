@@ -48,7 +48,12 @@ function FlowList({
         <button onClick={onAdd} className="btn btn-ghost text-xs">{addLabel}</button>
       </div>
       {items.length === 0 && (
-        <p className="text-xs text-muted">{placeholder}</p>
+        <button
+          onClick={onAdd}
+          className="w-full py-6 rounded-lg border-2 border-dashed border-border text-xs text-muted hover:border-accent/40 hover:text-foreground transition-colors"
+        >
+          {addLabel}
+        </button>
       )}
       <div className="space-y-3">
         {items.map((item) => (
