@@ -47,7 +47,14 @@ export default function ModuleNav({ project }: Props) {
         const ml = t.modules_labels[m.key]
         const href = `${base}/${m.path}`
         const isActive = pathname.startsWith(href)
-        const isComplete = !!(project.completed_modules & (1 << MODULES.indexOf(m)))
+        const bit = (key: string) => {
+          const idx = MODULES.findIndex(x => x.key === key)
+          return idx >= 0 ? (1 << idx) : 0
+        }
+        // For m4 (Step 5): complete only when both Supply & Emission AND Allocation are done
+        const isComplete = m.key === 'm4'
+          ? !!(project.completed_modules & bit('m4')) && !!(project.completed_modules & bit('m5'))
+          : !!(project.completed_modules & (1 << MODULES.indexOf(m)))
         return (
           <Link
             key={m.key}
