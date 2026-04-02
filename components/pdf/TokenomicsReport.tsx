@@ -215,7 +215,7 @@ function Step0Page({ lp }: { lp: LocalProject }) {
       />
 
       <View style={styles.card}>
-        <DataRow label="Décision" value={data.result === 'launch' ? '✅ Lancer le token' : data.result === 'rethink' ? '⚠ Reconsidérer' : '—'} />
+        <DataRow label="Décision" value={data.result ? String(data.result) : '—'} />
         <DataRow label="Gate access" value={data.gate_access ? 'Oui' : 'Non'} />
         <DataRow label="Absorb risk" value={data.absorb_risk ? 'Oui' : 'Non'} />
         <DataRow label="Capture value" value={data.capture_value ? 'Oui' : 'Non'} />

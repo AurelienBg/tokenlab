@@ -94,9 +94,9 @@ export default function SimulationPage() {
           <h2 className="text-base font-semibold text-foreground mb-2">{t.simNoData}</h2>
           <p className="text-sm text-muted mb-5 max-w-sm mx-auto">{t.simNoDataDesc}</p>
           <div className="flex justify-center gap-3">
-            <Link href={`/project/${id}/module/4`} className="btn btn-ghost text-sm">→ Module 4</Link>
-            <Link href={`/project/${id}/module/5`} className="btn btn-ghost text-sm">→ Module 5</Link>
-            <Link href={`/project/${id}/module/6`} className="btn btn-primary text-sm">→ Module 6</Link>
+            <Link href={`/project/${id}/module/4`} className="btn btn-ghost text-sm">→ Supply & Emission</Link>
+            <Link href={`/project/${id}/module/5`} className="btn btn-ghost text-sm">→ Allocation</Link>
+            <Link href={`/project/${id}/module/6`} className="btn btn-primary text-sm">→ {t.modules_labels['m6'].shortLabel}</Link>
           </div>
         </div>
       ) : (

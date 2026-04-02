@@ -119,9 +119,9 @@ export const translations = {
 
     // Simulation page
     simTitle: 'Supply Simulation',
-    simSubtitle: 'Circulating supply dans le temps — M4 + M5 + M6',
+    simSubtitle: 'Circulating supply dans le temps — Supply, Allocation & Vesting',
     simNoData: 'Données insuffisantes',
-    simNoDataDesc: 'Remplissez au minimum M4 (supply totale) et M5 (allocations) pour générer la simulation.',
+    simNoDataDesc: 'Remplissez au minimum la supply totale (Supply & Emission) et les allocations pour générer la simulation.',
     simHorizon: 'Horizon :',
     simTotalSupply: 'Supply totale :',
     simM6Missing: '⚠ M6 manquant — vesting supposé 100% au TGE',
@@ -489,9 +489,9 @@ export const translations = {
 
     // Simulation page
     simTitle: 'Supply Simulation',
-    simSubtitle: 'Circulating supply over time — M4 + M5 + M6',
+    simSubtitle: 'Circulating supply over time — Supply, Allocation & Vesting',
     simNoData: 'Insufficient data',
-    simNoDataDesc: 'Fill in at least M4 (total supply) and M5 (allocations) to generate the simulation.',
+    simNoDataDesc: 'Fill in at least the total supply (Supply & Emission) and allocations to generate the simulation.',
     simHorizon: 'Horizon:',
     simTotalSupply: 'Total supply:',
     simM6Missing: '⚠ M6 missing — vesting assumed 100% at TGE',
