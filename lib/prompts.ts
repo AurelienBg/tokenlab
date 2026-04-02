@@ -10,8 +10,14 @@ export function buildProjectContext(
     `Token : ${project.token_name || '—'} (${project.token_ticker || '—'})`,
     `Type : ${project.project_type || '—'} | Stade : ${project.project_stage || '—'}`,
     `Blockchain : ${project.blockchain || '—'} | Token type : ${project.token_type || '—'}`,
-    '',
   ]
+
+  if (project.problem) lines.push(`Problème : ${project.problem}`)
+  if (project.why_blockchain) lines.push(`Pourquoi blockchain : ${project.why_blockchain}`)
+  if (project.value_proposition) lines.push(`Proposition de valeur : ${project.value_proposition}`)
+  if (project.key_metrics) lines.push(`KPIs cibles : ${project.key_metrics}`)
+  if (project.blockchain_conditions?.length) lines.push(`Conditions blockchain validées : ${project.blockchain_conditions.join(', ')}`)
+  lines.push('')
 
   for (const mod of MODULES) {
     const data = modules[mod.key]
