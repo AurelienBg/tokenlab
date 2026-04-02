@@ -78,6 +78,18 @@ export const translations = {
     tokenType: 'Type de token envisagé',
     create: 'Créer le projet →',
     cancel: 'Annuler',
+    // Business context section
+    npContextSection: 'Contexte business',
+    npContextDesc: 'Ces informations enrichissent le Coach IA et donnent du sens à votre tokenomics.',
+    npProblem: 'Problème résolu',
+    npProblemPlaceholder: 'Quel problème concret résolvez-vous ? Pour qui ? Quelles sont les alternatives existantes ?',
+    npWhyBlockchain: 'Pourquoi une blockchain ?',
+    npWhyBlockchainPlaceholder: 'Pourquoi ce cas d\'usage nécessite une blockchain (et pas une base de données classique) ? Pourquoi XRPL / cette L1 spécifiquement ?',
+    npValueProp: 'Proposition de valeur',
+    npValuePropPlaceholder: 'Quelle valeur unique apportez-vous ? Quel est votre avantage injuste (unfair advantage) ?',
+    npKeyMetrics: 'KPIs cibles',
+    npKeyMetricsPlaceholder: 'ex: TVL > $1M, 10k wallets actifs, $VMT, volume de transactions…',
+    npBlockchainConditions: 'Conditions blockchain (cochez celles qui s\'appliquent)',
 
     // Dashboard
     editProject: 'Modifier le projet',
@@ -448,6 +460,18 @@ export const translations = {
     tokenType: 'Token type (planned)',
     create: 'Create project →',
     cancel: 'Cancel',
+    // Business context section
+    npContextSection: 'Business context',
+    npContextDesc: 'This information enriches the AI Coach and gives meaning to your tokenomics design.',
+    npProblem: 'Problem',
+    npProblemPlaceholder: 'What concrete problem are you solving? For whom? What are the existing alternatives?',
+    npWhyBlockchain: 'Why a blockchain?',
+    npWhyBlockchainPlaceholder: 'Why does this use case require a blockchain (not just a database)? Why XRPL / this L1 specifically?',
+    npValueProp: 'Value proposition',
+    npValuePropPlaceholder: 'What unique value do you bring? What is your unfair advantage?',
+    npKeyMetrics: 'Target KPIs',
+    npKeyMetricsPlaceholder: 'e.g. TVL > $1M, 10k active wallets, $VMT, transaction volume…',
+    npBlockchainConditions: 'Blockchain conditions (check all that apply)',
 
     // Dashboard
     editProject: 'Edit project',

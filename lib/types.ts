@@ -23,6 +23,12 @@ export interface Project {
   completed_modules: number
   created_at: string
   updated_at: string
+  // Business context
+  problem?: string
+  why_blockchain?: string
+  value_proposition?: string
+  key_metrics?: string
+  blockchain_conditions?: string[]
 }
 
 export interface ProjectMember {
