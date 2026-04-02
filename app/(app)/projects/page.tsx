@@ -149,7 +149,7 @@ export default function ProjectsPage() {
                         p.health_score >= 70 ? 'bg-green/10 text-green' :
                         p.health_score >= 40 ? 'bg-yellow/10 text-yellow' : 'bg-red/10 text-red'
                       }`}>
-                        {p.health_score}/100
+                        {p.health_score}%
                       </span>
                     )}
                   </div>
