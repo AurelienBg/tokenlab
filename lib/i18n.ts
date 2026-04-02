@@ -145,7 +145,7 @@ export const translations = {
     simFixNoVesting: 'Ajouter un vesting d\'au moins 12 mois pour cette catégorie.',
 
     // Step 0 — Token Decision Tree
-    step0_subtitle: 'Étape 0 — Avant de designer votre tokenomics, avez-vous vraiment besoin d\'un token ?',
+    step0_subtitle: 'Module 0 — Avant de designer votre tokenomics, avez-vous vraiment besoin d\'un token ?',
     step0_q1Title: 'Question 1 : Un token est-il nécessaire pour votre projet ?',
     step0_q1Desc: 'Les utilisateurs peuvent-ils pleinement utiliser le produit sans le token ?',
     step0_yes: '✓ Oui, le token est nécessaire',

@@ -7,6 +7,7 @@ import { M4Data } from '@/lib/types'
 import ModuleShell from '@/components/ModuleShell'
 import { useAutoSave } from '@/lib/useAutoSave'
 import { useLang } from '@/components/LangProvider'
+import SupplyTabs from '@/components/SupplyTabs'
 
 const DEFAULT: M4Data = {
   total_supply: null,
@@ -94,6 +95,7 @@ export default function Module4Page() {
       saved={saved}
       onSave={handleSave}
     >
+      <SupplyTabs projectId={id} />
       {/* Supply basics */}
       <div className="card">
         <h3 className="text-sm font-semibold text-foreground mb-4">{t.m4_supplyTitle}</h3>

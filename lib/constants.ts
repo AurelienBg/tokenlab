@@ -14,9 +14,9 @@ export const MODULES: ModuleInfo[] = [
   {
     key: 'step0',
     label: 'Token Decision Tree',
-    shortLabel: 'Étape 0',
+    shortLabel: 'Module 0',
     description: 'Avez-vous vraiment besoin d\'un token ?',
-    path: 'step0',
+    path: 'module/0',
     optional: false,
   },
   {
