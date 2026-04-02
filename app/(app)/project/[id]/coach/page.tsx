@@ -5,18 +5,27 @@ import { useParams } from 'next/navigation'
 import { getLocalProject } from '@/lib/storage'
 import { buildProjectContext } from '@/lib/prompts'
 import { LocalProject } from '@/lib/types'
+import { useLang } from '@/components/LangProvider'
 
 interface Message {
   role: 'user' | 'assistant'
   content: string
 }
 
-const STARTER_PROMPTS = [
+const STARTER_PROMPTS_FR = [
   'Analyse la cohérence globale de ma tokenomics et identifie les 3 risques principaux.',
   'Mon token est-il réellement utilitaire selon les critères du workshop ?',
   'Y a-t-il des red flags dans mon allocation ou mon vesting ?',
   'Quels sinks devrais-je ajouter pour équilibrer les émissions ?',
   'Mon modèle de gouvernance est-il cohérent avec ma distribution initiale ?',
+]
+
+const STARTER_PROMPTS_EN = [
+  'Analyze the overall consistency of my tokenomics and identify the 3 main risks.',
+  'Is my token truly a utility token according to the workshop criteria?',
+  'Are there any red flags in my allocation or vesting schedule?',
+  'What sinks should I add to balance the emissions?',
+  'Is my governance model consistent with my initial distribution?',
 ]
 
 export default function CoachPage() {
@@ -26,6 +35,9 @@ export default function CoachPage() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const { t, lang } = useLang()
+
+  const starterPrompts = lang === 'fr' ? STARTER_PROMPTS_FR : STARTER_PROMPTS_EN
 
   useEffect(() => {
     const data = getLocalProject(id)
@@ -77,7 +89,7 @@ export default function CoachPage() {
       }
     } catch (err) {
       console.error(err)
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Erreur de connexion au Coach IA. Réessayez.' }])
+      setMessages((prev) => [...prev, { role: 'assistant', content: t.coachError }])
     } finally {
       setLoading(false)
     }
@@ -89,17 +101,15 @@ export default function CoachPage() {
   }
 
   if (!lp) {
-    return <div className="flex items-center justify-center h-64 text-muted text-sm">Chargement…</div>
+    return <div className="flex items-center justify-center h-64 text-muted text-sm">{t.loading}</div>
   }
 
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
       <div className="border-b border-border px-6 py-4 shrink-0">
-        <h1 className="text-base font-bold text-foreground">Coach IA</h1>
-        <p className="text-xs text-muted mt-0.5">
-          Votre expert tokenomics — challenger & suggère sur la base du workshop XRPL Commons
-        </p>
+        <h1 className="text-base font-bold text-foreground">{t.coachTitle}</h1>
+        <p className="text-xs text-muted mt-0.5">{t.coachSubtitle}</p>
       </div>
 
       {/* Messages */}
@@ -108,13 +118,11 @@ export default function CoachPage() {
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
               <div className="text-4xl mb-3">✦</div>
-              <h2 className="text-base font-semibold text-foreground mb-1">Coach IA — {lp.project.name}</h2>
-              <p className="text-sm text-muted">
-                Je connais votre projet et ses modules renseignés. Posez-moi n'importe quelle question sur votre tokenomics.
-              </p>
+              <h2 className="text-base font-semibold text-foreground mb-1">{t.coachTitle} — {lp.project.name}</h2>
+              <p className="text-sm text-muted">{t.coachGreetingDesc}</p>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {STARTER_PROMPTS.map((prompt, i) => (
+              {starterPrompts.map((prompt, i) => (
                 <button
                   key={i}
                   onClick={() => sendMessage(prompt)}
@@ -178,7 +186,7 @@ export default function CoachPage() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Posez votre question au Coach IA…"
+              placeholder={t.coachPlaceholder}
               disabled={loading}
               className="input flex-1"
             />
@@ -199,7 +207,7 @@ export default function CoachPage() {
               onClick={() => setMessages([])}
               className="text-xs text-muted hover:text-foreground transition-colors mt-2"
             >
-              Effacer la conversation
+              {t.coachClear}
             </button>
           )}
         </div>
@@ -209,7 +217,6 @@ export default function CoachPage() {
 }
 
 function FormattedText({ text }: { text: string }) {
-  // Simple markdown-like rendering
   const lines = text.split('\n')
   return (
     <div className="space-y-1">

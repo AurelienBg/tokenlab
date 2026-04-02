@@ -37,7 +37,7 @@ export default function ModuleNav({ project }: Props) {
       <div className="pt-1 pb-0.5 px-3">
         <div className="flex items-center gap-2">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[10px] text-muted uppercase tracking-wider">Étapes</span>
+          <span className="text-[10px] text-muted uppercase tracking-wider">{t.stepsLabel}</span>
           <div className="flex-1 h-px bg-border" />
         </div>
       </div>
