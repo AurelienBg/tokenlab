@@ -5,17 +5,18 @@ const MODULE_LABELS: Record<ModuleKey, string> = Object.fromEntries(
   MODULES.map((m) => [m.key, m.label])
 ) as Record<ModuleKey, string>
 
-export function computeHealthScore(modules: Partial<Record<ModuleKey, ModuleData>>): HealthScore {
+export function computeHealthScore(modules: Partial<Record<ModuleKey, ModuleData>>, lang: 'fr' | 'en' = 'fr'): HealthScore {
   const breakdown: Partial<Record<ModuleKey, number>> = {}
   const gaps: string[] = []
   let weightedTotal = 0
   let totalWeight = 0
+  const empty = lang === 'fr' ? 'non renseigné' : 'not filled in'
 
   for (const [key, weight] of Object.entries(MODULE_HEALTH_WEIGHTS) as [ModuleKey, number][]) {
     const mod = modules[key]
     if (!mod) {
       breakdown[key] = 0
-      gaps.push(`${MODULE_LABELS[key]} non renseigné`)
+      gaps.push(`${MODULE_LABELS[key]} ${empty}`)
       totalWeight += weight
       continue
     }
@@ -35,30 +36,40 @@ export function computeHealthScore(modules: Partial<Record<ModuleKey, ModuleData
   const m6 = modules['m6']?.data as M6Data | undefined
 
   if (m1 && m1.utility_score < 2) {
-    gaps.push('Utilité token < 2 principes couverts — risque de token spéculatif')
+    gaps.push(lang === 'fr'
+      ? 'Utilité token < 2 principes couverts — risque de token spéculatif'
+      : 'Token utility < 2 principles covered — risk of speculative token')
   }
 
   if (m3 && m3.emission_revenue_ratio !== null && m3.emission_revenue_ratio > 1) {
-    gaps.push('Ratio émission/revenus > 1 — modèle non soutenable')
+    gaps.push(lang === 'fr'
+      ? 'Ratio émission/revenus > 1 — modèle non soutenable'
+      : 'Emission/revenue ratio > 1 — unsustainable model')
   }
 
   if (m5) {
     const total = m5.allocations.reduce((s, a) => s + a.percentage, 0)
     if (Math.abs(total - 100) > 1) {
-      gaps.push(`Allocation totale = ${total}% (doit être 100%)`)
+      gaps.push(lang === 'fr'
+        ? `Allocation totale = ${total}% (doit être 100%)`
+        : `Total allocation = ${total}% (must be 100%)`)
     }
     const teamInvestors = m5.allocations
       .filter(a => a.category.toLowerCase().includes('team') || a.category.toLowerCase().includes('invest'))
       .reduce((s, a) => s + a.percentage, 0)
     if (teamInvestors > 50) {
-      gaps.push('Team + Investisseurs > 50% — risque de centralisation de gouvernance')
+      gaps.push(lang === 'fr'
+        ? 'Team + Investisseurs > 50% — risque de centralisation de gouvernance'
+        : 'Team + Investors > 50% — governance centralization risk')
     }
   }
 
   if (m6 && m6.vesting_schedules.length > 0) {
     const hasShortCliff = m6.vesting_schedules.some(vs => vs.cliff_months < 3 && vs.category.toLowerCase().includes('team'))
     if (hasShortCliff) {
-      gaps.push('Cliff équipe < 3 mois — considérer ≥ 6 mois')
+      gaps.push(lang === 'fr'
+        ? 'Cliff équipe < 3 mois — considérer ≥ 6 mois'
+        : 'Team cliff < 3 months — consider ≥ 6 months')
     }
   }
 
