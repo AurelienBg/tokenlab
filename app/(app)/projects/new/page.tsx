@@ -180,8 +180,8 @@ export default function NewProjectPage() {
 
         {/* ── Blockchain conditions checklist ── */}
         <div>
-          <label className="label flex items-center gap-2">
-            {t.npBlockchainConditions}
+          <label className="label flex items-center justify-between">
+            <span>{t.npBlockchainConditions}</span>
             {conditionCount > 0 && (
               <span className="text-[10px] bg-accent/15 text-accent px-2 py-0.5 rounded-full font-medium">
                 {conditionCount}/9
