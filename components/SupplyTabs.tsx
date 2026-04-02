@@ -17,23 +17,25 @@ export default function SupplyTabs({ projectId }: Props) {
   ]
 
   return (
-    <div className="flex gap-1 p-1 bg-surface-2 rounded-xl mb-6">
-      {tabs.map((tab) => {
-        const active = pathname === tab.href
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            className={`flex-1 text-center text-xs font-medium py-2 px-3 rounded-lg transition-colors ${
-              active
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-muted hover:text-foreground'
-            }`}
-          >
-            {tab.label}
-          </Link>
-        )
-      })}
+    <div className="mb-6">
+      <div className="flex gap-6 border-b border-border">
+        {tabs.map((tab) => {
+          const active = pathname === tab.href
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={`pb-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                active
+                  ? 'text-accent border-accent'
+                  : 'text-muted border-transparent hover:text-foreground'
+              }`}
+            >
+              {tab.label}
+            </Link>
+          )
+        })}
+      </div>
     </div>
   )
 }

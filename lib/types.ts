@@ -35,14 +35,19 @@ export interface ProjectMember {
 
 // ─── Module data payloads ─────────────────────────────────────────────────────
 
+export type TokenRecommendation = 'utility' | 'governance' | 'security' | 'stablecoin' | 'hybrid' | 'rethink'
+
 export interface Step0Data {
   needs_token: boolean | null
+  primary_function: 'access' | 'governance' | 'value' | 'risk' | 'stable' | 'hybrid' | null
+  demand_driver: 'usage' | 'community' | 'investors' | 'mixed' | null
+  rationale: string
+  result: TokenRecommendation | null
+  // legacy compat
   gate_access: boolean
   absorb_risk: boolean
   capture_value: boolean
   impact_verified: boolean
-  rationale: string
-  result: 'launch' | 'rethink' | null
 }
 
 export interface M1Data {
