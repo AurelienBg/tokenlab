@@ -180,14 +180,14 @@ export default function NewProjectPage() {
 
         {/* ── Blockchain conditions checklist ── */}
         <div>
-          <label className="label flex items-center justify-between">
-            <span>{t.npBlockchainConditions}</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="label mb-0">{t.npBlockchainConditions}</span>
             {conditionCount > 0 && (
               <span className="text-[10px] bg-accent/15 text-accent px-2 py-0.5 rounded-full font-medium">
                 {conditionCount}/9
               </span>
             )}
-          </label>
+          </div>
           <div className="space-y-2 mt-1">
             {BLOCKCHAIN_CONDITIONS.map(c => {
               const checked = form.blockchain_conditions.includes(c.id)
