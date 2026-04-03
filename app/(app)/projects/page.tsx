@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { getLocalProjects, deleteLocalProject, getLocalProject, duplicateLocalProject } from '@/lib/storage'
 import { Project } from '@/lib/types'
 import { MODULES } from '@/lib/constants'
+
+const visibleModules = MODULES.filter(m => !m.hidden)
 import { useLang } from '@/components/LangProvider'
 import { encodeShareToken } from '@/lib/share'
 
@@ -48,7 +50,7 @@ export default function ProjectsPage() {
   }
 
   function completedCount(p: Project): number {
-    return MODULES.filter((m) => p.completed_modules & (1 << MODULES.indexOf(m))).length
+    return visibleModules.filter((m) => p.completed_modules & (1 << MODULES.indexOf(m))).length
   }
 
   return (
@@ -76,7 +78,7 @@ export default function ProjectsPage() {
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((p) => {
             const completed = completedCount(p)
-            const total = MODULES.length
+            const total = visibleModules.length
             const pct = Math.round((completed / total) * 100)
             const initial = p.name.charAt(0).toUpperCase()
 
@@ -125,8 +127,8 @@ export default function ProjectsPage() {
                       <span>{completed}/{total}</span>
                     </div>
                     <div className="flex gap-0.5">
-                      {MODULES.map((m, i) => {
-                        const done = !!(p.completed_modules & (1 << i))
+                      {visibleModules.map((m) => {
+                        const done = !!(p.completed_modules & (1 << MODULES.indexOf(m)))
                         return (
                           <div
                             key={m.key}

@@ -118,7 +118,7 @@ const copy = {
         },
         {
           q: 'Puis-je utiliser Tokenlab sans avoir fait un workshop ?',
-          a: 'Oui. Les modules sont auto-suffisants. Si vous débutez, commencez par le Token Decision Tree (Étape 0) — il vous aide à déterminer si vous avez vraiment besoin d\'un token.',
+          a: 'Oui. Les modules sont auto-suffisants. Si vous débutez, commencez par le Token Decision Tree (Étape 1) — il vous aide à déterminer si vous avez vraiment besoin d\'un token.',
         },
         {
           q: 'Comment fonctionne le plan Free ?',
@@ -241,7 +241,7 @@ const copy = {
         },
         {
           q: 'Can I use Tokenlab without having done a workshop?',
-          a: 'Yes. The modules are self-contained. If you\'re just starting out, begin with the Token Decision Tree (Step 0) — it helps you determine if you actually need a token.',
+          a: 'Yes. The modules are self-contained. If you\'re just starting out, begin with the Token Decision Tree (Step 1) — it helps you determine if you actually need a token.',
         },
         {
           q: 'How does the Free plan work?',

@@ -200,27 +200,77 @@ function SummaryPage({ lp, health }: { lp: LocalProject; health: HealthScore }) 
 
 // ─── Module pages ─────────────────────────────────────────────────────────────
 
+const TOKEN_RESULT_LABELS: Record<string, string> = {
+  fungible: 'Fungible Token (IOU / XLS-20)',
+  stablecoin: 'Stablecoin (IOU ancré)',
+  mpt: 'Multi-Purpose Token (MPT / XLS-33)',
+  nft: 'NFT (XLS-20 non-fongible)',
+  // legacy
+  yes: 'Token nécessaire',
+  no: 'Token non nécessaire',
+  maybe: 'À valider',
+}
+
+const Q_LABELS = [
+  'Ce que le token représente fondamentalement',
+  'Comment les utilisateurs utilisent ce token',
+  'Interchangeabilité des tokens',
+  'Exigences réglementaires et compliance',
+]
+
+const Q_OPTION_LABELS: Record<string, Record<string, string>> = {
+  q1: { a: 'Unité d\'échange/accès (Fungible)', b: 'Objet unique identifiable (NFT)', c: 'Valeur stable (Stablecoin)', d: 'Part dans un actif réel (MPT)' },
+  q2: { a: 'Échange libre / paiement de frais', b: 'Collection / preuve unique', c: 'Monnaie de compte stable', d: 'Détention sous conditions (KYC/compliance)' },
+  q3: { a: 'Oui, parfaitement interchangeables', b: 'Non, chaque token est unique', c: 'En partie (mêmes droits distincts)', d: 'Parité de valeur prime (Stablecoin)' },
+  q4: { a: 'Aucune contrainte', b: 'Compliance légère (whitelist)', c: 'Régulation stricte (MiCA / SEC)', d: 'Certificat unique / actif physique' },
+}
+
 function Step0Page({ lp }: { lp: LocalProject }) {
   const { project } = lp
   const data = lp.modules['step0']?.data as Step0Data | undefined
   if (!data) return null
 
+  const resultLabel = data.result ? (TOKEN_RESULT_LABELS[data.result] ?? data.result) : '—'
+
   return (
     <Page size="A4" style={styles.page}>
       <PageHeader projectName={project.name} ticker={project.token_ticker} />
       <SectionTitle
-        badge="ÉTAPE 0"
+        badge="ÉTAPE 1"
         title="Token Decision Tree"
-        description="Avez-vous vraiment besoin d'un token ?"
+        description="Recommandation de type de token basée sur 4 questions clés"
       />
 
+      {/* Recommendation */}
       <View style={styles.card}>
-        <DataRow label="Décision" value={data.result ? String(data.result) : '—'} />
-        <DataRow label="Gate access" value={data.gate_access ? 'Oui' : 'Non'} />
-        <DataRow label="Absorb risk" value={data.absorb_risk ? 'Oui' : 'Non'} />
-        <DataRow label="Capture value" value={data.capture_value ? 'Oui' : 'Non'} />
-        <DataRow label="Impact vérifié" value={data.impact_verified ? 'Oui' : 'Non'} />
+        <DataRow label="Type recommandé" value={resultLabel} />
       </View>
+
+      {/* Business context */}
+      {(project.problem || project.why_blockchain || project.value_proposition || project.key_metrics) && (
+        <View style={[styles.card, { marginTop: 8 }]}>
+          {project.problem && <DataRow label="Problème adressé" value={project.problem} />}
+          {project.why_blockchain && <DataRow label="Pourquoi blockchain" value={project.why_blockchain} />}
+          {project.value_proposition && <DataRow label="Proposition de valeur" value={project.value_proposition} />}
+          {project.key_metrics && <DataRow label="KPIs cibles" value={project.key_metrics} />}
+          {project.blockchain_conditions && project.blockchain_conditions.length > 0 && (
+            <DataRow label="Conditions blockchain" value={`${project.blockchain_conditions.length}/9 validées`} />
+          )}
+        </View>
+      )}
+
+      {/* Q&A detail */}
+      {(data.q1 || data.q2 || data.q3 || data.q4) && (
+        <View style={[styles.card, { marginTop: 8 }]}>
+          {(['q1', 'q2', 'q3', 'q4'] as const).map((qk, i) => {
+            const answer = data[qk]
+            if (!answer) return null
+            const label = Q_OPTION_LABELS[qk]?.[answer] ?? answer
+            return <DataRow key={qk} label={Q_LABELS[i]} value={label} />
+          })}
+        </View>
+      )}
+
       {data.rationale && <Notes text={data.rationale} />}
       <PageFooter />
     </Page>
