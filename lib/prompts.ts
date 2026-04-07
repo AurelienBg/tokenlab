@@ -23,7 +23,7 @@ export function buildProjectContext(
     const data = modules[mod.key]
     if (!data) continue
     lines.push(`## ${mod.label}`)
-    lines.push(JSON.stringify(data.data, null, 2))
+    lines.push(JSON.stringify(data.data))
     lines.push('')
   }
 
